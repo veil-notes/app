@@ -65,7 +65,7 @@ class NoteListScreen extends ConsumerWidget {
                 child: ListTile(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 8),
                   title: Text(
-                    note.title,
+                    _plainTitle(note.title),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -200,6 +200,18 @@ class NoteListScreen extends ConsumerWidget {
     final minute = date.minute.toString().padLeft(2, '0');
 
     return '$year-$month-$day $hour:$minute';
+  }
+
+  String _plainTitle(String value) {
+    return value
+        .replaceAll(RegExp(r'^\s*#{1,6}\s+'), '')
+        .replaceAll(RegExp(r'\*\*(.*?)\*\*'), r'$1')
+        .replaceAll(RegExp(r'\*(.*?)\*'), r'$1')
+        .replaceAll(RegExp(r'~~(.*?)~~'), r'$1')
+        .replaceAll(RegExp(r'^\s*-\s\[(?: |x|X)\]\s+'), '')
+        .replaceAll(RegExp(r'^\s*-\s+'), '')
+        .replaceAll(RegExp(r'^\s*\d+\.\s+'), '')
+        .trim();
   }
 }
 

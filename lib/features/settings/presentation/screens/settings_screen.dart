@@ -253,24 +253,62 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
     final selected = await showModalBottomSheet<AutoLockOption>(
       context: context,
+      backgroundColor: const Color(0xFF171336),
+      barrierColor: Colors.black.withValues(alpha: 0.45),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
+      ),
       builder: (context) {
         return SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: options.map((option) {
-              final isSelected = option.id == current.id;
+          top: false,
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 50,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                ...options.map((option) {
+                  final isSelected = option.id == current.id;
 
-              return ListTile(
-                title: Text(option.label),
-                trailing: isSelected
-                    ? Icon(
-                        Icons.check,
-                        color: Theme.of(context).colorScheme.primary,
-                      )
-                    : null,
-                onTap: () => Navigator.of(context).pop(option),
-              );
-            }).toList(),
+                  return Column(
+                    children: [
+                      ListTile(
+                        title: Text(option.label),
+                        trailing: isSelected
+                            ? Icon(
+                                Icons.check,
+                                color: Theme.of(context).colorScheme.primary,
+                              )
+                            : null,
+                        onTap: () => Navigator.of(context).pop(option),
+                      ),
+                      const SizedBox(height: 8),
+                      if (option.id != options.last.id) ...[
+                        Divider(
+                          height: 1,
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withValues(alpha: 0.05),
+                        ),
+                        const SizedBox(height: 8),
+                      ],
+                    ],
+                  );
+                }),
+              ],
+            ),
           ),
         );
       },

@@ -154,10 +154,7 @@ class NoteListScreen extends ConsumerWidget {
                         child: Text(
                           'Yes!',
                           style: Theme.of(context).textTheme.bodyLarge
-                              ?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: colorScheme.onSurface,
-                              ),
+                              ?.copyWith(color: colorScheme.onSurface),
                         ),
                       ),
                     ),
@@ -166,7 +163,7 @@ class NoteListScreen extends ConsumerWidget {
                 const SizedBox(height: 8),
                 Divider(
                   height: 1,
-                  color: colorScheme.onSurface.withValues(alpha: 0.14),
+                  color: colorScheme.onSurface.withValues(alpha: 0.05),
                 ),
                 const SizedBox(height: 8),
                 SizedBox(
@@ -180,10 +177,7 @@ class NoteListScreen extends ConsumerWidget {
                         child: Text(
                           'No! Nevermind...',
                           style: Theme.of(context).textTheme.bodyLarge
-                              ?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: colorScheme.onSurface,
-                              ),
+                              ?.copyWith(color: colorScheme.onSurface),
                         ),
                       ),
                     ),

@@ -32,4 +32,52 @@ void main() {
 
     expect(actual, equals(plainText));
   });
+
+  test('should encrypt and decrypt text symmetrically', () async {
+    final CryptoService cryptoService = PgpCryptoService();
+    const plainText = 'private symmetric note';
+    const passphrase = 'test-passphrase';
+
+    final encrypted = await cryptoService.encryptSymmetric(
+      plainText,
+      passphrase,
+    );
+    final decrypted = await cryptoService.decryptSymmetric(
+      encrypted,
+      passphrase,
+    );
+
+    expect(
+      encrypted.payload,
+      startsWith('-----BEGIN PGP MESSAGE-----'),
+    );
+    expect(decrypted, plainText);
+  });
+
+  test('should encrypt symmetric text into EncryptedData', () async {
+    final CryptoService cryptoService = PgpCryptoService();
+
+    final encrypted = await cryptoService.encryptSymmetric(
+      'another private note',
+      'another-passphrase',
+    );
+
+    expect(encrypted.payload, startsWith('-----BEGIN PGP MESSAGE-----'));
+  });
+
+  test('should decrypt previously encrypted symmetric text', () async {
+    final CryptoService cryptoService = PgpCryptoService();
+
+    final encrypted = await cryptoService.encryptSymmetric(
+      'symmetric roundtrip',
+      'super-secret',
+    );
+
+    final decrypted = await cryptoService.decryptSymmetric(
+      encrypted,
+      'super-secret',
+    );
+
+    expect(decrypted, 'symmetric roundtrip');
+  });
 }

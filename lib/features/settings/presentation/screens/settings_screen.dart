@@ -228,15 +228,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       return false;
     }
 
+    final password = passwordController.text;
+    passwordController.dispose();
+
     if (!mounted) {
-      passwordController.dispose();
       return false;
     }
 
     setState(() => _isLoading = true);
 
     try {
-      await veilService.enableBiometricUnlock(passwordController.text);
+      await veilService.enableBiometricUnlock(password);
       return true;
     } catch (error) {
       if (error is BiometricCanceledException) {
@@ -246,8 +248,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       _showError(error);
       return false;
     } finally {
-      passwordController.dispose();
-
       if (mounted) {
         setState(() => _isLoading = false);
       }

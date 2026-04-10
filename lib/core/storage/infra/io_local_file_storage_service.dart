@@ -5,6 +5,14 @@ import 'package:path_provider/path_provider.dart';
 import '../local_file_storage_service.dart';
 
 class IOLocalFileStorageService implements LocalFileStorageService {
+  final Future<Directory> Function() _applicationDocumentsDirectoryResolver;
+
+  IOLocalFileStorageService({
+    Future<Directory> Function()? applicationDocumentsDirectoryResolver,
+  }) : _applicationDocumentsDirectoryResolver =
+           applicationDocumentsDirectoryResolver ??
+           getApplicationDocumentsDirectory;
+
   @override
   Future<void> write({
     required String directory,
@@ -58,7 +66,7 @@ class IOLocalFileStorageService implements LocalFileStorageService {
   }
 
   Future<Directory> _resolveDirectory(String directoryName) async {
-    final appDirectory = await getApplicationDocumentsDirectory();
+    final appDirectory = await _applicationDocumentsDirectoryResolver();
     final directory = Directory('${appDirectory.path}/$directoryName');
 
     if (!await directory.exists()) {

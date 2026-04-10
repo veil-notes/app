@@ -234,9 +234,18 @@ class NoteListScreen extends ConsumerWidget {
   String _plainTitle(String value) {
     return value
         .replaceAll(RegExp(r'^\s*#{1,6}\s+'), '')
-        .replaceAll(RegExp(r'\*\*(.*?)\*\*'), r'$1')
-        .replaceAll(RegExp(r'\*(.*?)\*'), r'$1')
-        .replaceAll(RegExp(r'~~(.*?)~~'), r'$1')
+        .replaceAllMapped(
+          RegExp(r'\*\*(.*?)\*\*'),
+          (match) => match.group(1) ?? '',
+        )
+        .replaceAllMapped(
+          RegExp(r'\*(.*?)\*'),
+          (match) => match.group(1) ?? '',
+        )
+        .replaceAllMapped(
+          RegExp(r'~~(.*?)~~'),
+          (match) => match.group(1) ?? '',
+        )
         .replaceAll(RegExp(r'^\s*-\s\[(?: |x|X)\]\s+'), '')
         .replaceAll(RegExp(r'^\s*-\s+'), '')
         .replaceAll(RegExp(r'^\s*\d+\.\s+'), '')

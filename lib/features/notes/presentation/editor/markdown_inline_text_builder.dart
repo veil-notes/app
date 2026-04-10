@@ -45,6 +45,10 @@ class MarkdownInlineTextBuilder {
           i = end + 2;
           continue;
         }
+
+        buffer.write('**');
+        i += 2;
+        continue;
       }
 
       if (_startsWith(text, i, '~~')) {
@@ -66,6 +70,10 @@ class MarkdownInlineTextBuilder {
           i = end + 2;
           continue;
         }
+
+        buffer.write('~~');
+        i += 2;
+        continue;
       }
 
       if (_startsWith(text, i, '*')) {
@@ -87,6 +95,10 @@ class MarkdownInlineTextBuilder {
           i = end + 1;
           continue;
         }
+
+        buffer.write('*');
+        i++;
+        continue;
       }
 
       buffer.write(text[i]);

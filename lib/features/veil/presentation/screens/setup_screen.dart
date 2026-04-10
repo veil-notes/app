@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:veil/features/veil/presentation/providers/veil_provider.dart';
+import '../../providers/veil_provider.dart';
 
 class SetupScreen extends ConsumerStatefulWidget {
   const SetupScreen({super.key});

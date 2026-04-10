@@ -4,18 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
 
-import '../../domain/markdown_block.dart';
-import '../../domain/markdown_block_parser.dart';
-import '../../domain/markdown_block_serializer.dart';
+import '../../domain/editor/markdown_block.dart';
+import '../../domain/editor/markdown_block_parser.dart';
+import '../../domain/editor/markdown_block_serializer.dart';
 import '../../domain/note.dart';
-import '../editor/editor_document_controller.dart';
-import '../editor/markdown_block_editor.dart';
-import '../editor/markdown_block_view.dart';
-import '../note_save_status.dart';
-import '../providers/notes_provider.dart';
+import 'editor_document_controller.dart';
+import 'markdown_block_editor.dart';
+import 'markdown_block_view.dart';
+import 'note_save_status.dart';
+import '../../providers/notes_provider.dart';
 
-import '../editor/markdown_editing.dart';
-import '../editor/note_editor_toolbar.dart';
+import 'markdown_editing.dart';
+import 'note_editor_toolbar.dart';
 
 class NoteScreen extends ConsumerStatefulWidget {
   final String? id;

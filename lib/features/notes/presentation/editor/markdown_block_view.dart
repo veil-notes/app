@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../domain/markdown_block.dart';
+import '../../domain/editor/markdown_block.dart';
 
 import 'markdown_inline_text_builder.dart';
 

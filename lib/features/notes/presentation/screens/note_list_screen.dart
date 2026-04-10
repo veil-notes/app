@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../providers/notes_provider.dart';
+import '../../providers/notes_provider.dart';
 
 class NoteListScreen extends ConsumerWidget {
   const NoteListScreen({super.key});

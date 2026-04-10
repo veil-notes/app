@@ -1,4 +1,4 @@
-import '../../domain/markdown_block.dart';
+import '../../domain/editor/markdown_block.dart';
 
 class EditorDocumentState {
   final List<MarkdownBlock> blocks;

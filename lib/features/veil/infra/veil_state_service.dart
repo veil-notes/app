@@ -13,7 +13,7 @@ import '../domain/biometrics/biometric_auth_service.dart';
 import '../domain/password/password_validator.dart';
 import '../domain/session/auto_lock_option.dart';
 import '../domain/vault_key_provider.dart';
-import '../veil_service.dart';
+import '../application/veil_service.dart';
 
 class VeilStateService implements VeilService, VaultKeyProvider {
   static const _saltLength = 16;

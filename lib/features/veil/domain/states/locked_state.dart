@@ -1,4 +1,4 @@
-import '../../veil_service.dart';
+import '../../application/veil_service.dart';
 import '../biometrics/biometric_auth_exception.dart';
 import 'unlocked_state.dart';
 import 'veil_state.dart';

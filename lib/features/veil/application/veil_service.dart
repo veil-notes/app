@@ -1,4 +1,4 @@
-import 'domain/session/auto_lock_option.dart';
+import '../domain/session/auto_lock_option.dart';
 
 abstract class VeilService {
   Future<bool> isConfigured();

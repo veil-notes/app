@@ -1,4 +1,4 @@
-import '../../veil_service.dart';
+import '../../application/veil_service.dart';
 import 'locked_state.dart';
 import 'uninitialized_state.dart';
 import 'unlocked_state.dart';

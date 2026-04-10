@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../domain/states/bootstrapping_state.dart';
-import '../presentation/providers/veil_provider.dart';
-import '../veil_service.dart';
+import '../providers/veil_provider.dart';
+import 'veil_service.dart';
 
 import '../domain/states/veil_state.dart';
 

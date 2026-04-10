@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../application/veil_controller.dart';
-import '../providers/veil_provider.dart';
+import '../../providers/veil_provider.dart';
 
 class UnlockScreen extends ConsumerStatefulWidget {
   const UnlockScreen({super.key});

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../note_save_status.dart';
+import 'note_save_status.dart';
 
 class NoteEditorToolbar extends StatelessWidget {
   final NoteSaveStatus saveStatus;

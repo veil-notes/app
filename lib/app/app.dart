@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../features/veil/domain/states/unlocked_state.dart';
-import '../features/veil/presentation/providers/veil_provider.dart';
+import '../features/veil/providers/veil_provider.dart';
 import 'app_theme.dart';
 import 'router.dart';
 

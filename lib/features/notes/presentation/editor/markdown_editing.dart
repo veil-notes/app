@@ -1,4 +1,4 @@
-import '../../domain/markdown_block.dart';
+import '../../domain/editor/markdown_block.dart';
 
 class MarkdownEditing {
   static String bold(String raw) => '**$raw**';

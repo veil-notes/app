@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../veil/domain/biometrics/biometric_auth_exception.dart';
 import '../../../veil/domain/session/auto_lock_option.dart';
-import '../../../veil/presentation/providers/veil_provider.dart';
-import '../../../veil/veil_service.dart';
+import '../../../veil/providers/veil_provider.dart';
+import '../../../veil/application/veil_service.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});

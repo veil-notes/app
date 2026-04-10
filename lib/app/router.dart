@@ -6,11 +6,11 @@ import 'package:veil/features/veil/presentation/screens/setup_screen.dart';
 import 'package:veil/features/veil/presentation/screens/unlock_screen.dart';
 
 import '../features/notes/presentation/screens/note_list_screen.dart';
-import '../features/notes/presentation/screens/note_screen.dart';
+import '../features/notes/presentation/editor/note_screen.dart';
 import '../features/veil/domain/states/locked_state.dart';
 import '../features/veil/domain/states/uninitialized_state.dart';
 import '../features/veil/domain/states/unlocked_state.dart';
-import '../features/veil/presentation/providers/veil_provider.dart';
+import '../features/veil/providers/veil_provider.dart';
 import '../features/veil/presentation/screens/splash_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {

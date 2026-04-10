@@ -1,6 +1,6 @@
-import '../../domain/markdown_block.dart';
-import '../../domain/markdown_block_parser.dart';
-import '../../domain/markdown_block_serializer.dart';
+import '../../domain/editor/markdown_block.dart';
+import '../../domain/editor/markdown_block_parser.dart';
+import '../../domain/editor/markdown_block_serializer.dart';
 import 'editor_document_state.dart';
 
 class EditorDocumentController {

@@ -2,19 +2,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:local_auth/local_auth.dart';
 
-import '../../../../core/crypto/crypto_service.dart';
-import '../../../../core/crypto/infra/kdf/argon2_kdf_derivation_service.dart';
-import '../../../../core/crypto/infra/pgp/pgp_crypto_service.dart';
-import '../../../../core/storage/infra/flutter_secure_storage_service.dart';
-import '../../application/veil_controller.dart';
-import '../../application/veil_session_controller.dart';
-import '../../domain/password/default_password_validator.dart';
-import '../../domain/session/auto_lock_option.dart';
-import '../../domain/states/veil_state.dart';
-import '../../domain/vault_key_provider.dart';
-import '../../infra/biometrics/local_auth_biometric_auth_service.dart';
-import '../../infra/veil_state_service.dart';
-import '../../veil_service.dart';
+import '../../../core/crypto/crypto_service.dart';
+import '../../../core/crypto/infra/kdf/argon2_kdf_derivation_service.dart';
+import '../../../core/crypto/infra/pgp/pgp_crypto_service.dart';
+import '../../../core/storage/infra/flutter_secure_storage_service.dart';
+import '../application/veil_controller.dart';
+import '../application/veil_session_controller.dart';
+import '../domain/password/default_password_validator.dart';
+import '../domain/session/auto_lock_option.dart';
+import '../domain/states/veil_state.dart';
+import '../domain/vault_key_provider.dart';
+import '../infra/biometrics/local_auth_biometric_auth_service.dart';
+import '../infra/veil_state_service.dart';
+import '../application/veil_service.dart';
 
 class BiometricPromptInProgressNotifier extends Notifier<bool> {
   @override

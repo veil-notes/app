@@ -1,13 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/storage/infra/io_local_file_storage_service.dart';
-import '../../../../core/storage/local_file_storage_service.dart';
-import '../../../veil/presentation/providers/veil_provider.dart';
-import '../../application/notes_service.dart';
-import '../../domain/note.dart';
-import '../../domain/notes_repository.dart';
-import '../../infra/file_notes_repository.dart';
-import '../../infra/pgp_notes_service.dart';
+import '../../../core/storage/infra/io_local_file_storage_service.dart';
+import '../../../core/storage/local_file_storage_service.dart';
+import '../../veil/providers/veil_provider.dart';
+import '../application/notes_service.dart';
+import '../domain/note.dart';
+import '../domain/notes_repository.dart';
+import '../infra/file_notes_repository.dart';
+import '../infra/pgp_notes_service.dart';
 
 final localFileStorageServiceProvider = Provider<LocalFileStorageService>((
   ref,

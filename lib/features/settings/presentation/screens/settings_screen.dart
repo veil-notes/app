@@ -22,11 +22,36 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final biometricEnabledAsync = ref.watch(isBiometricEnabledProvider);
     final canUseBiometricsAsync = ref.watch(canUseBiometricUnlockProvider);
     final autoLockOptionAsync = ref.watch(autoLockOptionProvider);
+    final topInset = MediaQuery.paddingOf(context).top + kToolbarHeight + 8;
 
     return Scaffold(
-      appBar: AppBar(),
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        shadowColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+        automaticallyImplyLeading: false,
+        leadingWidth: 72,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 12, top: 8, bottom: 8),
+          child: Material(
+            elevation: 0,
+            color: const Color(0xFF2A2448),
+            shape: const CircleBorder(),
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+              ),
+              child: const BackButton(color: Colors.white),
+            ),
+          ),
+        ),
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(8),
+        padding: EdgeInsets.fromLTRB(8, topInset, 8, 8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -43,7 +68,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   subtitle: Text(
-                    'Locks the vault after ${option.label.toLowerCase()}.',
+                    'Locks the app after ${option.label.toLowerCase()}.',
                     style: TextStyle(fontSize: 12),
                   ),
                   onTap: _isLoading ? null : _selectAutoLockOption,
@@ -146,7 +171,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     required bool canUseBiometrics,
   }) {
     if (canUseBiometrics) {
-      return 'Use biometrics to unlock your vault faster.';
+      return 'Use biometrics to unlock app faster.';
     }
 
     if (isEnabled) {

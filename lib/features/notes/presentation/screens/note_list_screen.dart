@@ -10,14 +10,43 @@ class NoteListScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final notesAsync = ref.watch(notesListProvider);
+    final topInset = MediaQuery.paddingOf(context).top + kToolbarHeight;
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        shadowColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+        automaticallyImplyLeading: false,
         actions: [
-          IconButton(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            onPressed: () => context.push('/settings'),
-            icon: const Icon(Icons.settings),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 8,
+              top: 8,
+              bottom: 8,
+              right: 16,
+            ),
+            child: Material(
+              elevation: 0,
+              color: const Color(0xFF2A2448),
+              shape: const CircleBorder(),
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.08),
+                  ),
+                ),
+                child: IconButton(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  onPressed: () => context.push('/settings'),
+                  icon: const Icon(Icons.settings),
+                ),
+              ),
+            ),
           ),
         ],
       ),
@@ -37,7 +66,7 @@ class NoteListScreen extends ConsumerWidget {
           }
 
           return ListView.separated(
-            padding: const EdgeInsets.all(8),
+            padding: EdgeInsets.fromLTRB(8, topInset, 8, 8),
             itemCount: notes.length,
             separatorBuilder: (_, _) => const SizedBox(height: 4),
             itemBuilder: (context, index) {

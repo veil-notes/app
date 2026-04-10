@@ -29,7 +29,7 @@ class LocalAuthBiometricAuthService implements BiometricAuthService {
 
     try {
       return await _localAuthentication.authenticate(
-        localizedReason: 'Authenticate to unlock your vault',
+        localizedReason: 'Authenticate to unlock Veil',
         biometricOnly: true,
         persistAcrossBackgrounding: true,
       );

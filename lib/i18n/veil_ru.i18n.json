@@ -1,0 +1,28 @@
+{
+  "setup": {
+    "passwordHint": "Введите пароль, чтобы начать...",
+    "cta": "Начать!"
+  },
+  "unlock": {
+    "passwordHint": "Введите пароль...",
+    "cta": "Разблокировать",
+    "biometricTooltip": "Биометрия"
+  },
+  "splash": {
+    "loading": "Загрузка..."
+  },
+  "errors": {
+    "passwordRequired": "Требуется пароль.",
+    "passwordMinLength": "Пароль должен содержать не менее 8 символов.",
+    "passwordMissingLetter": "Пароль должен содержать хотя бы одну букву.",
+    "passwordMissingNumber": "Пароль должен содержать хотя бы одну цифру.",
+    "invalidPassword": "Неверный пароль.",
+    "biometricUnavailable": "Биометрическая аутентификация недоступна.",
+    "biometricFailed": "Ошибка биометрической аутентификации.",
+    "biometricLockedOut": "Биометрическая аутентификация временно заблокирована.",
+    "vaultNotConfigured": "Хранилище не настроено.",
+    "encryptedPrivateKeyNotFound": "Зашифрованный приватный ключ не найден.",
+    "publicKeyNotFound": "Публичный ключ не найден.",
+    "vaultLocked": "Хранилище заблокировано."
+  }
+}

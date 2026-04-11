@@ -8,10 +8,7 @@ void main() {
     final json = pair.toJson();
     final restored = CryptoKeyPair.fromJson(json);
 
-    expect(json, {
-      'publicKey': 'pub',
-      'privateKey': 'priv',
-    });
+    expect(json, {'publicKey': 'pub', 'privateKey': 'priv'});
     expect(restored.publicKey, 'pub');
     expect(restored.privateKey, 'priv');
   });

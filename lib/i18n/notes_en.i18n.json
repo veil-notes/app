@@ -1,0 +1,11 @@
+{
+  "empty": "no notes yet.",
+  "delete": {
+    "title": "Delete this note permanently?",
+    "confirm": "Yes, delete",
+    "cancel": "No, keep it"
+  },
+  "editor": {
+    "heading": "Heading {{level}}"
+  }
+}

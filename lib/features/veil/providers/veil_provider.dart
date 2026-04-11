@@ -5,6 +5,7 @@ import 'package:local_auth/local_auth.dart';
 import '../../../core/crypto/crypto_service.dart';
 import '../../../core/crypto/infra/kdf/argon2_kdf_derivation_service.dart';
 import '../../../core/crypto/infra/pgp/pgp_crypto_service.dart';
+import '../../../core/storage/secure_storage_service.dart';
 import '../../../core/storage/infra/flutter_secure_storage_service.dart';
 import '../application/veil_controller.dart';
 import '../application/veil_session_controller.dart';
@@ -33,10 +34,12 @@ final vaultKeyProviderProvider = Provider<VaultKeyProvider>((ref) {
   return ref.read(veilServiceProvider) as VaultKeyProvider;
 });
 
+final secureStorageServiceProvider = Provider<SecureStorageService>((ref) {
+  return FlutterSecureStorageService(const FlutterSecureStorage());
+});
+
 final veilServiceProvider = Provider<VeilService>((ref) {
-  final secureStorage = FlutterSecureStorageService(
-    const FlutterSecureStorage(),
-  );
+  final secureStorage = ref.read(secureStorageServiceProvider);
   final cryptoService = ref.read(cryptoServiceProvider);
 
   final biometricAuthService = LocalAuthBiometricAuthService(

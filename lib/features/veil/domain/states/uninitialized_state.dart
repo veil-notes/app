@@ -1,4 +1,5 @@
 import '../../application/veil_service.dart';
+import '../veil_exception.dart';
 import 'unlocked_state.dart';
 import 'veil_state.dart';
 
@@ -18,12 +19,12 @@ class UninitializedState implements VeilState {
 
   @override
   Future<VeilState> unlockWithBiometrics() async {
-    throw Exception('Veil not configured yet');
+    throw const VeilException(VeilExceptionCode.vaultNotConfigured);
   }
 
   @override
   Future<VeilState> unlockWithPassword(String password) async {
-    throw Exception('Veil not configured yet');
+    throw const VeilException(VeilExceptionCode.vaultNotConfigured);
   }
 
   @override

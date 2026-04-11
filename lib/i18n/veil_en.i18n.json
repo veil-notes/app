@@ -1,0 +1,28 @@
+{
+  "setup": {
+    "passwordHint": "Type a password to start...",
+    "cta": "Let's start!"
+  },
+  "unlock": {
+    "passwordHint": "Type your password...",
+    "cta": "Unlock",
+    "biometricTooltip": "Biometrics"
+  },
+  "splash": {
+    "loading": "Loading..."
+  },
+  "errors": {
+    "passwordRequired": "Password is required.",
+    "passwordMinLength": "Password must have at least 8 characters.",
+    "passwordMissingLetter": "Password must contain at least one letter.",
+    "passwordMissingNumber": "Password must contain at least one number.",
+    "invalidPassword": "Invalid password.",
+    "biometricUnavailable": "Biometric authentication is not available.",
+    "biometricFailed": "Biometric authentication failed.",
+    "biometricLockedOut": "Biometric authentication is temporarily locked.",
+    "vaultNotConfigured": "Vault is not configured.",
+    "encryptedPrivateKeyNotFound": "Encrypted private key not found.",
+    "publicKeyNotFound": "Public key not found.",
+    "vaultLocked": "Vault is locked."
+  }
+}

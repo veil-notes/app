@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../../app/app_error_mapper.dart';
+import '../../../../i18n/translations.g.dart';
 import '../../providers/veil_provider.dart';
 
 class SetupScreen extends ConsumerStatefulWidget {
@@ -10,6 +13,8 @@ class SetupScreen extends ConsumerStatefulWidget {
 }
 
 class _SetupScreenState extends ConsumerState<SetupScreen> {
+  static const _errorMapper = AppErrorMapper();
+
   final TextEditingController _passwordController = TextEditingController();
 
   @override
@@ -20,6 +25,8 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(24),
@@ -29,17 +36,10 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
             TextField(
               controller: _passwordController,
               obscureText: true,
-              decoration: const InputDecoration(
-                hintText: 'Type a password to start...',
-              ),
+              decoration: InputDecoration(hintText: t.veil.setup.passwordHint),
             ),
-
             const SizedBox(height: 24),
-
-            ElevatedButton(
-              onPressed: _submit,
-              child: const Text('Let\'s start!'),
-            ),
+            ElevatedButton(onPressed: _submit, child: Text(t.veil.setup.cta)),
           ],
         ),
       ),
@@ -53,15 +53,13 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
     try {
       await controller.create(password);
     } catch (error) {
-      if (!mounted) return;
+      if (!mounted) {
+        return;
+      }
 
-      final message = error is Exception
-          ? error.toString().replaceFirst('Exception: ', '')
-          : 'Unexpected error';
-
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(message)));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(_errorMapper.map(context.t, error))),
+      );
     }
   }
 }

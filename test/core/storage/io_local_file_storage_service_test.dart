@@ -20,20 +20,23 @@ void main() {
     }
   });
 
-  test('writes and reads file contents from the app documents directory', () async {
-    await service.write(
-      directory: 'notes',
-      fileName: 'alpha.txt',
-      content: 'hello',
-    );
+  test(
+    'writes and reads file contents from the app documents directory',
+    () async {
+      await service.write(
+        directory: 'notes',
+        fileName: 'alpha.txt',
+        content: 'hello',
+      );
 
-    final content = await service.read(
-      directory: 'notes',
-      fileName: 'alpha.txt',
-    );
+      final content = await service.read(
+        directory: 'notes',
+        fileName: 'alpha.txt',
+      );
 
-    expect(content, 'hello');
-  });
+      expect(content, 'hello');
+    },
+  );
 
   test('returns null when the file does not exist', () async {
     final content = await service.read(
@@ -50,12 +53,10 @@ void main() {
       fileName: 'alpha.txt',
       content: 'a',
     );
-    await service.write(
-      directory: 'notes',
-      fileName: 'beta.txt',
-      content: 'b',
-    );
-    await Directory('${tempDirectory.path}/notes/nested').create(recursive: true);
+    await service.write(directory: 'notes', fileName: 'beta.txt', content: 'b');
+    await Directory(
+      '${tempDirectory.path}/notes/nested',
+    ).create(recursive: true);
 
     final fileNames = await service.listFileNames(directory: 'notes');
 

@@ -1,0 +1,11 @@
+{
+  "empty": "nenhuma nota ainda.",
+  "delete": {
+    "title": "Excluir esta nota permanentemente?",
+    "confirm": "Sim, excluir",
+    "cancel": "Não, deixar como está"
+  },
+  "editor": {
+    "heading": "Título {{level}}"
+  }
+}

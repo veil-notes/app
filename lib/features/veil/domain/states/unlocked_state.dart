@@ -1,4 +1,5 @@
 import '../../application/veil_service.dart';
+import '../veil_exception.dart';
 import 'locked_state.dart';
 import 'veil_state.dart';
 
@@ -12,7 +13,7 @@ class UnlockedState implements VeilState {
 
   @override
   Future<VeilState> create(String password) async {
-    throw Exception('Veil already configured');
+    throw const VeilException(VeilExceptionCode.vaultAlreadyConfigured);
   }
 
   @override

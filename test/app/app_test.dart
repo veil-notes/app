@@ -15,7 +15,9 @@ import 'package:veil/features/veil/providers/veil_provider.dart';
 
 void main() {
   testWidgets('should instantiate App widget', (WidgetTester tester) async {
-    final harness = _AppHarness(initialStateBuilder: (service) => LockedState(service));
+    final harness = _AppHarness(
+      initialStateBuilder: (service) => LockedState(service),
+    );
     addTearDown(harness.dispose);
 
     await tester.pumpWidget(harness.build());
@@ -26,7 +28,9 @@ void main() {
   testWidgets('starts the session timer when veil becomes unlocked', (
     WidgetTester tester,
   ) async {
-    final harness = _AppHarness(initialStateBuilder: (service) => LockedState(service));
+    final harness = _AppHarness(
+      initialStateBuilder: (service) => LockedState(service),
+    );
     addTearDown(harness.dispose);
 
     await tester.pumpWidget(harness.build());
@@ -44,7 +48,9 @@ void main() {
   testWidgets('stops the session timer when veil leaves unlocked state', (
     WidgetTester tester,
   ) async {
-    final harness = _AppHarness(initialStateBuilder: (service) => LockedState(service));
+    final harness = _AppHarness(
+      initialStateBuilder: (service) => LockedState(service),
+    );
     addTearDown(harness.dispose);
 
     await tester.pumpWidget(harness.build());
@@ -108,25 +114,28 @@ void main() {
     expect(harness.controller.lockCalls, 0);
   });
 
-  testWidgets('refreshes the session timer on pointer interaction when unlocked', (
-    WidgetTester tester,
-  ) async {
-    final harness = _AppHarness(
-      initialStateBuilder: (service) => UnlockedState(service),
-    );
-    addTearDown(harness.dispose);
+  testWidgets(
+    'refreshes the session timer on pointer interaction when unlocked',
+    (WidgetTester tester) async {
+      final harness = _AppHarness(
+        initialStateBuilder: (service) => UnlockedState(service),
+      );
+      addTearDown(harness.dispose);
 
-    await tester.pumpWidget(harness.build());
-    await tester.tapAt(const Offset(20, 20));
-    await tester.pump();
+      await tester.pumpWidget(harness.build());
+      await tester.tapAt(const Offset(20, 20));
+      await tester.pump();
 
-    expect(harness.sessionController.refreshCalls, 1);
-  });
+      expect(harness.sessionController.refreshCalls, 1);
+    },
+  );
 
   testWidgets('ignores pointer interaction when veil is locked', (
     WidgetTester tester,
   ) async {
-    final harness = _AppHarness(initialStateBuilder: (service) => LockedState(service));
+    final harness = _AppHarness(
+      initialStateBuilder: (service) => LockedState(service),
+    );
     addTearDown(harness.dispose);
 
     await tester.pumpWidget(harness.build());
@@ -156,7 +165,8 @@ class _AppHarness {
       routes: [
         GoRoute(
           path: '/',
-          builder: (_, _) => const SizedBox.expand(child: ColoredBox(color: Colors.black)),
+          builder: (_, _) =>
+              const SizedBox.expand(child: ColoredBox(color: Colors.black)),
         ),
       ],
     );
@@ -177,10 +187,7 @@ class _AppHarness {
   }
 
   Widget build() {
-    return UncontrolledProviderScope(
-      container: container,
-      child: const App(),
-    );
+    return UncontrolledProviderScope(container: container, child: const App());
   }
 
   void dispose() {
@@ -264,7 +271,8 @@ class _FakeVeilService implements VeilService {
   Future<void> enableBiometricUnlock(String password) async {}
 
   @override
-  Future<AutoLockOption> getAutoLockOption() async => AutoLockOption.fiveMinutes;
+  Future<AutoLockOption> getAutoLockOption() async =>
+      AutoLockOption.fiveMinutes;
 
   @override
   Future<bool> isBiometricEnabled() async => false;

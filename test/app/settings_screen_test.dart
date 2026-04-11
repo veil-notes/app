@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:veil/app/locale/app_locale_provider.dart';
+import 'package:veil/app/locale/app_locale_service.dart';
 import 'package:veil/app/app_theme.dart';
+import 'package:veil/core/storage/secure_storage_service.dart';
 import 'package:veil/features/veil/application/veil_controller.dart';
 import 'package:veil/features/settings/presentation/screens/settings_screen.dart';
 import 'package:veil/features/veil/application/veil_service.dart';
@@ -9,7 +12,11 @@ import 'package:veil/features/veil/application/veil_session_controller.dart';
 import 'package:veil/features/veil/domain/biometrics/biometric_auth_exception.dart';
 import 'package:veil/features/veil/domain/session/auto_lock_option.dart';
 import 'package:veil/features/veil/domain/states/locked_state.dart';
+import 'package:veil/features/veil/domain/veil_exception.dart';
 import 'package:veil/features/veil/providers/veil_provider.dart';
+import 'package:veil/i18n/translations.g.dart';
+
+import '../test_localized_app.dart';
 
 void main() {
   Widget wrap({
@@ -19,6 +26,8 @@ void main() {
     AsyncValue<bool>? canUseBiometricsValue,
     AsyncValue<AutoLockOption>? autoLockOptionValue,
     _FakeVeilController? controller,
+    AppLocale initialLocale = AppLocale.en,
+    AppLocaleService? localeService,
   }) {
     return ProviderScope(
       overrides: [
@@ -41,6 +50,10 @@ void main() {
           autoLockOptionProvider.overrideWith(
             (ref) async => service.getAutoLockOption(),
           ),
+        initialAppLocaleProvider.overrideWithValue(initialLocale),
+        appLocaleServiceProvider.overrideWithValue(
+          localeService ?? AppLocaleService(_FakeSecureStorageService()),
+        ),
         veilSessionControllerProvider.overrideWithValue(
           sessionController ??
               _FakeVeilSessionController(timeout: const Duration(minutes: 5)),
@@ -49,8 +62,9 @@ void main() {
           () => controller ?? _FakeVeilController(service),
         ),
       ],
-      child: MaterialApp(
+      child: buildLocalizedApp(
         theme: AppTheme.darkTheme,
+        locale: initialLocale,
         home: const SettingsScreen(),
       ),
     );
@@ -102,7 +116,9 @@ void main() {
       expect(service.biometricEnabled, isTrue);
     });
 
-    testWidgets('shows loading and error states for async settings', (tester) async {
+    testWidgets('shows loading and error states for async settings', (
+      tester,
+    ) async {
       final service = _FakeVeilService(
         biometricEnabled: false,
         canUseBiometrics: false,
@@ -126,7 +142,7 @@ void main() {
       await tester.pump();
 
       expect(find.text('Loading biometric settings...'), findsOneWidget);
-      expect(find.text('Exception: Auto-lock failed'), findsOneWidget);
+      expect(find.text('Could not load the information.'), findsOneWidget);
     });
 
     testWidgets('shows loading state while checking biometric availability', (
@@ -171,7 +187,7 @@ void main() {
       );
       await tester.pump();
 
-      expect(find.text('Exception: Sensor error'), findsOneWidget);
+      expect(find.text('Could not load the information.'), findsOneWidget);
     });
 
     testWidgets('shows error state while loading biometric settings', (
@@ -194,7 +210,7 @@ void main() {
       );
       await tester.pump();
 
-      expect(find.text('Exception: Biometrics failed'), findsOneWidget);
+      expect(find.text('Could not load the information.'), findsOneWidget);
     });
 
     testWidgets('disables biometrics through the switch', (tester) async {
@@ -222,7 +238,7 @@ void main() {
         biometricEnabled: false,
         canUseBiometrics: false,
         autoLockOption: AutoLockOption.fiveMinutes,
-        enableException: Exception('Invalid password'),
+        enableException: const VeilException(VeilExceptionCode.invalidPassword),
       );
 
       await tester.pumpWidget(wrap(service: service));
@@ -235,32 +251,35 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));
 
-      expect(find.text('Invalid password'), findsOneWidget);
+      expect(find.text('Invalid password.'), findsOneWidget);
     });
 
-    testWidgets('does not enable biometrics when password dialog is cancelled', (
+    testWidgets(
+      'does not enable biometrics when password dialog is cancelled',
+      (tester) async {
+        final service = _FakeVeilService(
+          biometricEnabled: false,
+          canUseBiometrics: false,
+          autoLockOption: AutoLockOption.fiveMinutes,
+        );
+
+        await tester.pumpWidget(wrap(service: service));
+        await tester.pump();
+        await tester.pump();
+
+        await tester.tap(find.byType(Switch));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Cancel'));
+        await tester.pumpAndSettle();
+
+        expect(service.enabledPassword, isNull);
+        expect(service.biometricEnabled, isFalse);
+      },
+    );
+
+    testWidgets('shows snackbar when disabling biometrics fails', (
       tester,
     ) async {
-      final service = _FakeVeilService(
-        biometricEnabled: false,
-        canUseBiometrics: false,
-        autoLockOption: AutoLockOption.fiveMinutes,
-      );
-
-      await tester.pumpWidget(wrap(service: service));
-      await tester.pump();
-      await tester.pump();
-
-      await tester.tap(find.byType(Switch));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Cancel'));
-      await tester.pumpAndSettle();
-
-      expect(service.enabledPassword, isNull);
-      expect(service.biometricEnabled, isFalse);
-    });
-
-    testWidgets('shows snackbar when disabling biometrics fails', (tester) async {
       final service = _FakeVeilService(
         biometricEnabled: true,
         canUseBiometrics: true,
@@ -275,36 +294,40 @@ void main() {
       await tester.tap(find.byType(Switch));
       await tester.pumpAndSettle();
 
-      expect(find.text('Disable failed'), findsOneWidget);
+      expect(find.text('An unexpected error occurred.'), findsOneWidget);
     });
 
-    testWidgets('selects a new auto-lock option and updates the session timer', (
-      tester,
-    ) async {
-      final service = _FakeVeilService(
-        biometricEnabled: false,
-        canUseBiometrics: false,
-        autoLockOption: AutoLockOption.fiveMinutes,
-      );
-      final sessionController = _FakeVeilSessionController(
-        timeout: const Duration(minutes: 5),
-      );
+    testWidgets(
+      'selects a new auto-lock option and updates the session timer',
+      (tester) async {
+        final service = _FakeVeilService(
+          biometricEnabled: false,
+          canUseBiometrics: false,
+          autoLockOption: AutoLockOption.fiveMinutes,
+        );
+        final sessionController = _FakeVeilSessionController(
+          timeout: const Duration(minutes: 5),
+        );
 
-      await tester.pumpWidget(
-        wrap(service: service, sessionController: sessionController),
-      );
-      await tester.pump();
-      await tester.pump();
+        await tester.pumpWidget(
+          wrap(service: service, sessionController: sessionController),
+        );
+        await tester.pump();
+        await tester.pump();
 
-      await tester.tap(find.text('Auto-lock'));
-      await tester.pumpAndSettle();
+        await tester.tap(find.text('Auto-lock'));
+        await tester.pumpAndSettle();
 
-      await tester.tap(find.text('15 minutes').last);
-      await tester.pumpAndSettle();
+        await tester.tap(find.text('15 minutes').last);
+        await tester.pumpAndSettle();
 
-      expect(service.autoLockOption, AutoLockOption.fifteenMinutes);
-      expect(sessionController.lastTimeout, AutoLockOption.fifteenMinutes.duration);
-    });
+        expect(service.autoLockOption, AutoLockOption.fifteenMinutes);
+        expect(
+          sessionController.lastTimeout,
+          AutoLockOption.fifteenMinutes.duration,
+        );
+      },
+    );
 
     testWidgets('shows snackbar when changing auto-lock fails', (tester) async {
       final service = _FakeVeilService(
@@ -328,7 +351,7 @@ void main() {
       await tester.tap(find.text('15 minutes').last);
       await tester.pumpAndSettle();
 
-      expect(find.text('Could not update auto-lock'), findsOneWidget);
+      expect(find.text('An unexpected error occurred.'), findsOneWidget);
       expect(sessionController.lastTimeout, isNull);
     });
 
@@ -371,6 +394,44 @@ void main() {
       await tester.pump(const Duration(milliseconds: 300));
 
       expect(find.byType(SnackBar), findsNothing);
+    });
+
+    testWidgets('changes the app language from the settings bottom sheet', (
+      tester,
+    ) async {
+      final storage = _FakeSecureStorageService();
+      final localeService = AppLocaleService(storage);
+      final service = _FakeVeilService(
+        biometricEnabled: false,
+        canUseBiometrics: false,
+        autoLockOption: AutoLockOption.fiveMinutes,
+      );
+
+      await tester.pumpWidget(
+        wrap(
+          service: service,
+          initialLocale: AppLocale.en,
+          localeService: localeService,
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+
+      expect(find.text('Language'), findsOneWidget);
+      expect(find.text('Current language: English.'), findsOneWidget);
+
+      await tester.tap(find.text('Language'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('English'), findsOneWidget);
+      expect(find.byIcon(Icons.check), findsOneWidget);
+
+      await tester.tap(find.text('Portuguese (Brazil)'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Idioma'), findsOneWidget);
+      expect(find.text('Idioma atual: Português (Brasil).'), findsOneWidget);
+      expect(storage.values[AppLocaleService.localeStorageKey], 'pt-BR');
     });
   });
 }
@@ -472,5 +533,17 @@ class _FakeVeilController extends VeilController {
   @override
   void lock() {
     lockCalls++;
+  }
+}
+
+class _FakeSecureStorageService implements SecureStorageService {
+  final Map<String, String> values = {};
+
+  @override
+  Future<String?> read(String key) async => values[key];
+
+  @override
+  Future<void> write(String key, String value) async {
+    values[key] = value;
   }
 }

@@ -13,16 +13,13 @@ import 'package:veil/features/notes/presentation/editor/note_save_status.dart';
 import 'package:veil/features/notes/presentation/editor/note_screen.dart';
 import 'package:veil/features/notes/providers/notes_provider.dart';
 
+import '../test_localized_app.dart';
+
 void main() {
-  Widget wrap({
-    required _FakeNotesService service,
-    String? id,
-  }) {
+  Widget wrap({required _FakeNotesService service, String? id}) {
     return ProviderScope(
-      overrides: [
-        notesServiceProvider.overrideWithValue(service),
-      ],
-      child: MaterialApp(
+      overrides: [notesServiceProvider.overrideWithValue(service)],
+      child: buildLocalizedApp(
         theme: AppTheme.darkTheme,
         home: NoteScreen(id: id),
       ),
@@ -34,13 +31,9 @@ void main() {
       tester,
     ) async {
       final completer = Completer<Note>();
-      final service = _FakeNotesService(
-        openHandler: (_) => completer.future,
-      );
+      final service = _FakeNotesService(openHandler: (_) => completer.future);
 
-      await tester.pumpWidget(
-        wrap(service: service, id: 'note-1'),
-      );
+      await tester.pumpWidget(wrap(service: service, id: 'note-1'));
       await tester.pump();
 
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
@@ -51,39 +44,41 @@ void main() {
         openHandler: (_) async => throw Exception('load failed'),
       );
 
-      await tester.pumpWidget(
-        wrap(service: service, id: 'note-1'),
-      );
+      await tester.pumpWidget(wrap(service: service, id: 'note-1'));
       await tester.pumpAndSettle();
 
-      expect(find.textContaining('load failed'), findsOneWidget);
-    });
-
-    testWidgets('starts editing immediately for a new empty note and saves changes', (
-      tester,
-    ) async {
-      final service = _FakeNotesService(
-        createEmptyHandler: () async => Note(
-          id: 'new-note',
-          content: '',
-          createdAt: DateTime(2026, 4, 10, 9, 0),
-          updatedAt: DateTime(2026, 4, 10, 9, 0),
-        ),
+      expect(
+        find.text('Could not load the information.'),
+        findsOneWidget,
       );
-
-      await tester.pumpWidget(wrap(service: service));
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 50));
-
-      expect(find.byType(TextField), findsOneWidget);
-
-      await tester.enterText(find.byType(TextField), 'Draft');
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 650));
-
-      expect(service.savedNotes, hasLength(1));
-      expect(service.savedNotes.single.content, 'Draft');
     });
+
+    testWidgets(
+      'starts editing immediately for a new empty note and saves changes',
+      (tester) async {
+        final service = _FakeNotesService(
+          createEmptyHandler: () async => Note(
+            id: 'new-note',
+            content: '',
+            createdAt: DateTime(2026, 4, 10, 9, 0),
+            updatedAt: DateTime(2026, 4, 10, 9, 0),
+          ),
+        );
+
+        await tester.pumpWidget(wrap(service: service));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 50));
+
+        expect(find.byType(TextField), findsOneWidget);
+
+        await tester.enterText(find.byType(TextField), 'Draft');
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 650));
+
+        expect(service.savedNotes, hasLength(1));
+        expect(service.savedNotes.single.content, 'Draft');
+      },
+    );
 
     testWidgets('enters edit mode on tap and splits blocks on next action', (
       tester,
@@ -97,9 +92,7 @@ void main() {
         ),
       );
 
-      await tester.pumpWidget(
-        wrap(service: service, id: 'note-1'),
-      );
+      await tester.pumpWidget(wrap(service: service, id: 'note-1'));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 50));
 
@@ -134,9 +127,7 @@ void main() {
         ),
       );
 
-      await tester.pumpWidget(
-        wrap(service: service, id: 'note-1'),
-      );
+      await tester.pumpWidget(wrap(service: service, id: 'note-1'));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 50));
 
@@ -150,48 +141,49 @@ void main() {
       expect(service.savedNotes.last.content, '- [x] task');
     });
 
-    testWidgets('formats the editing block from the toolbar and saves the markdown', (
-      tester,
-    ) async {
-      final service = _FakeNotesService(
-        openHandler: (_) async => Note(
-          id: 'note-1',
-          content: 'task',
-          createdAt: DateTime(2026, 4, 10, 9, 0),
-          updatedAt: DateTime(2026, 4, 10, 9, 0),
-        ),
-      );
+    testWidgets(
+      'formats the editing block from the toolbar and saves the markdown',
+      (tester) async {
+        final service = _FakeNotesService(
+          openHandler: (_) async => Note(
+            id: 'note-1',
+            content: 'task',
+            createdAt: DateTime(2026, 4, 10, 9, 0),
+            updatedAt: DateTime(2026, 4, 10, 9, 0),
+          ),
+        );
 
-      await tester.pumpWidget(wrap(service: service, id: 'note-1'));
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 50));
+        await tester.pumpWidget(wrap(service: service, id: 'note-1'));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 50));
 
-      await tester.tap(find.text('task'));
-      await tester.pump();
+        await tester.tap(find.text('task'));
+        await tester.pump();
 
-      await tester.tap(find.byIcon(Icons.format_list_bulleted_rounded));
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 650));
-      expect(service.savedNotes.last.content, '- task');
+        await tester.tap(find.byIcon(Icons.format_list_bulleted_rounded));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 650));
+        expect(service.savedNotes.last.content, '- task');
 
-      await tester.tap(find.byIcon(Icons.format_list_numbered_rounded));
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 650));
-      expect(service.savedNotes.last.content, '1. task');
+        await tester.tap(find.byIcon(Icons.format_list_numbered_rounded));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 650));
+        expect(service.savedNotes.last.content, '1. task');
 
-      await tester.tap(find.byIcon(Icons.check_box_outlined));
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 650));
-      expect(service.savedNotes.last.content, '- [ ] task');
+        await tester.tap(find.byIcon(Icons.check_box_outlined));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 650));
+        expect(service.savedNotes.last.content, '- [ ] task');
 
-      await tester.tap(find.text('H'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Heading 2').last);
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 650));
+        await tester.tap(find.text('H'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Heading 2').last);
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 650));
 
-      expect(service.savedNotes.last.content, '## task');
-    });
+        expect(service.savedNotes.last.content, '## task');
+      },
+    );
 
     testWidgets('applies bold and italic formatting to the current selection', (
       tester,
@@ -339,7 +331,9 @@ void main() {
       await tester.pump();
 
       final textField = tester.widget<TextField>(find.byType(TextField));
-      textField.controller!.selection = const TextSelection.collapsed(offset: 7);
+      textField.controller!.selection = const TextSelection.collapsed(
+        offset: 7,
+      );
 
       await tester.testTextInput.receiveAction(TextInputAction.next);
       await tester.pump();
@@ -387,7 +381,9 @@ void main() {
       await tester.pump();
 
       final textField = tester.widget<TextField>(find.byType(TextField));
-      textField.controller!.selection = const TextSelection.collapsed(offset: 4);
+      textField.controller!.selection = const TextSelection.collapsed(
+        offset: 4,
+      );
 
       final editor = tester.widget<MarkdownBlockEditor>(
         find.byType(MarkdownBlockEditor),

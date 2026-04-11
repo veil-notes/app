@@ -1,0 +1,11 @@
+{
+  "empty": "todavía no hay notas.",
+  "delete": {
+    "title": "¿Eliminar esta nota de forma permanente?",
+    "confirm": "Sí, eliminar",
+    "cancel": "No, conservar"
+  },
+  "editor": {
+    "heading": "Encabezado {{level}}"
+  }
+}

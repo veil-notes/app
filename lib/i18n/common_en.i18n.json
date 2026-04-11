@@ -1,0 +1,22 @@
+{
+  "loading": "Loading...",
+  "actions": {
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
+  "languageNames": {
+    "ptBr": "Portuguese (Brazil)",
+    "en": "English",
+    "es": "Spanish",
+    "de": "German",
+    "ru": "Russian",
+    "ko": "Korean",
+    "zh": "Chinese (Simplified)",
+    "fr": "French",
+    "ja": "Japanese"
+  },
+  "errors": {
+    "unexpected": "An unexpected error occurred.",
+    "loadFailed": "Could not load the information."
+  }
+}

@@ -41,14 +41,17 @@ void main() {
     expect(await service.isAvailable(), isFalse);
   });
 
-  test('authenticate returns platform result and always calls callbacks', () async {
-    fakePlatform.authenticateResult = true;
+  test(
+    'authenticate returns platform result and always calls callbacks',
+    () async {
+      fakePlatform.authenticateResult = true;
 
-    expect(await service.authenticate(), isTrue);
-    expect(authStartedCount, 1);
-    expect(authFinishedCount, 1);
-    expect(fakePlatform.lastLocalizedReason, 'Authenticate to unlock Veil');
-  });
+      expect(await service.authenticate(), isTrue);
+      expect(authStartedCount, 1);
+      expect(authFinishedCount, 1);
+      expect(fakePlatform.lastLocalizedReason, 'Authenticate to unlock Veil');
+    },
+  );
 
   test('authenticate maps cancel-related exceptions', () async {
     for (final code in [
@@ -59,7 +62,10 @@ void main() {
     ]) {
       fakePlatform.exception = LocalAuthException(code: code);
 
-      await expectLater(service.authenticate, throwsA(isA<BiometricCanceledException>()));
+      await expectLater(
+        service.authenticate,
+        throwsA(isA<BiometricCanceledException>()),
+      );
     }
   });
 

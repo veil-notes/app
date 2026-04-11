@@ -1,0 +1,22 @@
+{
+  "loading": "加载中...",
+  "actions": {
+    "cancel": "取消",
+    "confirm": "确认"
+  },
+  "languageNames": {
+    "ptBr": "葡萄牙语（巴西）",
+    "en": "英语",
+    "es": "西班牙语",
+    "de": "德语",
+    "ru": "俄语",
+    "ko": "韩语",
+    "zh": "简体中文",
+    "fr": "法语",
+    "ja": "日语"
+  },
+  "errors": {
+    "unexpected": "发生了意外错误。",
+    "loadFailed": "无法加载信息。"
+  }
+}

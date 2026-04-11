@@ -1,0 +1,28 @@
+{
+  "setup": {
+    "passwordHint": "Saisissez un mot de passe pour commencer...",
+    "cta": "C'est parti !"
+  },
+  "unlock": {
+    "passwordHint": "Saisissez votre mot de passe...",
+    "cta": "Déverrouiller",
+    "biometricTooltip": "Biométrie"
+  },
+  "splash": {
+    "loading": "Chargement..."
+  },
+  "errors": {
+    "passwordRequired": "Le mot de passe est requis.",
+    "passwordMinLength": "Le mot de passe doit contenir au moins 8 caractères.",
+    "passwordMissingLetter": "Le mot de passe doit contenir au moins une lettre.",
+    "passwordMissingNumber": "Le mot de passe doit contenir au moins un chiffre.",
+    "invalidPassword": "Mot de passe invalide.",
+    "biometricUnavailable": "L'authentification biométrique n'est pas disponible.",
+    "biometricFailed": "L'authentification biométrique a échoué.",
+    "biometricLockedOut": "L'authentification biométrique est temporairement verrouillée.",
+    "vaultNotConfigured": "Le coffre n'est pas configuré.",
+    "encryptedPrivateKeyNotFound": "Clé privée chiffrée introuvable.",
+    "publicKeyNotFound": "Clé publique introuvable.",
+    "vaultLocked": "Le coffre est verrouillé."
+  }
+}

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
 
+import '../../../../i18n/translations.g.dart';
 import '../../domain/editor/markdown_block.dart';
 import '../../domain/editor/markdown_block_parser.dart';
 import '../../domain/editor/markdown_block_serializer.dart';
@@ -148,7 +149,8 @@ class _NoteScreenState extends ConsumerState<NoteScreen> {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, _) => Center(child: Text(error.toString())),
+        error: (_, _) =>
+            Center(child: Text(context.t.common.errors.loadFailed)),
       ),
     );
   }

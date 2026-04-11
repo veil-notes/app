@@ -7,26 +7,28 @@ class DefaultPasswordValidator implements PasswordValidator {
     final normalized = password.trim();
 
     if (normalized.isEmpty) {
-      return const PasswordValidationResult.invalid('Password is required.');
+      return const PasswordValidationResult.invalid(
+        PasswordValidationError.required,
+      );
     }
 
     if (normalized.length < 8) {
       return const PasswordValidationResult.invalid(
-        'Password must have at least 8 characters.',
+        PasswordValidationError.minLength,
       );
     }
 
     final hasLetter = RegExp(r'[A-Za-z]').hasMatch(normalized);
     if (!hasLetter) {
       return const PasswordValidationResult.invalid(
-        'Password must contain at least one letter.',
+        PasswordValidationError.missingLetter,
       );
     }
 
     final hasNumber = RegExp(r'\d').hasMatch(normalized);
     if (!hasNumber) {
       return const PasswordValidationResult.invalid(
-        'Password must contain at least one number.',
+        PasswordValidationError.missingNumber,
       );
     }
 

@@ -45,9 +45,7 @@ class AppTheme {
       style: ElevatedButton.styleFrom(
         backgroundColor: _darkColorScheme.primary,
         foregroundColor: _darkColorScheme.onPrimary,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 24),
       ),
     ),
@@ -64,10 +62,7 @@ class AppTheme {
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: const Color(0xFF1a1838),
-      hintStyle: const TextStyle(
-        fontFamily: 'Inter',
-        color: Color(0xFFBDBDBD),
-      ),
+      hintStyle: const TextStyle(fontFamily: 'Inter', color: Color(0xFFBDBDBD)),
       labelStyle: TextStyle(
         fontFamily: 'Inter',
         color: _darkColorScheme.onSurface,

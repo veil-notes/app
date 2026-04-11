@@ -6,10 +6,8 @@ class VeilSessionController {
 
   Timer? _timer;
 
-  VeilSessionController({
-    required Duration timeout,
-    required this.onTimeout,
-  }) : _timeout = timeout;
+  VeilSessionController({required Duration timeout, required this.onTimeout})
+    : _timeout = timeout;
 
   void updateTimeout(Duration timeout) {
     _timeout = timeout;

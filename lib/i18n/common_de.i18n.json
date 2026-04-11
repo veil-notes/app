@@ -1,0 +1,22 @@
+{
+  "loading": "Wird geladen...",
+  "actions": {
+    "cancel": "Abbrechen",
+    "confirm": "Bestätigen"
+  },
+  "languageNames": {
+    "ptBr": "Portugiesisch (Brasilien)",
+    "en": "Englisch",
+    "es": "Spanisch",
+    "de": "Deutsch",
+    "ru": "Russisch",
+    "ko": "Koreanisch",
+    "zh": "Chinesisch (vereinfacht)",
+    "fr": "Französisch",
+    "ja": "Japanisch"
+  },
+  "errors": {
+    "unexpected": "Ein unerwarteter Fehler ist aufgetreten.",
+    "loadFailed": "Die Informationen konnten nicht geladen werden."
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "biometrics": {
+    "title": "Biometria",
+    "subtitleAvailable": "Use biometria para desbloquear o app mais rápido.",
+    "subtitleEnabledUnavailable": "A biometria está ativada, mas não está disponível neste dispositivo.",
+    "subtitleDisabledUnavailable": "Ative a biometria para desbloquear mais rápido.",
+    "checkingAvailability": "Verificando disponibilidade da biometria...",
+    "loading": "Carregando configurações da biometria..."
+  },
+  "autoLock": {
+    "title": "Bloqueio automático",
+    "subtitle": "Bloqueia o app após {{duration}}.",
+    "options": {
+      "oneMinute": "1 minuto",
+      "fiveMinutes": "5 minutos",
+      "fifteenMinutes": "15 minutos",
+      "thirtyMinutes": "30 minutos"
+    }
+  },
+  "language": {
+    "title": "Idioma",
+    "subtitle": "Idioma atual: {{language}}."
+  },
+  "lock": {
+    "title": "Bloquear",
+    "subtitle": "Limpa a sessão atual. Você precisará desbloquear novamente."
+  },
+  "confirmPassword": {
+    "title": "Confirmar senha",
+    "hint": "Digite sua senha..."
+  }
+}

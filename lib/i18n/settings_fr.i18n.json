@@ -1,0 +1,32 @@
+{
+  "biometrics": {
+    "title": "Biométrie",
+    "subtitleAvailable": "Utilisez la biométrie pour déverrouiller l'app plus rapidement.",
+    "subtitleEnabledUnavailable": "La biométrie est activée, mais elle n'est pas disponible sur cet appareil.",
+    "subtitleDisabledUnavailable": "Activez la biométrie pour déverrouiller plus rapidement.",
+    "checkingAvailability": "Vérification de la disponibilité de la biométrie...",
+    "loading": "Chargement des réglages biométriques..."
+  },
+  "autoLock": {
+    "title": "Verrouillage automatique",
+    "subtitle": "Verrouille l'app après {{duration}}.",
+    "options": {
+      "oneMinute": "1 minute",
+      "fiveMinutes": "5 minutes",
+      "fifteenMinutes": "15 minutes",
+      "thirtyMinutes": "30 minutes"
+    }
+  },
+  "language": {
+    "title": "Langue",
+    "subtitle": "Langue actuelle : {{language}}."
+  },
+  "lock": {
+    "title": "Verrouiller",
+    "subtitle": "Efface la session actuelle. Vous devrez déverrouiller à nouveau."
+  },
+  "confirmPassword": {
+    "title": "Confirmer le mot de passe",
+    "hint": "Saisissez votre mot de passe..."
+  }
+}

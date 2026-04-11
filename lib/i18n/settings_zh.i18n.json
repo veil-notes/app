@@ -1,0 +1,32 @@
+{
+  "biometrics": {
+    "title": "生物识别",
+    "subtitleAvailable": "使用生物识别可更快解锁应用。",
+    "subtitleEnabledUnavailable": "生物识别已启用，但此设备上不可用。",
+    "subtitleDisabledUnavailable": "启用生物识别以更快解锁。",
+    "checkingAvailability": "正在检查生物识别可用性...",
+    "loading": "正在加载生物识别设置..."
+  },
+  "autoLock": {
+    "title": "自动锁定",
+    "subtitle": "应用将在 {{duration}} 后锁定。",
+    "options": {
+      "oneMinute": "1 分钟",
+      "fiveMinutes": "5 分钟",
+      "fifteenMinutes": "15 分钟",
+      "thirtyMinutes": "30 分钟"
+    }
+  },
+  "language": {
+    "title": "语言",
+    "subtitle": "当前语言：{{language}}。"
+  },
+  "lock": {
+    "title": "锁定",
+    "subtitle": "清除当前会话。你需要重新解锁。"
+  },
+  "confirmPassword": {
+    "title": "确认密码",
+    "hint": "输入你的密码..."
+  }
+}

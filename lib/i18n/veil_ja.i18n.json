@@ -1,0 +1,28 @@
+{
+  "setup": {
+    "passwordHint": "開始するにはパスワードを入力してください...",
+    "cta": "始めましょう！"
+  },
+  "unlock": {
+    "passwordHint": "パスワードを入力してください...",
+    "cta": "ロック解除",
+    "biometricTooltip": "生体認証"
+  },
+  "splash": {
+    "loading": "読み込み中..."
+  },
+  "errors": {
+    "passwordRequired": "パスワードは必須です。",
+    "passwordMinLength": "パスワードは8文字以上である必要があります。",
+    "passwordMissingLetter": "パスワードには少なくとも1文字の文字が必要です。",
+    "passwordMissingNumber": "パスワードには少なくとも1つの数字が必要です。",
+    "invalidPassword": "無効なパスワードです。",
+    "biometricUnavailable": "生体認証は利用できません。",
+    "biometricFailed": "生体認証に失敗しました。",
+    "biometricLockedOut": "生体認証は一時的にロックされています。",
+    "vaultNotConfigured": "保管庫は設定されていません。",
+    "encryptedPrivateKeyNotFound": "暗号化された秘密鍵が見つかりません。",
+    "publicKeyNotFound": "公開鍵が見つかりません。",
+    "vaultLocked": "保管庫はロックされています。"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "biometrics": {
+    "title": "생체 인증",
+    "subtitleAvailable": "생체 인증으로 앱을 더 빠르게 잠금 해제하세요.",
+    "subtitleEnabledUnavailable": "생체 인증이 활성화되어 있지만 이 기기에서는 사용할 수 없습니다.",
+    "subtitleDisabledUnavailable": "더 빠르게 잠금 해제하려면 생체 인증을 활성화하세요.",
+    "checkingAvailability": "생체 인증 사용 가능 여부를 확인하는 중...",
+    "loading": "생체 인증 설정을 불러오는 중..."
+  },
+  "autoLock": {
+    "title": "자동 잠금",
+    "subtitle": "{{duration}} 후 앱을 잠급니다.",
+    "options": {
+      "oneMinute": "1분",
+      "fiveMinutes": "5분",
+      "fifteenMinutes": "15분",
+      "thirtyMinutes": "30분"
+    }
+  },
+  "language": {
+    "title": "언어",
+    "subtitle": "현재 언어: {{language}}."
+  },
+  "lock": {
+    "title": "잠그기",
+    "subtitle": "현재 세션을 지웁니다. 다시 잠금 해제해야 합니다."
+  },
+  "confirmPassword": {
+    "title": "비밀번호 확인",
+    "hint": "비밀번호를 입력하세요..."
+  }
+}

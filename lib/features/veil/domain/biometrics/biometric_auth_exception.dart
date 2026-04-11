@@ -23,6 +23,5 @@ class BiometricLockedOutException extends BiometricAuthException {
 }
 
 class BiometricFailedException extends BiometricAuthException {
-  const BiometricFailedException()
-    : super('Biometric authentication failed.');
+  const BiometricFailedException() : super('Biometric authentication failed.');
 }

@@ -4,9 +4,11 @@ import 'package:veil/app/app_theme.dart';
 import 'package:veil/features/notes/presentation/editor/note_editor_toolbar.dart';
 import 'package:veil/features/notes/presentation/editor/note_save_status.dart';
 
+import '../test_localized_app.dart';
+
 void main() {
   Widget wrap(Widget child) {
-    return MaterialApp(
+    return buildLocalizedApp(
       theme: AppTheme.darkTheme,
       home: Scaffold(body: child),
     );

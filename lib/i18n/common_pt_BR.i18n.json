@@ -1,0 +1,22 @@
+{
+  "loading": "Carregando...",
+  "actions": {
+    "cancel": "Cancelar",
+    "confirm": "Confirmar"
+  },
+  "languageNames": {
+    "ptBr": "Português (Brasil)",
+    "en": "Inglês",
+    "es": "Espanhol",
+    "de": "Alemão",
+    "ru": "Russo",
+    "ko": "Coreano",
+    "zh": "Chinês (Simplificado)",
+    "fr": "Francês",
+    "ja": "Japonês"
+  },
+  "errors": {
+    "unexpected": "Ocorreu um erro inesperado.",
+    "loadFailed": "Não foi possível carregar as informações."
+  }
+}

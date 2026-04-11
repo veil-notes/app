@@ -84,7 +84,10 @@ void main() {
       expect(opened.id, note.id);
       expect(opened.content, note.content);
       expect(crypto.lastDecryptPrivateKey, 'private-key');
-      expect(crypto.lastDecryptedPayload, repository.storedFile!.encryptedPayload);
+      expect(
+        crypto.lastDecryptedPayload,
+        repository.storedFile!.encryptedPayload,
+      );
     });
 
     test('throws when opening a missing note', () async {

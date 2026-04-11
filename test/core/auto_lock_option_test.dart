@@ -17,7 +17,10 @@ void main() {
     });
 
     test('falls back to five minutes for unknown ids', () {
-      expect(AutoLockOption.fromId('unknown'), same(AutoLockOption.fiveMinutes));
+      expect(
+        AutoLockOption.fromId('unknown'),
+        same(AutoLockOption.fiveMinutes),
+      );
       expect(AutoLockOption.fromId(null), same(AutoLockOption.fiveMinutes));
     });
   });

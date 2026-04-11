@@ -89,10 +89,7 @@ void main() {
         () => state.unlockWithPassword('secret'),
         throwsA(isA<Exception>()),
       );
-      await expectLater(
-        state.unlockWithBiometrics,
-        throwsA(isA<Exception>()),
-      );
+      await expectLater(state.unlockWithBiometrics, throwsA(isA<Exception>()));
     });
 
     test('keeps bootstrap and timeout idempotent while inaccessible', () async {
@@ -134,36 +131,39 @@ void main() {
       expect(identical(next, state), isTrue);
     });
 
-    test('maps biometric availability failures to user-facing exceptions', () async {
-      final unavailable = LockedState(
-        _FakeVeilService(
-          biometricException: const BiometricUnavailableException(),
-        ),
-      );
-      final lockedOut = LockedState(
-        _FakeVeilService(
-          biometricException: const BiometricLockedOutException(),
-        ),
-      );
-      final failed = LockedState(
-        _FakeVeilService(
-          biometricException: const BiometricFailedException(),
-        ),
-      );
+    test(
+      'maps biometric availability failures to user-facing exceptions',
+      () async {
+        final unavailable = LockedState(
+          _FakeVeilService(
+            biometricException: const BiometricUnavailableException(),
+          ),
+        );
+        final lockedOut = LockedState(
+          _FakeVeilService(
+            biometricException: const BiometricLockedOutException(),
+          ),
+        );
+        final failed = LockedState(
+          _FakeVeilService(
+            biometricException: const BiometricFailedException(),
+          ),
+        );
 
-      await expectLater(
-        unavailable.unlockWithBiometrics,
-        throwsA(isA<Exception>()),
-      );
-      await expectLater(
-        lockedOut.unlockWithBiometrics,
-        throwsA(isA<Exception>()),
-      );
-      await expectLater(
-        failed.unlockWithBiometrics,
-        throwsA(isA<Exception>()),
-      );
-    });
+        await expectLater(
+          unavailable.unlockWithBiometrics,
+          throwsA(isA<Exception>()),
+        );
+        await expectLater(
+          lockedOut.unlockWithBiometrics,
+          throwsA(isA<Exception>()),
+        );
+        await expectLater(
+          failed.unlockWithBiometrics,
+          throwsA(isA<Exception>()),
+        );
+      },
+    );
 
     test('returns unlocked when biometric auth succeeds', () async {
       final service = _FakeVeilService(unlockWithBiometricsResult: true);
@@ -270,7 +270,8 @@ class _FakeVeilService implements VeilService {
   Future<void> disableBiometricUnlock() async {}
 
   @override
-  Future<AutoLockOption> getAutoLockOption() async => AutoLockOption.fiveMinutes;
+  Future<AutoLockOption> getAutoLockOption() async =>
+      AutoLockOption.fiveMinutes;
 
   @override
   Future<void> setAutoLockOption(AutoLockOption option) async {}

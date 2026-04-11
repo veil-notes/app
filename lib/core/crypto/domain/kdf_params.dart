@@ -13,7 +13,7 @@ class KdfParams {
     required this.length,
   });
 
-   Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson() {
     return {
       'salt': salt,
       'iterations': iterations,

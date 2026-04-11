@@ -1,4 +1,6 @@
 import '../../application/veil_service.dart';
+import '../biometrics/biometric_auth_exception.dart';
+import '../veil_exception.dart';
 import 'locked_state.dart';
 import 'uninitialized_state.dart';
 import 'unlocked_state.dart';
@@ -21,14 +23,14 @@ class BootstrappingState implements VeilState {
 
   @override
   Future<VeilState> create(String password) async {
-    throw Exception('Veil already configured');
+    throw const VeilException(VeilExceptionCode.vaultAlreadyConfigured);
   }
 
   @override
   Future<VeilState> unlockWithPassword(String password) async {
     final success = await _service.unlock(password);
     if (!success) {
-      throw Exception('Invalid password');
+      throw const VeilException(VeilExceptionCode.invalidPassword);
     }
 
     return UnlockedState(_service);
@@ -36,12 +38,16 @@ class BootstrappingState implements VeilState {
 
   @override
   Future<VeilState> unlockWithBiometrics() async {
-    final success = await _service.unlockWithBiometrics();
-    if (!success) {
-      throw Exception('Biometric failed');
-    }
+    try {
+      final success = await _service.unlockWithBiometrics();
+      if (!success) {
+        throw const BiometricFailedException();
+      }
 
-    return UnlockedState(_service);
+      return UnlockedState(_service);
+    } on BiometricCanceledException {
+      return this;
+    }
   }
 
   @override

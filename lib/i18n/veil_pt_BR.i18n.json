@@ -1,0 +1,28 @@
+{
+  "setup": {
+    "passwordHint": "Digite uma senha para começar...",
+    "cta": "Vamos começar!"
+  },
+  "unlock": {
+    "passwordHint": "Digite sua senha...",
+    "cta": "Desbloquear",
+    "biometricTooltip": "Biometria"
+  },
+  "splash": {
+    "loading": "Carregando..."
+  },
+  "errors": {
+    "passwordRequired": "A senha é obrigatória.",
+    "passwordMinLength": "A senha deve ter pelo menos 8 caracteres.",
+    "passwordMissingLetter": "A senha deve conter ao menos uma letra.",
+    "passwordMissingNumber": "A senha deve conter ao menos um número.",
+    "invalidPassword": "Senha inválida.",
+    "biometricUnavailable": "A autenticação biométrica não está disponível.",
+    "biometricFailed": "A autenticação biométrica falhou.",
+    "biometricLockedOut": "A autenticação biométrica está temporariamente bloqueada.",
+    "vaultNotConfigured": "O cofre ainda não foi configurado.",
+    "encryptedPrivateKeyNotFound": "A chave privada criptografada não foi encontrada.",
+    "publicKeyNotFound": "A chave pública não foi encontrada.",
+    "vaultLocked": "O cofre está bloqueado."
+  }
+}

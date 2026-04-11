@@ -1,0 +1,11 @@
+{
+  "empty": "아직 노트가 없습니다.",
+  "delete": {
+    "title": "이 노트를 영구적으로 삭제할까요?",
+    "confirm": "예, 삭제",
+    "cancel": "아니요, 유지"
+  },
+  "editor": {
+    "heading": "제목 {{level}}"
+  }
+}

@@ -6,6 +6,10 @@ import 'package:veil/features/veil/application/veil_service.dart';
 import 'package:veil/features/veil/domain/session/auto_lock_option.dart';
 import 'package:veil/features/veil/presentation/screens/setup_screen.dart';
 import 'package:veil/features/veil/providers/veil_provider.dart';
+import 'package:veil/features/veil/domain/password/password_validation_result.dart';
+import 'package:veil/features/veil/domain/veil_exception.dart';
+
+import '../test_localized_app.dart';
 
 void main() {
   Widget wrap(VeilService service) {
@@ -15,7 +19,7 @@ void main() {
         builder: (context, ref, _) {
           ref.watch(veilControllerProvider);
 
-          return MaterialApp(
+          return buildLocalizedApp(
             theme: AppTheme.darkTheme,
             home: const SetupScreen(),
           );
@@ -41,7 +45,9 @@ void main() {
 
     testWidgets('shows snackbar when create throws', (tester) async {
       final service = _FakeVeilService(
-        throwOnCreate: Exception('Password is required.'),
+        throwOnCreate: const VeilException.passwordValidation(
+          PasswordValidationError.required,
+        ),
       );
 
       await tester.pumpWidget(wrap(service));
@@ -57,7 +63,7 @@ void main() {
 }
 
 class _FakeVeilService implements VeilService {
-  final Exception? throwOnCreate;
+  final Object? throwOnCreate;
   String? createdPassword;
 
   _FakeVeilService({this.throwOnCreate});
@@ -92,7 +98,8 @@ class _FakeVeilService implements VeilService {
   Future<void> disableBiometricUnlock() async {}
 
   @override
-  Future<AutoLockOption> getAutoLockOption() async => AutoLockOption.fiveMinutes;
+  Future<AutoLockOption> getAutoLockOption() async =>
+      AutoLockOption.fiveMinutes;
 
   @override
   Future<void> setAutoLockOption(AutoLockOption option) async {}

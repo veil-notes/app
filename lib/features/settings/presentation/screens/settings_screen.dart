@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../app/app_error_mapper.dart';
+import '../../../../app/locale/app_locale_provider.dart';
+import '../../../../i18n/translations.g.dart';
+import '../../../veil/application/veil_service.dart';
 import '../../../veil/domain/biometrics/biometric_auth_exception.dart';
 import '../../../veil/domain/session/auto_lock_option.dart';
 import '../../../veil/providers/veil_provider.dart';
-import '../../../veil/application/veil_service.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -14,6 +17,8 @@ class SettingsScreen extends ConsumerStatefulWidget {
 }
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+  static const _errorMapper = AppErrorMapper();
+
   bool _isLoading = false;
 
   @override
@@ -22,7 +27,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final biometricEnabledAsync = ref.watch(isBiometricEnabledProvider);
     final canUseBiometricsAsync = ref.watch(canUseBiometricUnlockProvider);
     final autoLockOptionAsync = ref.watch(autoLockOptionProvider);
+    final currentLocale = ref.watch(appLocaleControllerProvider);
     final topInset = MediaQuery.paddingOf(context).top + kToolbarHeight + 8;
+    final t = context.t;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -56,42 +63,58 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildBiometricTile(
-              veilService,
-              biometricEnabledAsync,
-              canUseBiometricsAsync,
+              context: context,
+              veilService: veilService,
+              biometricEnabledAsync: biometricEnabledAsync,
+              canUseBiometricsAsync: canUseBiometricsAsync,
             ),
             autoLockOptionAsync.when(
               data: (option) {
                 return ListTile(
-                  title: const Text(
-                    'Auto-lock',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  title: Text(
+                    t.settings.autoLock.title,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   subtitle: Text(
-                    'Locks the app after ${option.label.toLowerCase()}.',
-                    style: TextStyle(fontSize: 12),
+                    t.settings.autoLock.subtitle(
+                      duration: _autoLockLabel(t, option),
+                    ),
+                    style: const TextStyle(fontSize: 12),
                   ),
                   onTap: _isLoading ? null : _selectAutoLockOption,
                 );
               },
-              loading: () => const ListTile(
-                title: Text('Auto-lock'),
-                subtitle: Text('Loading...'),
+              loading: () => ListTile(
+                title: Text(t.settings.autoLock.title),
+                subtitle: Text(t.common.loading),
               ),
-              error: (error, _) => ListTile(
+              error: (_, _) => ListTile(
                 leading: const Icon(Icons.timer_outlined),
-                title: const Text('Auto-lock'),
-                subtitle: Text(error.toString()),
+                title: Text(t.settings.autoLock.title),
+                subtitle: Text(t.common.errors.loadFailed),
               ),
             ),
             ListTile(
-              title: const Text(
-                'Lock',
-                style: TextStyle(fontWeight: FontWeight.bold),
+              title: Text(
+                t.settings.language.title,
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
-              subtitle: const Text(
-                "Clears the current session. You will need to unlock again...",
-                style: TextStyle(fontSize: 12),
+              subtitle: Text(
+                t.settings.language.subtitle(
+                  language: _languageLabel(t, currentLocale),
+                ),
+                style: const TextStyle(fontSize: 12),
+              ),
+              onTap: _isLoading ? null : _selectLanguage,
+            ),
+            ListTile(
+              title: Text(
+                t.settings.lock.title,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              subtitle: Text(
+                t.settings.lock.subtitle,
+                style: const TextStyle(fontSize: 12),
               ),
               onTap: () {
                 ref.read(veilControllerProvider.notifier).lock();
@@ -103,11 +126,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
-  Widget _buildBiometricTile(
-    VeilService veilService,
-    AsyncValue<bool> biometricEnabledAsync,
-    AsyncValue<bool> canUseBiometricsAsync,
-  ) {
+  Widget _buildBiometricTile({
+    required BuildContext context,
+    required VeilService veilService,
+    required AsyncValue<bool> biometricEnabledAsync,
+    required AsyncValue<bool> canUseBiometricsAsync,
+  }) {
+    final t = context.t;
+
     return biometricEnabledAsync.when(
       data: (isEnabled) {
         return canUseBiometricsAsync.when(
@@ -117,12 +143,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               onChanged: _isLoading
                   ? null
                   : (value) => _onBiometricChanged(value, veilService),
-              title: const Text(
-                'Biometrics',
-                style: TextStyle(fontWeight: FontWeight.bold),
+              title: Text(
+                t.settings.biometrics.title,
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               subtitle: Text(
                 _biometricSubtitle(
+                  t,
                   isEnabled: isEnabled,
                   canUseBiometrics: canUseBiometrics,
                 ),
@@ -131,54 +158,60 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             );
           },
           loading: () => _buildBiometricLoadingTile(
+            context: context,
             isEnabled: isEnabled,
-            subtitle: 'Checking biometric availability...',
+            subtitle: t.settings.biometrics.checkingAvailability,
           ),
-          error: (error, _) => _buildBiometricLoadingTile(
+          error: (_, _) => _buildBiometricLoadingTile(
+            context: context,
             isEnabled: isEnabled,
-            subtitle: error.toString(),
+            subtitle: t.common.errors.loadFailed,
           ),
         );
       },
       loading: () => _buildBiometricLoadingTile(
+        context: context,
         isEnabled: false,
-        subtitle: 'Loading biometric settings...',
+        subtitle: t.settings.biometrics.loading,
       ),
-      error: (error, _) => _buildBiometricLoadingTile(
+      error: (_, _) => _buildBiometricLoadingTile(
+        context: context,
         isEnabled: false,
-        subtitle: error.toString(),
+        subtitle: t.common.errors.loadFailed,
       ),
     );
   }
 
   Widget _buildBiometricLoadingTile({
+    required BuildContext context,
     required bool isEnabled,
     required String subtitle,
   }) {
     return SwitchListTile(
       value: isEnabled,
       onChanged: null,
-      title: const Text(
-        'Biometrics',
-        style: TextStyle(fontWeight: FontWeight.bold),
+      title: Text(
+        context.t.settings.biometrics.title,
+        style: const TextStyle(fontWeight: FontWeight.bold),
       ),
       subtitle: Text(subtitle, style: const TextStyle(fontSize: 12)),
     );
   }
 
-  String _biometricSubtitle({
+  String _biometricSubtitle(
+    Translations t, {
     required bool isEnabled,
     required bool canUseBiometrics,
   }) {
     if (canUseBiometrics) {
-      return 'Use biometrics to unlock app faster.';
+      return t.settings.biometrics.subtitleAvailable;
     }
 
     if (isEnabled) {
-      return 'Biometrics is enabled, but is not currently available on this device.';
+      return t.settings.biometrics.subtitleEnabledUnavailable;
     }
 
-    return 'Enable biometrics for faster unlock.';
+    return t.settings.biometrics.subtitleDisabledUnavailable;
   }
 
   Future<void> _onBiometricChanged(bool value, VeilService veilService) async {
@@ -196,27 +229,28 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   Future<bool> _enableBiometrics(VeilService veilService) async {
     final passwordController = TextEditingController();
+    final t = context.t;
 
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Confirm password'),
+          title: Text(t.settings.confirmPassword.title),
           content: TextField(
             controller: passwordController,
             obscureText: true,
-            decoration: const InputDecoration(
-              hintText: 'Type your password...',
+            decoration: InputDecoration(
+              hintText: t.settings.confirmPassword.hint,
             ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancel'),
+              child: Text(t.common.actions.cancel),
             ),
             FilledButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Confirm'),
+              child: Text(t.common.actions.confirm),
             ),
           ],
         );
@@ -274,69 +308,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final options = AutoLockOption.options;
     final current = await ref.read(veilServiceProvider).getAutoLockOption();
 
-    if (!mounted) return;
+    if (!mounted) {
+      return;
+    }
 
-    final selected = await showModalBottomSheet<AutoLockOption>(
-      context: context,
-      backgroundColor: const Color(0xFF171336),
-      barrierColor: Colors.black.withValues(alpha: 0.45),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
-      ),
-      builder: (context) {
-        return SafeArea(
-          top: false,
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Container(
-                    width: 50,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      borderRadius: BorderRadius.circular(999),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                ...options.map((option) {
-                  final isSelected = option.id == current.id;
-
-                  return Column(
-                    children: [
-                      ListTile(
-                        title: Text(option.label),
-                        trailing: isSelected
-                            ? Icon(
-                                Icons.check,
-                                color: Theme.of(context).colorScheme.primary,
-                              )
-                            : null,
-                        onTap: () => Navigator.of(context).pop(option),
-                      ),
-                      const SizedBox(height: 8),
-                      if (option.id != options.last.id) ...[
-                        Divider(
-                          height: 1,
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.onSurface.withValues(alpha: 0.05),
-                        ),
-                        const SizedBox(height: 8),
-                      ],
-                    ],
-                  );
-                }),
-              ],
-            ),
-          ),
-        );
-      },
+    final t = context.t;
+    final selected = await _showSelectionSheet<AutoLockOption>(
+      options: options,
+      current: current,
+      labelFor: (option) => _autoLockLabel(t, option),
+      isSelected: (option, selectedOption) => option.id == selectedOption.id,
     );
 
     if (selected == null) {
@@ -354,7 +335,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       final sessionController = ref.read(veilSessionControllerProvider);
       sessionController.updateTimeout(selected.duration);
     } catch (error) {
-      if (!mounted) return;
+      if (!mounted) {
+        return;
+      }
       _showError(error);
     } finally {
       if (mounted) {
@@ -363,13 +346,170 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     }
   }
 
-  void _showError(Object error) {
-    if (!mounted) return;
+  Future<void> _selectLanguage() async {
+    final currentLocale = ref.read(appLocaleControllerProvider);
+    final t = context.t;
 
-    final message = error.toString().replaceFirst('Exception: ', '');
+    final selected = await _showSelectionSheet<AppLocale>(
+      options: const [
+        AppLocale.ptBr,
+        AppLocale.en,
+        AppLocale.es,
+        AppLocale.de,
+        AppLocale.ru,
+        AppLocale.ko,
+        AppLocale.zh,
+        AppLocale.fr,
+        AppLocale.ja,
+      ],
+      current: currentLocale,
+      labelFor: (locale) => _languageLabel(t, locale),
+      isSelected: (locale, selectedLocale) => locale == selectedLocale,
+    );
+
+    if (selected == null || selected == currentLocale) {
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      await ref.read(appLocaleControllerProvider.notifier).setLocale(selected);
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
+      _showError(error);
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  Future<T?> _showSelectionSheet<T>({
+    required List<T> options,
+    required T current,
+    required String Function(T option) labelFor,
+    required bool Function(T option, T current) isSelected,
+  }) {
+    return showModalBottomSheet<T>(
+      context: context,
+      backgroundColor: const Color(0xFF171336),
+      barrierColor: Colors.black.withValues(alpha: 0.45),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
+      ),
+      builder: (context) {
+        final colorScheme = Theme.of(context).colorScheme;
+        final maxSheetHeight = MediaQuery.of(context).size.height * 0.75;
+
+        return SafeArea(
+          top: false,
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: maxSheetHeight,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 50,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: colorScheme.onPrimary,
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Flexible(
+                    child: ListView.separated(
+                      itemCount: options.length,
+                      itemBuilder: (context, index) {
+                        final option = options[index];
+                        final selected = isSelected(option, current);
+
+                        return ListTile(
+                          title: Text(labelFor(option)),
+                          trailing: selected
+                              ? Icon(Icons.check, color: colorScheme.primary)
+                              : null,
+                          onTap: () => Navigator.of(context).pop(option),
+                        );
+                      },
+                      separatorBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            const SizedBox(height: 8),
+                            Divider(
+                              height: 1,
+                              color: colorScheme.onSurface.withValues(
+                                alpha: 0.05,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  String _autoLockLabel(Translations t, AutoLockOption option) {
+    switch (option.id) {
+      case '1m':
+        return t.settings.autoLock.options.oneMinute;
+      case '5m':
+        return t.settings.autoLock.options.fiveMinutes;
+      case '15m':
+        return t.settings.autoLock.options.fifteenMinutes;
+      case '30m':
+        return t.settings.autoLock.options.thirtyMinutes;
+      default:
+        return t.settings.autoLock.options.fiveMinutes;
+    }
+  }
+
+  String _languageLabel(Translations t, AppLocale locale) {
+    switch (locale) {
+      case AppLocale.ptBr:
+        return t.common.languageNames.ptBr;
+      case AppLocale.en:
+        return t.common.languageNames.en;
+      case AppLocale.es:
+        return t.common.languageNames.es;
+      case AppLocale.de:
+        return t.common.languageNames.de;
+      case AppLocale.ru:
+        return t.common.languageNames.ru;
+      case AppLocale.ko:
+        return t.common.languageNames.ko;
+      case AppLocale.zh:
+        return t.common.languageNames.zh;
+      case AppLocale.fr:
+        return t.common.languageNames.fr;
+      case AppLocale.ja:
+        return t.common.languageNames.ja;
+    }
+  }
+
+  void _showError(Object error) {
+    if (!mounted) {
+      return;
+    }
 
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    ).showSnackBar(SnackBar(content: Text(_errorMapper.map(context.t, error))));
   }
 }

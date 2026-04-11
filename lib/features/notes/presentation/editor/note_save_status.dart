@@ -1,5 +1,1 @@
-enum NoteSaveStatus {
-  saved,
-  saving,
-  error,
-}
+enum NoteSaveStatus { saved, saving, error }

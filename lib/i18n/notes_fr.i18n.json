@@ -1,0 +1,11 @@
+{
+  "empty": "aucune note pour l'instant.",
+  "delete": {
+    "title": "Supprimer définitivement cette note ?",
+    "confirm": "Oui, supprimer",
+    "cancel": "Non, conserver"
+  },
+  "editor": {
+    "heading": "Titre {{level}}"
+  }
+}

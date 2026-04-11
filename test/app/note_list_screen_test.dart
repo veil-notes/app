@@ -10,15 +10,15 @@ import 'package:veil/features/notes/domain/note.dart';
 import 'package:veil/features/notes/presentation/screens/note_list_screen.dart';
 import 'package:veil/features/notes/providers/notes_provider.dart';
 
+import '../test_localized_app.dart';
+
 void main() {
   testWidgets('shows the empty state when there are no notes', (
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(
       _wrapHome(
-        overrides: [
-          notesListProvider.overrideWith((ref) async => const []),
-        ],
+        overrides: [notesListProvider.overrideWith((ref) async => const [])],
       ),
     );
 
@@ -35,9 +35,7 @@ void main() {
 
     await tester.pumpWidget(
       _wrapHome(
-        overrides: [
-          notesListProvider.overrideWith((ref) => completer.future),
-        ],
+        overrides: [notesListProvider.overrideWith((ref) => completer.future)],
       ),
     );
 
@@ -59,7 +57,7 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    expect(find.textContaining('boom'), findsOneWidget);
+    expect(find.textContaining("Could not load the information."), findsOneWidget);
   });
 
   testWidgets('strips markdown syntax from note titles in the list', (
@@ -85,7 +83,7 @@ void main() {
 
     expect(find.text('Launch plan'), findsOneWidget);
     expect(find.text('# **Launch** plan'), findsNothing);
-    expect(find.text('2026-04-10 09:30'), findsOneWidget);
+    expect(find.textContaining('4/10/2026'), findsOneWidget);
   });
 
   testWidgets('strips italic and strike markdown syntax from note titles', (
@@ -130,9 +128,7 @@ void main() {
 
     await tester.pumpWidget(
       _wrapHome(
-        overrides: [
-          notesListProvider.overrideWith((ref) async => notes),
-        ],
+        overrides: [notesListProvider.overrideWith((ref) async => notes)],
       ),
     );
 
@@ -154,9 +150,7 @@ void main() {
   ) async {
     await tester.pumpWidget(
       _wrapWithRouter(
-        overrides: [
-          notesListProvider.overrideWith((ref) async => const []),
-        ],
+        overrides: [notesListProvider.overrideWith((ref) async => const [])],
       ),
     );
 
@@ -173,9 +167,7 @@ void main() {
   ) async {
     await tester.pumpWidget(
       _wrapWithRouter(
-        overrides: [
-          notesListProvider.overrideWith((ref) async => const []),
-        ],
+        overrides: [notesListProvider.overrideWith((ref) async => const [])],
       ),
     );
 
@@ -237,7 +229,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 50));
     await tester.drag(find.text('Disposable'), const Offset(-500, 0));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Yes!'));
+    await tester.tap(find.text('Yes, delete'));
     await tester.pumpAndSettle();
 
     expect(service.deletedIds, ['note-1']);
@@ -267,7 +259,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 50));
     await tester.drag(find.text('Keep me'), const Offset(-500, 0));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('No! Nevermind...'));
+    await tester.tap(find.text('No, keep it'));
     await tester.pumpAndSettle();
 
     expect(service.deletedIds, isEmpty);
@@ -277,7 +269,7 @@ void main() {
 Widget _wrapHome({required dynamic overrides}) {
   return ProviderScope(
     overrides: overrides,
-    child: MaterialApp(
+    child: buildLocalizedApp(
       theme: AppTheme.darkTheme,
       home: const NoteListScreen(),
     ),
@@ -291,18 +283,18 @@ Widget _wrapWithRouter({required dynamic overrides}) {
       GoRoute(path: '/list', builder: (_, _) => const NoteListScreen()),
       GoRoute(
         path: '/settings',
-        builder: (_, _) => const Scaffold(body: Center(child: Text('settings route'))),
+        builder: (_, _) =>
+            const Scaffold(body: Center(child: Text('settings route'))),
       ),
       GoRoute(
         path: '/note',
-        builder: (_, _) => const Scaffold(body: Center(child: Text('new note route'))),
+        builder: (_, _) =>
+            const Scaffold(body: Center(child: Text('new note route'))),
       ),
       GoRoute(
         path: '/note/:id',
         builder: (_, state) => Scaffold(
-          body: Center(
-            child: Text('note route ${state.pathParameters['id']}'),
-          ),
+          body: Center(child: Text('note route ${state.pathParameters['id']}')),
         ),
       ),
     ],
@@ -310,7 +302,7 @@ Widget _wrapWithRouter({required dynamic overrides}) {
 
   return ProviderScope(
     overrides: overrides,
-    child: MaterialApp.router(
+    child: buildLocalizedRouterApp(
       theme: AppTheme.darkTheme,
       routerConfig: router,
     ),

@@ -1,0 +1,32 @@
+{
+  "biometrics": {
+    "title": "Biometrie",
+    "subtitleAvailable": "Nutze Biometrie, um die App schneller zu entsperren.",
+    "subtitleEnabledUnavailable": "Biometrie ist aktiviert, aber auf diesem Gerät nicht verfügbar.",
+    "subtitleDisabledUnavailable": "Aktiviere Biometrie für schnelleres Entsperren.",
+    "checkingAvailability": "Biometrieverfügbarkeit wird geprüft...",
+    "loading": "Biometrie-Einstellungen werden geladen..."
+  },
+  "autoLock": {
+    "title": "Automatische Sperre",
+    "subtitle": "Sperrt die App nach {{duration}}.",
+    "options": {
+      "oneMinute": "1 Minute",
+      "fiveMinutes": "5 Minuten",
+      "fifteenMinutes": "15 Minuten",
+      "thirtyMinutes": "30 Minuten"
+    }
+  },
+  "language": {
+    "title": "Sprache",
+    "subtitle": "Aktuelle Sprache: {{language}}."
+  },
+  "lock": {
+    "title": "Sperren",
+    "subtitle": "Löscht die aktuelle Sitzung. Du musst erneut entsperren."
+  },
+  "confirmPassword": {
+    "title": "Passwort bestätigen",
+    "hint": "Gib dein Passwort ein..."
+  }
+}

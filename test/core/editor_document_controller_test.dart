@@ -142,15 +142,18 @@ void main() {
       expect(controller.state.editingIndex, isNull);
     });
 
-    test('replaces a block with empty paragraph when replacement list is empty', () {
-      final controller = buildController()..load('Body');
+    test(
+      'replaces a block with empty paragraph when replacement list is empty',
+      () {
+        final controller = buildController()..load('Body');
 
-      controller.replaceBlockWithBlocks(0, const []);
+        controller.replaceBlockWithBlocks(0, const []);
 
-      expect(controller.state.blocks, hasLength(1));
-      expect(controller.state.blocks.single, isA<ParagraphBlock>());
-      expect(controller.state.blocks.single.raw, '');
-    });
+        expect(controller.state.blocks, hasLength(1));
+        expect(controller.state.blocks.single, isA<ParagraphBlock>());
+        expect(controller.state.blocks.single.raw, '');
+      },
+    );
 
     test('serializes current blocks back to markdown', () {
       final controller = buildController()..load('# Title\nBody');

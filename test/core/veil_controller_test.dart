@@ -10,23 +10,32 @@ import 'package:veil/features/veil/providers/veil_provider.dart';
 
 void main() {
   group('VeilController', () {
-    test('bootstraps to uninitialized when the veil is not configured', () async {
-      final container = ProviderContainer(
-        overrides: [
-          veilServiceProvider.overrideWithValue(
-            _FakeVeilService(isConfiguredResult: false),
-          ),
-        ],
-      );
-      addTearDown(container.dispose);
+    test(
+      'bootstraps to uninitialized when the veil is not configured',
+      () async {
+        final container = ProviderContainer(
+          overrides: [
+            veilServiceProvider.overrideWithValue(
+              _FakeVeilService(isConfiguredResult: false),
+            ),
+          ],
+        );
+        addTearDown(container.dispose);
 
-      expect(container.read(veilControllerProvider), isA<BootstrappingState>());
+        expect(
+          container.read(veilControllerProvider),
+          isA<BootstrappingState>(),
+        );
 
-      await Future<void>.delayed(Duration.zero);
-      await Future<void>.delayed(Duration.zero);
+        await Future<void>.delayed(Duration.zero);
+        await Future<void>.delayed(Duration.zero);
 
-      expect(container.read(veilControllerProvider), isA<UninitializedState>());
-    });
+        expect(
+          container.read(veilControllerProvider),
+          isA<UninitializedState>(),
+        );
+      },
+    );
 
     test('bootstraps to locked when the veil is configured', () async {
       final container = ProviderContainer(
@@ -148,7 +157,8 @@ class _FakeVeilService implements VeilService {
   Future<void> disableBiometricUnlock() async {}
 
   @override
-  Future<AutoLockOption> getAutoLockOption() async => AutoLockOption.fiveMinutes;
+  Future<AutoLockOption> getAutoLockOption() async =>
+      AutoLockOption.fiveMinutes;
 
   @override
   Future<void> setAutoLockOption(AutoLockOption option) async {}

@@ -1,0 +1,11 @@
+{
+  "empty": "noch keine notizen.",
+  "delete": {
+    "title": "Diese Notiz dauerhaft löschen?",
+    "confirm": "Ja, löschen",
+    "cancel": "Nein, behalten"
+  },
+  "editor": {
+    "heading": "Überschrift {{level}}"
+  }
+}

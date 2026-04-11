@@ -1,10 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../features/veil/domain/states/unlocked_state.dart';
 import '../features/veil/providers/veil_provider.dart';
+import '../i18n/translations.g.dart';
 import 'app_theme.dart';
+import 'locale/app_locale_provider.dart';
 import 'router.dart';
 
 class App extends ConsumerStatefulWidget {
@@ -70,6 +73,7 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     final sessionController = ref.read(veilSessionControllerProvider);
+    final appLocale = ref.watch(appLocaleControllerProvider);
 
     return Listener(
       behavior: HitTestBehavior.translucent,
@@ -82,7 +86,10 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
       },
       child: MaterialApp.router(
         debugShowCheckedModeBanner: kDebugMode || kProfileMode,
-        title: 'Veil',
+        locale: appLocale.flutterLocale,
+        supportedLocales: AppLocaleUtils.supportedLocales,
+        localizationsDelegates: GlobalMaterialLocalizations.delegates,
+        title: appLocale.translations.app.title,
         routerConfig: ref.watch(routerProvider),
         theme: AppTheme.darkTheme,
         darkTheme: AppTheme.darkTheme,

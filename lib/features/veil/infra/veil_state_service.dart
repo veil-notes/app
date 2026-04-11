@@ -12,6 +12,7 @@ import '../domain/biometrics/biometric_auth_exception.dart';
 import '../domain/biometrics/biometric_auth_service.dart';
 import '../domain/password/password_validator.dart';
 import '../domain/session/auto_lock_option.dart';
+import '../domain/veil_exception.dart';
 import '../domain/vault_key_provider.dart';
 import '../application/veil_service.dart';
 
@@ -71,7 +72,7 @@ class VeilStateService implements VeilService, VaultKeyProvider {
     final validation = _passwordValidator.validate(password);
 
     if (!validation.isValid) {
-      throw Exception(validation.message!);
+      throw VeilException.passwordValidation(validation.error!);
     }
 
     final params = _buildKdfParams();
@@ -160,19 +161,19 @@ class VeilStateService implements VeilService, VaultKeyProvider {
   Future<void> enableBiometricUnlock(String password) async {
     final params = await _readKdfParams();
     if (params == null) {
-      throw Exception('Vault is not configured.');
+      throw const VeilException(VeilExceptionCode.vaultNotConfigured);
     }
 
     final encryptedPrivateKey = await _secureStorageService.read(
       _encryptedPrivateKeyStorageKey,
     );
     if (encryptedPrivateKey == null || encryptedPrivateKey.isEmpty) {
-      throw Exception('Encrypted private key not found.');
+      throw const VeilException(VeilExceptionCode.encryptedPrivateKeyNotFound);
     }
 
     final biometricAvailable = await _biometricAuthService.isAvailable();
     if (!biometricAvailable) {
-      throw Exception('Biometric authentication is not available.');
+      throw const BiometricUnavailableException();
     }
 
     final authenticated = await _biometricAuthService.authenticate();
@@ -193,7 +194,7 @@ class VeilStateService implements VeilService, VaultKeyProvider {
         passphrase,
       );
     } catch (_) {
-      throw Exception('Invalid password');
+      throw const VeilException(VeilExceptionCode.invalidPassword);
     }
 
     await _secureStorageService.write(_biometricEnabledStorageKey, 'true');
@@ -264,7 +265,7 @@ class VeilStateService implements VeilService, VaultKeyProvider {
     final publicKey = await _secureStorageService.read(_publicKeyStorageKey);
 
     if (publicKey == null || publicKey.isEmpty) {
-      throw Exception('Public key not found.');
+      throw const VeilException(VeilExceptionCode.publicKeyNotFound);
     }
 
     return publicKey;
@@ -275,7 +276,7 @@ class VeilStateService implements VeilService, VaultKeyProvider {
     final privateKey = _privateKeyInMemory;
 
     if (privateKey == null || privateKey.isEmpty) {
-      throw Exception('Vault is locked.');
+      throw const VeilException(VeilExceptionCode.vaultLocked);
     }
 
     return privateKey;

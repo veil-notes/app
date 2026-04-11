@@ -84,7 +84,9 @@ void main() {
       );
 
       final textField = tester.widget<TextField>(find.byType(TextField));
-      textField.controller!.selection = const TextSelection.collapsed(offset: 1);
+      textField.controller!.selection = const TextSelection.collapsed(
+        offset: 1,
+      );
 
       key.currentState!.applyWrap('**', '**');
       await tester.pump();
@@ -113,7 +115,9 @@ void main() {
       );
 
       final textField = tester.widget<TextField>(find.byType(TextField));
-      textField.controller!.selection = const TextSelection.collapsed(offset: 1);
+      textField.controller!.selection = const TextSelection.collapsed(
+        offset: 1,
+      );
 
       key.currentState!.insertText('X');
       await tester.pump();
@@ -179,88 +183,90 @@ void main() {
       expect(submittedSelection!.extentOffset, 4);
     });
 
-    testWidgets('updates the controller when the initial value changes externally', (
-      tester,
-    ) async {
-      String value = 'old';
+    testWidgets(
+      'updates the controller when the initial value changes externally',
+      (tester) async {
+        String value = 'old';
 
-      await tester.pumpWidget(
-        wrap(
-          StatefulBuilder(
-            builder: (context, setState) {
-              return Column(
-                children: [
-                  MarkdownBlockEditor(
-                    initialValue: value,
-                    onChanged: (_) {},
-                    onSubmittedNewBlock: (_) {},
-                    onPasteRequested: () async {},
-                    onDeleteEmptyBlock: () {},
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      setState(() {
-                        value = 'new';
-                      });
-                    },
-                    child: const Text('update'),
-                  ),
-                ],
-              );
-            },
+        await tester.pumpWidget(
+          wrap(
+            StatefulBuilder(
+              builder: (context, setState) {
+                return Column(
+                  children: [
+                    MarkdownBlockEditor(
+                      initialValue: value,
+                      onChanged: (_) {},
+                      onSubmittedNewBlock: (_) {},
+                      onPasteRequested: () async {},
+                      onDeleteEmptyBlock: () {},
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          value = 'new';
+                        });
+                      },
+                      child: const Text('update'),
+                    ),
+                  ],
+                );
+              },
+            ),
           ),
-        ),
-      );
+        );
 
-      expect(find.text('old'), findsOneWidget);
+        expect(find.text('old'), findsOneWidget);
 
-      await tester.tap(find.text('update'));
-      await tester.pump();
+        await tester.tap(find.text('update'));
+        await tester.pump();
 
-      expect(find.text('new'), findsOneWidget);
-      expect(find.text('old'), findsNothing);
-    });
+        expect(find.text('new'), findsOneWidget);
+        expect(find.text('old'), findsNothing);
+      },
+    );
 
-    testWidgets('accepts an external value that already matches the controller text', (
-      tester,
-    ) async {
-      const sentinel = '\u200B';
-      String value = '';
+    testWidgets(
+      'accepts an external value that already matches the controller text',
+      (tester) async {
+        const sentinel = '\u200B';
+        String value = '';
 
-      await tester.pumpWidget(
-        wrap(
-          StatefulBuilder(
-            builder: (context, setState) {
-              return Column(
-                children: [
-                  MarkdownBlockEditor(
-                    initialValue: value,
-                    onChanged: (_) {},
-                    onSubmittedNewBlock: (_) {},
-                    onPasteRequested: () async {},
-                    onDeleteEmptyBlock: () {},
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      setState(() {
-                        value = sentinel;
-                      });
-                    },
-                    child: const Text('update-to-sentinel'),
-                  ),
-                ],
-              );
-            },
+        await tester.pumpWidget(
+          wrap(
+            StatefulBuilder(
+              builder: (context, setState) {
+                return Column(
+                  children: [
+                    MarkdownBlockEditor(
+                      initialValue: value,
+                      onChanged: (_) {},
+                      onSubmittedNewBlock: (_) {},
+                      onPasteRequested: () async {},
+                      onDeleteEmptyBlock: () {},
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          value = sentinel;
+                        });
+                      },
+                      child: const Text('update-to-sentinel'),
+                    ),
+                  ],
+                );
+              },
+            ),
           ),
-        ),
-      );
+        );
 
-      await tester.tap(find.text('update-to-sentinel'));
-      await tester.pump();
+        await tester.tap(find.text('update-to-sentinel'));
+        await tester.pump();
 
-      final textField = tester.widget<TextField>(find.byType(TextField));
-      expect(textField.controller!.text, sentinel);
-    });
+        final textField = tester.widget<TextField>(find.byType(TextField));
+        expect(textField.controller!.text, sentinel);
+      },
+    );
 
     testWidgets('backspace on empty content requests block deletion', (
       tester,
@@ -286,39 +292,40 @@ void main() {
       expect(deleteCalls, 1);
     });
 
-    testWidgets('backspace with a selection deletes the selection instead of the block', (
-      tester,
-    ) async {
-      String? changedValue;
-      var deleteCalls = 0;
+    testWidgets(
+      'backspace with a selection deletes the selection instead of the block',
+      (tester) async {
+        String? changedValue;
+        var deleteCalls = 0;
 
-      await tester.pumpWidget(
-        wrap(
-          MarkdownBlockEditor(
-            initialValue: 'hello',
-            onChanged: (value) => changedValue = value,
-            onSubmittedNewBlock: (_) {},
-            onPasteRequested: () async {},
-            onDeleteEmptyBlock: () => deleteCalls++,
+        await tester.pumpWidget(
+          wrap(
+            MarkdownBlockEditor(
+              initialValue: 'hello',
+              onChanged: (value) => changedValue = value,
+              onSubmittedNewBlock: (_) {},
+              onPasteRequested: () async {},
+              onDeleteEmptyBlock: () => deleteCalls++,
+            ),
           ),
-        ),
-      );
+        );
 
-      await tester.tap(find.byType(TextField));
-      await tester.pump();
+        await tester.tap(find.byType(TextField));
+        await tester.pump();
 
-      final textField = tester.widget<TextField>(find.byType(TextField));
-      textField.controller!.selection = const TextSelection(
-        baseOffset: 1,
-        extentOffset: 4,
-      );
+        final textField = tester.widget<TextField>(find.byType(TextField));
+        textField.controller!.selection = const TextSelection(
+          baseOffset: 1,
+          extentOffset: 4,
+        );
 
-      await tester.sendKeyEvent(LogicalKeyboardKey.backspace);
-      await tester.pump();
+        await tester.sendKeyEvent(LogicalKeyboardKey.backspace);
+        await tester.pump();
 
-      expect(changedValue, 'ho');
-      expect(deleteCalls, 0);
-    });
+        expect(changedValue, 'ho');
+        expect(deleteCalls, 0);
+      },
+    );
 
     testWidgets('backspace at the start of non-empty text does nothing', (
       tester,
@@ -341,7 +348,9 @@ void main() {
       await tester.pump();
 
       final textField = tester.widget<TextField>(find.byType(TextField));
-      textField.controller!.selection = const TextSelection.collapsed(offset: 0);
+      textField.controller!.selection = const TextSelection.collapsed(
+        offset: 0,
+      );
 
       await tester.sendKeyEvent(LogicalKeyboardKey.backspace);
       await tester.pump();
@@ -449,14 +458,14 @@ void main() {
       await tester.pump();
 
       final context = tester.element(find.byType(TextField));
-      final toolbar = textField.contextMenuBuilder!(context, editableTextState)
-          as AdaptiveTextSelectionToolbar;
+      final toolbar =
+          textField.contextMenuBuilder!(context, editableTextState)
+              as AdaptiveTextSelectionToolbar;
 
       expect(
         toolbar.buttonItems!.any(
           (item) =>
-              item.label == 'Paste' ||
-              item.type == ContextMenuButtonType.paste,
+              item.label == 'Paste' || item.type == ContextMenuButtonType.paste,
         ),
         isTrue,
       );
@@ -471,34 +480,37 @@ void main() {
       expect(pasteCalls, 1);
     });
 
-    testWidgets('backspace in the middle of text removes the previous character', (
-      tester,
-    ) async {
-      String? changedValue;
+    testWidgets(
+      'backspace in the middle of text removes the previous character',
+      (tester) async {
+        String? changedValue;
 
-      await tester.pumpWidget(
-        wrap(
-          MarkdownBlockEditor(
-            initialValue: 'hello',
-            onChanged: (value) => changedValue = value,
-            onSubmittedNewBlock: (_) {},
-            onPasteRequested: () async {},
-            onDeleteEmptyBlock: () {},
+        await tester.pumpWidget(
+          wrap(
+            MarkdownBlockEditor(
+              initialValue: 'hello',
+              onChanged: (value) => changedValue = value,
+              onSubmittedNewBlock: (_) {},
+              onPasteRequested: () async {},
+              onDeleteEmptyBlock: () {},
+            ),
           ),
-        ),
-      );
+        );
 
-      await tester.tap(find.byType(TextField));
-      await tester.pump();
+        await tester.tap(find.byType(TextField));
+        await tester.pump();
 
-      final textField = tester.widget<TextField>(find.byType(TextField));
-      textField.controller!.selection = const TextSelection.collapsed(offset: 3);
+        final textField = tester.widget<TextField>(find.byType(TextField));
+        textField.controller!.selection = const TextSelection.collapsed(
+          offset: 3,
+        );
 
-      await tester.sendKeyEvent(LogicalKeyboardKey.backspace);
-      await tester.pump();
+        await tester.sendKeyEvent(LogicalKeyboardKey.backspace);
+        await tester.pump();
 
-      expect(changedValue, 'helo');
-      expect(find.text('helo'), findsOneWidget);
-    });
+        expect(changedValue, 'helo');
+        expect(find.text('helo'), findsOneWidget);
+      },
+    );
   });
 }

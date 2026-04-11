@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../i18n/translations.g.dart';
 import 'note_save_status.dart';
 
 class NoteEditorToolbar extends StatelessWidget {
@@ -102,7 +103,7 @@ class NoteEditorToolbar extends StatelessWidget {
                               return PopupMenuItem<int>(
                                 value: level,
                                 child: Text(
-                                  'Heading $level',
+                                  context.t.notes.editor.heading(level: level),
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: currentHeadingLevel == level

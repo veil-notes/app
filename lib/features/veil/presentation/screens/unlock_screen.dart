@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../app/app_error_mapper.dart';
+import '../../../../i18n/translations.g.dart';
 import '../../application/veil_controller.dart';
 import '../../providers/veil_provider.dart';
 
@@ -12,6 +14,8 @@ class UnlockScreen extends ConsumerStatefulWidget {
 }
 
 class _UnlockScreenState extends ConsumerState<UnlockScreen> {
+  static const _errorMapper = AppErrorMapper();
+
   final TextEditingController _passwordController = TextEditingController();
 
   ProviderSubscription<AsyncValue<bool>>? _biometricSubscription;
@@ -55,6 +59,7 @@ class _UnlockScreenState extends ConsumerState<UnlockScreen> {
   Widget build(BuildContext context) {
     final controller = ref.read(veilControllerProvider.notifier);
     final canUseBiometrics = ref.watch(canUseBiometricUnlockProvider);
+    final t = context.t;
 
     return Scaffold(
       body: Padding(
@@ -65,9 +70,7 @@ class _UnlockScreenState extends ConsumerState<UnlockScreen> {
             TextField(
               controller: _passwordController,
               obscureText: true,
-              decoration: const InputDecoration(
-                hintText: 'Type your password...',
-              ),
+              decoration: InputDecoration(hintText: t.veil.unlock.passwordHint),
               onSubmitted: (_) => _unlock(controller),
             ),
             const SizedBox(height: 24),
@@ -75,7 +78,7 @@ class _UnlockScreenState extends ConsumerState<UnlockScreen> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () => _unlock(controller),
-                child: const Text('Unlock!'),
+                child: Text(t.veil.unlock.cta),
               ),
             ),
             const SizedBox(height: 48),
@@ -88,7 +91,7 @@ class _UnlockScreenState extends ConsumerState<UnlockScreen> {
                 return IconButton(
                   icon: const Icon(Icons.fingerprint),
                   iconSize: 46,
-                  tooltip: 'Fingerprint',
+                  tooltip: t.veil.unlock.biometricTooltip,
                   onPressed: () => _unlockWithBiometrics(controller),
                 );
               },
@@ -105,7 +108,9 @@ class _UnlockScreenState extends ConsumerState<UnlockScreen> {
     try {
       await controller.unlock(_passwordController.text);
     } catch (error) {
-      if (!mounted) return;
+      if (!mounted) {
+        return;
+      }
       _showError(error);
     }
   }
@@ -114,16 +119,16 @@ class _UnlockScreenState extends ConsumerState<UnlockScreen> {
     try {
       await controller.unlockWithBiometrics();
     } catch (error) {
-      if (!mounted) return;
+      if (!mounted) {
+        return;
+      }
       _showError(error);
     }
   }
 
   void _showError(Object error) {
-    final message = error.toString().replaceFirst('Exception: ', '');
-
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    ).showSnackBar(SnackBar(content: Text(_errorMapper.map(context.t, error))));
   }
 }

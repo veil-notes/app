@@ -3,9 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:veil/app/app_theme.dart';
 import 'package:veil/features/veil/application/veil_service.dart';
+import 'package:veil/features/veil/domain/biometrics/biometric_auth_exception.dart';
 import 'package:veil/features/veil/domain/session/auto_lock_option.dart';
+import 'package:veil/features/veil/domain/veil_exception.dart';
 import 'package:veil/features/veil/presentation/screens/unlock_screen.dart';
 import 'package:veil/features/veil/providers/veil_provider.dart';
+
+import '../test_localized_app.dart';
 
 void main() {
   Widget wrap({
@@ -23,7 +27,10 @@ void main() {
             biometricsBuilder ?? (ref) async => false,
           ),
       ],
-      child: MaterialApp(theme: AppTheme.darkTheme, home: const UnlockScreen()),
+      child: buildLocalizedApp(
+        theme: AppTheme.darkTheme,
+        home: const UnlockScreen(),
+      ),
     );
   }
 
@@ -32,16 +39,13 @@ void main() {
       final service = _FakeVeilService();
 
       await tester.pumpWidget(
-        wrap(
-          service: service,
-          biometricsBuilder: (ref) async => false,
-        ),
+        wrap(service: service, biometricsBuilder: (ref) async => false),
       );
       await tester.pump();
       await tester.pump();
 
       await tester.enterText(find.byType(TextField), 'abc12345');
-      await tester.tap(find.text('Unlock!'));
+      await tester.tap(find.text('Unlock'));
       await tester.pumpAndSettle();
 
       expect(service.lastUnlockPassword, 'abc12345');
@@ -51,10 +55,7 @@ void main() {
       final service = _FakeVeilService();
 
       await tester.pumpWidget(
-        wrap(
-          service: service,
-          biometricsBuilder: (ref) async => true,
-        ),
+        wrap(service: service, biometricsBuilder: (ref) async => true),
       );
       await tester.pump();
       await tester.pump();
@@ -72,10 +73,7 @@ void main() {
       final service = _FakeVeilService();
 
       await tester.pumpWidget(
-        wrap(
-          service: service,
-          biometricsBuilder: (ref) async => true,
-        ),
+        wrap(service: service, biometricsBuilder: (ref) async => true),
       );
       await tester.pump();
       await tester.pump();
@@ -85,32 +83,28 @@ void main() {
     });
 
     testWidgets('shows snackbar when password unlock fails', (tester) async {
-      final service = _FakeVeilService(throwOnUnlock: Exception('Invalid password'));
+      final service = _FakeVeilService(
+        throwOnUnlock: const VeilException(VeilExceptionCode.invalidPassword),
+      );
 
       await tester.pumpWidget(
-        wrap(
-          service: service,
-          biometricsBuilder: (ref) async => false,
-        ),
+        wrap(service: service, biometricsBuilder: (ref) async => false),
       );
       await tester.pump();
       await tester.pump();
 
       await tester.enterText(find.byType(TextField), 'wrong');
-      await tester.tap(find.text('Unlock!'));
+      await tester.tap(find.text('Unlock'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Invalid password'), findsOneWidget);
+      expect(find.text('Invalid password.'), findsOneWidget);
     });
 
     testWidgets('submits password from the keyboard action', (tester) async {
       final service = _FakeVeilService();
 
       await tester.pumpWidget(
-        wrap(
-          service: service,
-          biometricsBuilder: (ref) async => false,
-        ),
+        wrap(service: service, biometricsBuilder: (ref) async => false),
       );
       await tester.pump();
       await tester.pump();
@@ -141,14 +135,11 @@ void main() {
 
     testWidgets('shows snackbar when biometric unlock fails', (tester) async {
       final service = _FakeVeilService(
-        throwOnBiometricUnlock: Exception('Biometric failed'),
+        throwOnBiometricUnlock: const BiometricFailedException(),
       );
 
       await tester.pumpWidget(
-        wrap(
-          service: service,
-          biometricsBuilder: (ref) async => true,
-        ),
+        wrap(service: service, biometricsBuilder: (ref) async => true),
       );
       await tester.pump();
       await tester.pump();
@@ -157,14 +148,14 @@ void main() {
       await tester.tap(find.byIcon(Icons.fingerprint));
       await tester.pumpAndSettle();
 
-      expect(find.text('Biometric failed'), findsOneWidget);
+      expect(find.text('Biometric authentication failed.'), findsOneWidget);
     });
   });
 }
 
 class _FakeVeilService implements VeilService {
-  final Exception? throwOnUnlock;
-  final Exception? throwOnBiometricUnlock;
+  final Object? throwOnUnlock;
+  final Object? throwOnBiometricUnlock;
   String? lastUnlockPassword;
   int biometricUnlockCalls = 0;
 
@@ -207,7 +198,8 @@ class _FakeVeilService implements VeilService {
   Future<void> disableBiometricUnlock() async {}
 
   @override
-  Future<AutoLockOption> getAutoLockOption() async => AutoLockOption.fiveMinutes;
+  Future<AutoLockOption> getAutoLockOption() async =>
+      AutoLockOption.fiveMinutes;
 
   @override
   Future<void> setAutoLockOption(AutoLockOption option) async {}

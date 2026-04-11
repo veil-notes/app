@@ -1,0 +1,32 @@
+{
+  "biometrics": {
+    "title": "生体認証",
+    "subtitleAvailable": "生体認証を使うと、よりすばやくアプリのロックを解除できます。",
+    "subtitleEnabledUnavailable": "生体認証は有効ですが、このデバイスでは利用できません。",
+    "subtitleDisabledUnavailable": "よりすばやく解除するには生体認証を有効にしてください。",
+    "checkingAvailability": "生体認証の利用可否を確認中...",
+    "loading": "生体認証の設定を読み込み中..."
+  },
+  "autoLock": {
+    "title": "自動ロック",
+    "subtitle": "{{duration}}後にアプリをロックします。",
+    "options": {
+      "oneMinute": "1分",
+      "fiveMinutes": "5分",
+      "fifteenMinutes": "15分",
+      "thirtyMinutes": "30分"
+    }
+  },
+  "language": {
+    "title": "言語",
+    "subtitle": "現在の言語: {{language}}。"
+  },
+  "lock": {
+    "title": "ロック",
+    "subtitle": "現在のセッションを消去します。再度ロック解除が必要です。"
+  },
+  "confirmPassword": {
+    "title": "パスワードを確認",
+    "hint": "パスワードを入力..."
+  }
+}

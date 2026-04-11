@@ -1,0 +1,32 @@
+{
+  "biometrics": {
+    "title": "Биометрия",
+    "subtitleAvailable": "Используйте биометрию, чтобы быстрее разблокировать приложение.",
+    "subtitleEnabledUnavailable": "Биометрия включена, но недоступна на этом устройстве.",
+    "subtitleDisabledUnavailable": "Включите биометрию для более быстрой разблокировки.",
+    "checkingAvailability": "Проверка доступности биометрии...",
+    "loading": "Загрузка настроек биометрии..."
+  },
+  "autoLock": {
+    "title": "Автоблокировка",
+    "subtitle": "Блокирует приложение через {{duration}}.",
+    "options": {
+      "oneMinute": "1 минута",
+      "fiveMinutes": "5 минут",
+      "fifteenMinutes": "15 минут",
+      "thirtyMinutes": "30 минут"
+    }
+  },
+  "language": {
+    "title": "Язык",
+    "subtitle": "Текущий язык: {{language}}."
+  },
+  "lock": {
+    "title": "Заблокировать",
+    "subtitle": "Сбрасывает текущую сессию. Нужно будет разблокировать снова."
+  },
+  "confirmPassword": {
+    "title": "Подтвердите пароль",
+    "hint": "Введите пароль..."
+  }
+}

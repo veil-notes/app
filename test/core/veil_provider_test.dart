@@ -52,54 +52,51 @@ void main() {
     expect(container.read(veilServiceProvider), isA<VeilService>());
   });
 
-  test('vaultKeyProviderProvider exposes the veil service as vault key provider', () {
-    final service = _FakeVeilService();
-    final container = ProviderContainer(
-      overrides: [
-        veilServiceProvider.overrideWithValue(service),
-      ],
-    );
-    addTearDown(container.dispose);
+  test(
+    'vaultKeyProviderProvider exposes the veil service as vault key provider',
+    () {
+      final service = _FakeVeilService();
+      final container = ProviderContainer(
+        overrides: [veilServiceProvider.overrideWithValue(service)],
+      );
+      addTearDown(container.dispose);
 
-    final provider = container.read(vaultKeyProviderProvider);
+      final provider = container.read(vaultKeyProviderProvider);
 
-    expect(provider, same(service));
-  });
+      expect(provider, same(service));
+    },
+  );
 
-  test('future providers read biometric and auto-lock values from the service', () async {
-    final service = _FakeVeilService(
-      biometricEnabled: true,
-      canUseBiometrics: true,
-      autoLockOption: AutoLockOption.fifteenMinutes,
-    );
-    final container = ProviderContainer(
-      overrides: [
-        veilServiceProvider.overrideWithValue(service),
-      ],
-    );
-    addTearDown(container.dispose);
+  test(
+    'future providers read biometric and auto-lock values from the service',
+    () async {
+      final service = _FakeVeilService(
+        biometricEnabled: true,
+        canUseBiometrics: true,
+        autoLockOption: AutoLockOption.fifteenMinutes,
+      );
+      final container = ProviderContainer(
+        overrides: [veilServiceProvider.overrideWithValue(service)],
+      );
+      addTearDown(container.dispose);
 
-    expect(
-      await container.read(isBiometricEnabledProvider.future),
-      isTrue,
-    );
-    expect(
-      await container.read(canUseBiometricUnlockProvider.future),
-      isTrue,
-    );
-    expect(
-      await container.read(autoLockOptionProvider.future),
-      AutoLockOption.fifteenMinutes,
-    );
-  });
+      expect(await container.read(isBiometricEnabledProvider.future), isTrue);
+      expect(
+        await container.read(canUseBiometricUnlockProvider.future),
+        isTrue,
+      );
+      expect(
+        await container.read(autoLockOptionProvider.future),
+        AutoLockOption.fifteenMinutes,
+      );
+    },
+  );
 
   test('veilSessionControllerProvider locks the veil on timeout', () {
     fakeAsync((async) {
       final controller = _FakeVeilController(_FakeVeilService());
       final container = ProviderContainer(
-        overrides: [
-          veilControllerProvider.overrideWith(() => controller),
-        ],
+        overrides: [veilControllerProvider.overrideWith(() => controller)],
       );
       addTearDown(container.dispose);
 
@@ -112,36 +109,39 @@ void main() {
     });
   });
 
-  test('veilServiceProvider toggles the biometric prompt notifier during auth', () async {
-    FlutterSecureStorage.setMockInitialValues({
-      'veil.biometric_enabled': 'true',
-      'veil.biometric_passphrase': 'stored-passphrase',
-      'veil.private_key_encrypted': 'encrypted-private-key',
-    });
+  test(
+    'veilServiceProvider toggles the biometric prompt notifier during auth',
+    () async {
+      FlutterSecureStorage.setMockInitialValues({
+        'veil.biometric_enabled': 'true',
+        'veil.biometric_passphrase': 'stored-passphrase',
+        'veil.private_key_encrypted': 'encrypted-private-key',
+      });
 
-    fakeLocalAuthPlatform.canCheckBiometrics = true;
-    fakeLocalAuthPlatform.deviceSupported = true;
+      fakeLocalAuthPlatform.canCheckBiometrics = true;
+      fakeLocalAuthPlatform.deviceSupported = true;
 
-    late ProviderContainer container;
-    fakeLocalAuthPlatform.onAuthenticate = () async {
-      expect(container.read(biometricPromptInProgressProvider), isTrue);
-    };
+      late ProviderContainer container;
+      fakeLocalAuthPlatform.onAuthenticate = () async {
+        expect(container.read(biometricPromptInProgressProvider), isTrue);
+      };
 
-    container = ProviderContainer(
-      overrides: [
-        cryptoServiceProvider.overrideWithValue(_FakeCryptoService()),
-      ],
-    );
-    addTearDown(container.dispose);
+      container = ProviderContainer(
+        overrides: [
+          cryptoServiceProvider.overrideWithValue(_FakeCryptoService()),
+        ],
+      );
+      addTearDown(container.dispose);
 
-    final service = container.read(veilServiceProvider);
-    final unlocked = await service.unlockWithBiometrics();
-    final vaultKeyProvider = container.read(vaultKeyProviderProvider);
+      final service = container.read(veilServiceProvider);
+      final unlocked = await service.unlockWithBiometrics();
+      final vaultKeyProvider = container.read(vaultKeyProviderProvider);
 
-    expect(unlocked, isTrue);
-    expect(container.read(biometricPromptInProgressProvider), isFalse);
-    expect(await vaultKeyProvider.getUnlockedPrivateKey(), 'private-key');
-  });
+      expect(unlocked, isTrue);
+      expect(container.read(biometricPromptInProgressProvider), isFalse);
+      expect(await vaultKeyProvider.getUnlockedPrivateKey(), 'private-key');
+    },
+  );
 }
 
 class _FakeVeilController extends VeilController {

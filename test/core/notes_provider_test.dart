@@ -58,9 +58,7 @@ void main() {
     test('noteProvider creates an empty note when id is null', () async {
       final notesService = _FakeNotesService();
       final container = ProviderContainer(
-        overrides: [
-          notesServiceProvider.overrideWithValue(notesService),
-        ],
+        overrides: [notesServiceProvider.overrideWithValue(notesService)],
       );
       addTearDown(container.dispose);
 
@@ -74,9 +72,7 @@ void main() {
     test('noteProvider opens a note when id is provided', () async {
       final notesService = _FakeNotesService();
       final container = ProviderContainer(
-        overrides: [
-          notesServiceProvider.overrideWithValue(notesService),
-        ],
+        overrides: [notesServiceProvider.overrideWithValue(notesService)],
       );
       addTearDown(container.dispose);
 
@@ -89,9 +85,7 @@ void main() {
     test('notesListProvider lists notes from the service', () async {
       final notesService = _FakeNotesService();
       final container = ProviderContainer(
-        overrides: [
-          notesServiceProvider.overrideWithValue(notesService),
-        ],
+        overrides: [notesServiceProvider.overrideWithValue(notesService)],
       );
       addTearDown(container.dispose);
 

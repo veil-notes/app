@@ -1,0 +1,28 @@
+{
+  "setup": {
+    "passwordHint": "Escribe una contraseña para empezar...",
+    "cta": "¡Empecemos!"
+  },
+  "unlock": {
+    "passwordHint": "Escribe tu contraseña...",
+    "cta": "Desbloquear",
+    "biometricTooltip": "Biometría"
+  },
+  "splash": {
+    "loading": "Cargando..."
+  },
+  "errors": {
+    "passwordRequired": "La contraseña es obligatoria.",
+    "passwordMinLength": "La contraseña debe tener al menos 8 caracteres.",
+    "passwordMissingLetter": "La contraseña debe contener al menos una letra.",
+    "passwordMissingNumber": "La contraseña debe contener al menos un número.",
+    "invalidPassword": "Contraseña inválida.",
+    "biometricUnavailable": "La autenticación biométrica no está disponible.",
+    "biometricFailed": "La autenticación biométrica falló.",
+    "biometricLockedOut": "La autenticación biométrica está bloqueada temporalmente.",
+    "vaultNotConfigured": "La bóveda no está configurada.",
+    "encryptedPrivateKeyNotFound": "No se encontró la clave privada cifrada.",
+    "publicKeyNotFound": "No se encontró la clave pública.",
+    "vaultLocked": "La bóveda está bloqueada."
+  }
+}

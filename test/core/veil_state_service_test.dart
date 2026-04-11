@@ -14,6 +14,7 @@ import 'package:veil/features/veil/domain/biometrics/biometric_auth_service.dart
 import 'package:veil/features/veil/domain/password/password_validation_result.dart';
 import 'package:veil/features/veil/domain/password/password_validator.dart';
 import 'package:veil/features/veil/domain/session/auto_lock_option.dart';
+import 'package:veil/features/veil/domain/veil_exception.dart';
 import 'package:veil/features/veil/infra/veil_state_service.dart';
 
 void main() {
@@ -31,38 +32,47 @@ void main() {
       expect(await service.isConfigured(), isTrue);
     });
 
-    test('create validates password, persists keys and unlocks memory', () async {
-      final storage = _FakeSecureStorageService();
-      final crypto = _FakeCryptoService();
-      final service = _buildService(
-        storage: storage,
-        crypto: crypto,
-        random: _FixedRandom(),
-      );
+    test(
+      'create validates password, persists keys and unlocks memory',
+      () async {
+        final storage = _FakeSecureStorageService();
+        final crypto = _FakeCryptoService();
+        final service = _buildService(
+          storage: storage,
+          crypto: crypto,
+          random: _FixedRandom(),
+        );
 
-      await service.create('abc12345');
+        await service.create('abc12345');
 
-      expect(storage.values['veil.kdf_params'], isNotNull);
-      expect(storage.values['veil.public_key'], 'public-key');
-      expect(storage.values['veil.private_key_encrypted'], 'sym:private-key');
-      expect(await service.getUnlockedPrivateKey(), 'private-key');
+        expect(storage.values['veil.kdf_params'], isNotNull);
+        expect(storage.values['veil.public_key'], 'public-key');
+        expect(storage.values['veil.private_key_encrypted'], 'sym:private-key');
+        expect(await service.getUnlockedPrivateKey(), 'private-key');
 
-      final params = KdfParams.fromJson(
-        jsonDecode(storage.values['veil.kdf_params']!) as Map<String, dynamic>,
-      );
-      expect(params.iterations, 3);
-      expect(params.memoryPowerOf2, 16);
-      expect(crypto.lastEncryptSymmetricPlainText, 'private-key');
-    });
+        final params = KdfParams.fromJson(
+          jsonDecode(storage.values['veil.kdf_params']!)
+              as Map<String, dynamic>,
+        );
+        expect(params.iterations, 3);
+        expect(params.memoryPowerOf2, 16);
+        expect(crypto.lastEncryptSymmetricPlainText, 'private-key');
+      },
+    );
 
     test('create fails when password validation fails', () async {
       final service = _buildService(
         validator: _FixedPasswordValidator(
-          const PasswordValidationResult.invalid('bad password'),
+          const PasswordValidationResult.invalid(
+            PasswordValidationError.minLength,
+          ),
         ),
       );
 
-      await expectLater(() => service.create('short'), throwsException);
+      await expectLater(
+        () => service.create('short'),
+        throwsA(isA<VeilException>()),
+      );
     });
 
     test('unlock returns false when configuration is incomplete', () async {
@@ -71,28 +81,31 @@ void main() {
       expect(await service.unlock('abc12345'), isFalse);
     });
 
-    test('unlock derives passphrase, decrypts private key and caches it', () async {
-      final storage = _FakeSecureStorageService(
-        values: {
-          'veil.kdf_params': jsonEncode(_kdfParams.toJson()),
-          'veil.private_key_encrypted': 'sym:private-key',
-        },
-      );
-      final keyDerivation = _FakeKeyDerivationService();
-      final crypto = _FakeCryptoService();
-      final service = _buildService(
-        storage: storage,
-        keyDerivation: keyDerivation,
-        crypto: crypto,
-      );
+    test(
+      'unlock derives passphrase, decrypts private key and caches it',
+      () async {
+        final storage = _FakeSecureStorageService(
+          values: {
+            'veil.kdf_params': jsonEncode(_kdfParams.toJson()),
+            'veil.private_key_encrypted': 'sym:private-key',
+          },
+        );
+        final keyDerivation = _FakeKeyDerivationService();
+        final crypto = _FakeCryptoService();
+        final service = _buildService(
+          storage: storage,
+          keyDerivation: keyDerivation,
+          crypto: crypto,
+        );
 
-      final unlocked = await service.unlock('abc12345');
+        final unlocked = await service.unlock('abc12345');
 
-      expect(unlocked, isTrue);
-      expect(keyDerivation.lastPassword, 'abc12345');
-      expect(crypto.lastDecryptSymmetricPayload, 'sym:private-key');
-      expect(await service.getUnlockedPrivateKey(), 'private-key');
-    });
+        expect(unlocked, isTrue);
+        expect(keyDerivation.lastPassword, 'abc12345');
+        expect(crypto.lastDecryptSymmetricPayload, 'sym:private-key');
+        expect(await service.getUnlockedPrivateKey(), 'private-key');
+      },
+    );
 
     test('unlock clears memory and returns false when decrypt fails', () async {
       final storage = _FakeSecureStorageService(
@@ -112,46 +125,52 @@ void main() {
       await expectLater(service.getUnlockedPrivateKey, throwsException);
     });
 
-    test('canUseBiometricUnlock requires availability, enabled flag and passphrase', () async {
-      final storage = _FakeSecureStorageService(
-        values: {
-          'veil.biometric_enabled': 'true',
-          'veil.biometric_passphrase': 'passphrase',
-        },
-      );
-      final biometrics = _FakeBiometricAuthService(isAvailableResult: true);
-      final service = _buildService(storage: storage, biometrics: biometrics);
+    test(
+      'canUseBiometricUnlock requires availability, enabled flag and passphrase',
+      () async {
+        final storage = _FakeSecureStorageService(
+          values: {
+            'veil.biometric_enabled': 'true',
+            'veil.biometric_passphrase': 'passphrase',
+          },
+        );
+        final biometrics = _FakeBiometricAuthService(isAvailableResult: true);
+        final service = _buildService(storage: storage, biometrics: biometrics);
 
-      expect(await service.canUseBiometricUnlock(), isTrue);
+        expect(await service.canUseBiometricUnlock(), isTrue);
 
-      biometrics.isAvailableResult = false;
-      expect(await service.canUseBiometricUnlock(), isFalse);
-    });
+        biometrics.isAvailableResult = false;
+        expect(await service.canUseBiometricUnlock(), isFalse);
+      },
+    );
 
-    test('enableBiometricUnlock stores passphrase after auth and password check', () async {
-      final storage = _FakeSecureStorageService(
-        values: {
-          'veil.kdf_params': jsonEncode(_kdfParams.toJson()),
-          'veil.private_key_encrypted': 'sym:private-key',
-        },
-      );
-      final biometrics = _FakeBiometricAuthService(
-        isAvailableResult: true,
-        authenticateResult: true,
-      );
-      final crypto = _FakeCryptoService();
-      final service = _buildService(
-        storage: storage,
-        biometrics: biometrics,
-        crypto: crypto,
-      );
+    test(
+      'enableBiometricUnlock stores passphrase after auth and password check',
+      () async {
+        final storage = _FakeSecureStorageService(
+          values: {
+            'veil.kdf_params': jsonEncode(_kdfParams.toJson()),
+            'veil.private_key_encrypted': 'sym:private-key',
+          },
+        );
+        final biometrics = _FakeBiometricAuthService(
+          isAvailableResult: true,
+          authenticateResult: true,
+        );
+        final crypto = _FakeCryptoService();
+        final service = _buildService(
+          storage: storage,
+          biometrics: biometrics,
+          crypto: crypto,
+        );
 
-      await service.enableBiometricUnlock('abc12345');
+        await service.enableBiometricUnlock('abc12345');
 
-      expect(storage.values['veil.biometric_enabled'], 'true');
-      expect(storage.values['veil.biometric_passphrase'], isNotEmpty);
-      expect(crypto.lastDecryptSymmetricPayload, 'sym:private-key');
-    });
+        expect(storage.values['veil.biometric_enabled'], 'true');
+        expect(storage.values['veil.biometric_passphrase'], isNotEmpty);
+        expect(crypto.lastDecryptSymmetricPayload, 'sym:private-key');
+      },
+    );
 
     test('enableBiometricUnlock throws when vault is not configured', () async {
       final service = _buildService(
@@ -168,86 +187,96 @@ void main() {
       );
     });
 
-    test('enableBiometricUnlock throws when encrypted private key is missing', () async {
-      final storage = _FakeSecureStorageService(
-        values: {
-          'veil.kdf_params': jsonEncode(_kdfParams.toJson()),
-        },
-      );
-      final service = _buildService(
-        storage: storage,
-        biometrics: _FakeBiometricAuthService(
-          isAvailableResult: true,
-          authenticateResult: true,
-        ),
-      );
+    test(
+      'enableBiometricUnlock throws when encrypted private key is missing',
+      () async {
+        final storage = _FakeSecureStorageService(
+          values: {'veil.kdf_params': jsonEncode(_kdfParams.toJson())},
+        );
+        final service = _buildService(
+          storage: storage,
+          biometrics: _FakeBiometricAuthService(
+            isAvailableResult: true,
+            authenticateResult: true,
+          ),
+        );
 
-      await expectLater(
-        () => service.enableBiometricUnlock('abc12345'),
-        throwsException,
-      );
-    });
+        await expectLater(
+          () => service.enableBiometricUnlock('abc12345'),
+          throwsException,
+        );
+      },
+    );
 
-    test('enableBiometricUnlock throws when biometrics are unavailable', () async {
-      final storage = _FakeSecureStorageService(
-        values: {
-          'veil.kdf_params': jsonEncode(_kdfParams.toJson()),
-          'veil.private_key_encrypted': 'sym:private-key',
-        },
-      );
-      final service = _buildService(
-        storage: storage,
-        biometrics: _FakeBiometricAuthService(isAvailableResult: false),
-      );
+    test(
+      'enableBiometricUnlock throws when biometrics are unavailable',
+      () async {
+        final storage = _FakeSecureStorageService(
+          values: {
+            'veil.kdf_params': jsonEncode(_kdfParams.toJson()),
+            'veil.private_key_encrypted': 'sym:private-key',
+          },
+        );
+        final service = _buildService(
+          storage: storage,
+          biometrics: _FakeBiometricAuthService(isAvailableResult: false),
+        );
 
-      await expectLater(
-        () => service.enableBiometricUnlock('abc12345'),
-        throwsException,
-      );
-    });
+        await expectLater(
+          () => service.enableBiometricUnlock('abc12345'),
+          throwsException,
+        );
+      },
+    );
 
-    test('enableBiometricUnlock throws biometric failed when auth returns false', () async {
-      final storage = _FakeSecureStorageService(
-        values: {
-          'veil.kdf_params': jsonEncode(_kdfParams.toJson()),
-          'veil.private_key_encrypted': 'sym:private-key',
-        },
-      );
-      final service = _buildService(
-        storage: storage,
-        biometrics: _FakeBiometricAuthService(
-          isAvailableResult: true,
-          authenticateResult: false,
-        ),
-      );
+    test(
+      'enableBiometricUnlock throws biometric failed when auth returns false',
+      () async {
+        final storage = _FakeSecureStorageService(
+          values: {
+            'veil.kdf_params': jsonEncode(_kdfParams.toJson()),
+            'veil.private_key_encrypted': 'sym:private-key',
+          },
+        );
+        final service = _buildService(
+          storage: storage,
+          biometrics: _FakeBiometricAuthService(
+            isAvailableResult: true,
+            authenticateResult: false,
+          ),
+        );
 
-      await expectLater(
-        () => service.enableBiometricUnlock('abc12345'),
-        throwsA(isA<BiometricFailedException>()),
-      );
-    });
+        await expectLater(
+          () => service.enableBiometricUnlock('abc12345'),
+          throwsA(isA<BiometricFailedException>()),
+        );
+      },
+    );
 
-    test('enableBiometricUnlock throws when password cannot decrypt key', () async {
-      final storage = _FakeSecureStorageService(
-        values: {
-          'veil.kdf_params': jsonEncode(_kdfParams.toJson()),
-          'veil.private_key_encrypted': 'sym:private-key',
-        },
-      );
-      final service = _buildService(
-        storage: storage,
-        biometrics: _FakeBiometricAuthService(
-          isAvailableResult: true,
-          authenticateResult: true,
-        ),
-        crypto: _FakeCryptoService(shouldThrowOnDecryptSymmetric: true),
-      );
+    test(
+      'enableBiometricUnlock throws when password cannot decrypt key',
+      () async {
+        final storage = _FakeSecureStorageService(
+          values: {
+            'veil.kdf_params': jsonEncode(_kdfParams.toJson()),
+            'veil.private_key_encrypted': 'sym:private-key',
+          },
+        );
+        final service = _buildService(
+          storage: storage,
+          biometrics: _FakeBiometricAuthService(
+            isAvailableResult: true,
+            authenticateResult: true,
+          ),
+          crypto: _FakeCryptoService(shouldThrowOnDecryptSymmetric: true),
+        );
 
-      await expectLater(
-        () => service.enableBiometricUnlock('abc12345'),
-        throwsException,
-      );
-    });
+        await expectLater(
+          () => service.enableBiometricUnlock('abc12345'),
+          throwsException,
+        );
+      },
+    );
 
     test('disableBiometricUnlock clears biometric storage', () async {
       final storage = _FakeSecureStorageService(
@@ -264,55 +293,61 @@ void main() {
       expect(storage.values['veil.biometric_passphrase'], '');
     });
 
-    test('unlockWithBiometrics succeeds when auth and decrypt succeed', () async {
-      final storage = _FakeSecureStorageService(
-        values: {
-          'veil.biometric_enabled': 'true',
-          'veil.biometric_passphrase': 'passphrase',
-          'veil.private_key_encrypted': 'sym:private-key',
-        },
-      );
-      final service = _buildService(
-        storage: storage,
-        biometrics: _FakeBiometricAuthService(
-          isAvailableResult: true,
-          authenticateResult: true,
-        ),
-      );
+    test(
+      'unlockWithBiometrics succeeds when auth and decrypt succeed',
+      () async {
+        final storage = _FakeSecureStorageService(
+          values: {
+            'veil.biometric_enabled': 'true',
+            'veil.biometric_passphrase': 'passphrase',
+            'veil.private_key_encrypted': 'sym:private-key',
+          },
+        );
+        final service = _buildService(
+          storage: storage,
+          biometrics: _FakeBiometricAuthService(
+            isAvailableResult: true,
+            authenticateResult: true,
+          ),
+        );
 
-      final unlocked = await service.unlockWithBiometrics();
+        final unlocked = await service.unlockWithBiometrics();
 
-      expect(unlocked, isTrue);
-      expect(await service.getUnlockedPrivateKey(), 'private-key');
-    });
+        expect(unlocked, isTrue);
+        expect(await service.getUnlockedPrivateKey(), 'private-key');
+      },
+    );
 
-    test('unlockWithBiometrics returns false when auth fails or decrypt errors', () async {
-      final storage = _FakeSecureStorageService(
-        values: {
-          'veil.biometric_enabled': 'true',
-          'veil.biometric_passphrase': 'passphrase',
-          'veil.private_key_encrypted': 'sym:private-key',
-        },
-      );
-      final authFailService = _buildService(
-        storage: storage,
-        biometrics: _FakeBiometricAuthService(
-          isAvailableResult: true,
-          authenticateResult: false,
-        ),
-      );
-      final decryptFailService = _buildService(
-        storage: storage,
-        biometrics: _FakeBiometricAuthService(
-          isAvailableResult: true,
-          authenticateResult: true,
-        ),
-        crypto: _FakeCryptoService(shouldThrowOnDecryptSymmetric: true),
-      );
+    test(
+      'unlockWithBiometrics returns false when auth fails or decrypt errors',
+      () async {
+        final storage = _FakeSecureStorageService(
+          values: {
+            'veil.biometric_enabled': 'true',
+            'veil.biometric_passphrase': 'passphrase',
+            'veil.private_key_encrypted': 'sym:private-key',
+          },
+        );
+        final authFailService = _buildService(
+          storage: storage,
+          biometrics: _FakeBiometricAuthService(
+            isAvailableResult: true,
+            authenticateResult: false,
+          ),
+        );
+        final decryptFailService = _buildService(
+          storage: storage,
+          biometrics: _FakeBiometricAuthService(
+            isAvailableResult: true,
+            authenticateResult: true,
+          ),
+          crypto: _FakeCryptoService(shouldThrowOnDecryptSymmetric: true),
+        );
 
-      expect(await authFailService.unlockWithBiometrics(), isFalse);
-      expect(await decryptFailService.unlockWithBiometrics(), isFalse);
-    });
+        expect(await authFailService.unlockWithBiometrics(), isFalse);
+        expect(await decryptFailService.unlockWithBiometrics(), isFalse);
+      },
+    );
 
     test('get and set auto-lock option roundtrip through storage', () async {
       final storage = _FakeSecureStorageService();
@@ -326,18 +361,22 @@ void main() {
       expect(await service.getAutoLockOption(), AutoLockOption.fifteenMinutes);
     });
 
-    test('getPublicKey and getUnlockedPrivateKey throw when unavailable', () async {
-      final service = _buildService();
+    test(
+      'getPublicKey and getUnlockedPrivateKey throw when unavailable',
+      () async {
+        final service = _buildService();
 
-      await expectLater(() => service.getPublicKey(), throwsException);
-      await expectLater(() => service.getUnlockedPrivateKey(), throwsException);
-    });
+        await expectLater(() => service.getPublicKey(), throwsException);
+        await expectLater(
+          () => service.getUnlockedPrivateKey(),
+          throwsException,
+        );
+      },
+    );
 
     test('getPublicKey throws when stored key is empty', () async {
       final service = _buildService(
-        storage: _FakeSecureStorageService(
-          values: {'veil.public_key': ''},
-        ),
+        storage: _FakeSecureStorageService(values: {'veil.public_key': ''}),
       );
 
       await expectLater(() => service.getPublicKey(), throwsException);
@@ -382,7 +421,8 @@ VeilStateService _buildService({
     cryptoService: crypto ?? _FakeCryptoService(),
     biometricAuthService: biometrics ?? _FakeBiometricAuthService(),
     passwordValidator:
-        validator ?? _FixedPasswordValidator(const PasswordValidationResult.valid()),
+        validator ??
+        _FixedPasswordValidator(const PasswordValidationResult.valid()),
     random: random,
   );
 }
@@ -458,10 +498,7 @@ class _FakeCryptoService implements CryptoService {
   }
 
   @override
-  Future<String> decryptSymmetric(
-    EncryptedData data,
-    String passphrase,
-  ) async {
+  Future<String> decryptSymmetric(EncryptedData data, String passphrase) async {
     lastDecryptSymmetricPayload = data.payload;
 
     if (shouldThrowOnDecryptSymmetric) {

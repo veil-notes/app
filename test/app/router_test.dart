@@ -17,9 +17,13 @@ import 'package:veil/features/veil/domain/states/unlocked_state.dart';
 import 'package:veil/features/veil/domain/states/veil_state.dart';
 import 'package:veil/features/veil/providers/veil_provider.dart';
 
+import '../test_localized_app.dart';
+
 void main() {
   group('routerProvider', () {
-    testWidgets('keeps bootstrapping users on the splash route', (tester) async {
+    testWidgets('keeps bootstrapping users on the splash route', (
+      tester,
+    ) async {
       final harness = _RouterHarness(
         state: (service) => BootstrappingState(service),
       );
@@ -46,32 +50,31 @@ void main() {
     });
 
     testWidgets('redirects locked users to unlock', (tester) async {
-      final harness = _RouterHarness(
-        state: (service) => LockedState(service),
-      );
+      final harness = _RouterHarness(state: (service) => LockedState(service));
       addTearDown(harness.dispose);
 
       await tester.pumpWidget(harness.build());
       await _pumpRouter(tester);
 
-      expect(find.text('Unlock!'), findsOneWidget);
+      expect(find.text('Unlock'), findsOneWidget);
       expect(harness.router.state.matchedLocation, '/unlock');
     });
 
-    testWidgets('redirects unlocked users from public routes to the note list', (
-      tester,
-    ) async {
-      final harness = _RouterHarness(
-        state: (service) => UnlockedState(service),
-      );
-      addTearDown(harness.dispose);
+    testWidgets(
+      'redirects unlocked users from public routes to the note list',
+      (tester) async {
+        final harness = _RouterHarness(
+          state: (service) => UnlockedState(service),
+        );
+        addTearDown(harness.dispose);
 
-      await tester.pumpWidget(harness.build());
-      await _pumpRouter(tester);
+        await tester.pumpWidget(harness.build());
+        await _pumpRouter(tester);
 
-      expect(find.text('no notes yet.'), findsOneWidget);
-      expect(harness.router.state.matchedLocation, '/list');
-    });
+        expect(find.text('no notes yet.'), findsOneWidget);
+        expect(harness.router.state.matchedLocation, '/list');
+      },
+    );
 
     testWidgets('allows unlocked users to open settings', (tester) async {
       final harness = _RouterHarness(
@@ -142,7 +145,7 @@ class _RouterHarness {
   Widget build() {
     return UncontrolledProviderScope(
       container: container,
-      child: MaterialApp.router(
+      child: buildLocalizedRouterApp(
         theme: AppTheme.darkTheme,
         routerConfig: router,
       ),
@@ -178,7 +181,8 @@ class _FakeVeilService implements VeilService {
   Future<void> enableBiometricUnlock(String password) async {}
 
   @override
-  Future<AutoLockOption> getAutoLockOption() async => AutoLockOption.fiveMinutes;
+  Future<AutoLockOption> getAutoLockOption() async =>
+      AutoLockOption.fiveMinutes;
 
   @override
   Future<bool> isBiometricEnabled() async => false;

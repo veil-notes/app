@@ -1,0 +1,32 @@
+{
+  "biometrics": {
+    "title": "Biometrics",
+    "subtitleAvailable": "Use biometrics to unlock the app faster.",
+    "subtitleEnabledUnavailable": "Biometrics is enabled, but is not available on this device.",
+    "subtitleDisabledUnavailable": "Enable biometrics for faster unlock.",
+    "checkingAvailability": "Checking biometric availability...",
+    "loading": "Loading biometric settings..."
+  },
+  "autoLock": {
+    "title": "Auto-lock",
+    "subtitle": "Locks the app after {{duration}}.",
+    "options": {
+      "oneMinute": "1 minute",
+      "fiveMinutes": "5 minutes",
+      "fifteenMinutes": "15 minutes",
+      "thirtyMinutes": "30 minutes"
+    }
+  },
+  "language": {
+    "title": "Language",
+    "subtitle": "Current language: {{language}}."
+  },
+  "lock": {
+    "title": "Lock",
+    "subtitle": "Clears the current session. You will need to unlock again."
+  },
+  "confirmPassword": {
+    "title": "Confirm password",
+    "hint": "Type your password..."
+  }
+}

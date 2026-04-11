@@ -47,10 +47,7 @@ void main() {
       passphrase,
     );
 
-    expect(
-      encrypted.payload,
-      startsWith('-----BEGIN PGP MESSAGE-----'),
-    );
+    expect(encrypted.payload, startsWith('-----BEGIN PGP MESSAGE-----'));
     expect(decrypted, plainText);
   });
 

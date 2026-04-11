@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../i18n/translations.g.dart';
 import '../../providers/notes_provider.dart';
 
 class NoteListScreen extends ConsumerWidget {
@@ -105,7 +106,7 @@ class NoteListScreen extends ConsumerWidget {
                   subtitle: Padding(
                     padding: const EdgeInsets.only(top: 2),
                     child: Text(
-                      _formatUpdatedAt(note.updatedAt),
+                      _formatUpdatedAt(context, note.updatedAt),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Theme.of(
                           context,
@@ -121,10 +122,10 @@ class NoteListScreen extends ConsumerWidget {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, _) => Center(
+        error: (_, _) => Center(
           child: Padding(
             padding: const EdgeInsets.all(24),
-            child: Text(error.toString()),
+            child: Text(context.t.common.errors.loadFailed),
           ),
         ),
       ),
@@ -164,7 +165,7 @@ class NoteListScreen extends ConsumerWidget {
                 const SizedBox(height: 16),
                 Center(
                   child: Text(
-                    'Delete this note permanently?',
+                    context.t.notes.delete.title,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: colorScheme.onSurface,
@@ -181,7 +182,7 @@ class NoteListScreen extends ConsumerWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(16),
                         child: Text(
-                          'Yes!',
+                          context.t.notes.delete.confirm,
                           style: Theme.of(context).textTheme.bodyLarge
                               ?.copyWith(color: colorScheme.onSurface),
                         ),
@@ -204,7 +205,7 @@ class NoteListScreen extends ConsumerWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(16),
                         child: Text(
-                          'No! Nevermind...',
+                          context.t.notes.delete.cancel,
                           style: Theme.of(context).textTheme.bodyLarge
                               ?.copyWith(color: colorScheme.onSurface),
                         ),
@@ -220,15 +221,17 @@ class NoteListScreen extends ConsumerWidget {
     );
   }
 
-  String _formatUpdatedAt(DateTime date) {
-    final day = date.day.toString().padLeft(2, '0');
-    final month = date.month.toString().padLeft(2, '0');
-    final year = date.year.toString();
+  String _formatUpdatedAt(BuildContext context, DateTime date) {
+    final materialLocalizations = MaterialLocalizations.of(context);
+    final mediaQuery = MediaQuery.of(context);
 
-    final hour = date.hour.toString().padLeft(2, '0');
-    final minute = date.minute.toString().padLeft(2, '0');
+    final datePart = materialLocalizations.formatCompactDate(date);
+    final timePart = materialLocalizations.formatTimeOfDay(
+      TimeOfDay.fromDateTime(date),
+      alwaysUse24HourFormat: mediaQuery.alwaysUse24HourFormat,
+    );
 
-    return '$year-$month-$day $hour:$minute';
+    return '$datePart $timePart';
   }
 
   String _plainTitle(String value) {
@@ -238,14 +241,8 @@ class NoteListScreen extends ConsumerWidget {
           RegExp(r'\*\*(.*?)\*\*'),
           (match) => match.group(1) ?? '',
         )
-        .replaceAllMapped(
-          RegExp(r'\*(.*?)\*'),
-          (match) => match.group(1) ?? '',
-        )
-        .replaceAllMapped(
-          RegExp(r'~~(.*?)~~'),
-          (match) => match.group(1) ?? '',
-        )
+        .replaceAllMapped(RegExp(r'\*(.*?)\*'), (match) => match.group(1) ?? '')
+        .replaceAllMapped(RegExp(r'~~(.*?)~~'), (match) => match.group(1) ?? '')
         .replaceAll(RegExp(r'^\s*-\s\[(?: |x|X)\]\s+'), '')
         .replaceAll(RegExp(r'^\s*-\s+'), '')
         .replaceAll(RegExp(r'^\s*\d+\.\s+'), '')
@@ -279,10 +276,10 @@ class _EmptyNotesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    return Center(
       child: Padding(
-        padding: EdgeInsets.all(24),
-        child: Text('no notes yet.', textAlign: TextAlign.center),
+        padding: const EdgeInsets.all(24),
+        child: Text(context.t.notes.empty, textAlign: TextAlign.center),
       ),
     );
   }

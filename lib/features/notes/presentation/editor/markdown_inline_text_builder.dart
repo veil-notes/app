@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 class MarkdownInlineTextBuilder {
   const MarkdownInlineTextBuilder();
 
-  TextSpan build(
-    String text, {
-    TextStyle? style,
-  }) {
+  TextSpan build(String text, {TextStyle? style}) {
     final spans = <InlineSpan>[];
     var buffer = StringBuffer();
     var i = 0;
@@ -17,10 +14,7 @@ class MarkdownInlineTextBuilder {
       }
 
       spans.add(
-        TextSpan(
-          text: buffer.toString(),
-          style: overrideStyle ?? style,
-        ),
+        TextSpan(text: buffer.toString(), style: overrideStyle ?? style),
       );
       buffer = StringBuffer();
     }
@@ -107,10 +101,7 @@ class MarkdownInlineTextBuilder {
 
     flushBuffer();
 
-    return TextSpan(
-      style: style,
-      children: spans,
-    );
+    return TextSpan(style: style, children: spans);
   }
 
   bool _startsWith(String source, int index, String pattern) {

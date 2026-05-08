@@ -1,0 +1,295 @@
+name: Android Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build signed Android artifacts
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: gradle
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Validate Android signing secrets
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          test -n "$ANDROID_KEYSTORE_BASE64" || { echo "Missing ANDROID_KEYSTORE_BASE64 secret"; exit 1; }
+          test -n "$ANDROID_KEYSTORE_PASSWORD" || { echo "Missing ANDROID_KEYSTORE_PASSWORD secret"; exit 1; }
+          test -n "$ANDROID_KEY_ALIAS" || { echo "Missing ANDROID_KEY_ALIAS secret"; exit 1; }
+          test -n "$ANDROID_KEY_PASSWORD" || { echo "Missing ANDROID_KEY_PASSWORD secret"; exit 1; }
+
+      - name: Restore Android signing files
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/upload-keystore.jks
+          cat > android/key.properties <<EOF
+          storePassword=$ANDROID_KEYSTORE_PASSWORD
+          keyPassword=$ANDROID_KEY_PASSWORD
+          keyAlias=$ANDROID_KEY_ALIAS
+          storeFile=upload-keystore.jks
+          EOF
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Test
+        run: flutter test
+
+      - name: Build Android App Bundle
+        run: flutter build appbundle --release
+
+      - name: Build Android APKs
+        run: flutter build apk --release --split-per-abi
+
+      - name: Prepare release assets
+        id: assets
+        run: |
+          TAG_NAME="${GITHUB_REF_NAME}"
+          RELEASE_DATE="$(date -u +%F)"
+          VERSION_LINE="$(grep -E '^version:' pubspec.yaml | head -n 1 | awk '{print $2}')"
+          BUILD_NUMBER="${VERSION_LINE##*+}"
+          PREVIOUS_TAG="$(git tag --list 'v*' --sort=-v:refname | grep -v "^${TAG_NAME}$" | head -n 1 || true)"
+          ASSET_DIR="release-assets"
+          ARM64_APK="app-arm64-v8a-release.apk"
+          ARMV7_APK="app-armeabi-v7a-release.apk"
+          X64_APK="app-x86_64-release.apk"
+          AAB_FILE="app-release.aab"
+
+          if [ -n "$PREVIOUS_TAG" ]; then
+            COMMIT_RANGE="$PREVIOUS_TAG..$TAG_NAME"
+          else
+            COMMIT_RANGE="$TAG_NAME"
+          fi
+
+          mkdir -p "$ASSET_DIR"
+          cp "build/app/outputs/flutter-apk/$ARM64_APK" "$ASSET_DIR/$ARM64_APK"
+          cp "build/app/outputs/flutter-apk/$ARMV7_APK" "$ASSET_DIR/$ARMV7_APK"
+          cp "build/app/outputs/flutter-apk/$X64_APK" "$ASSET_DIR/$X64_APK"
+          cp "build/app/outputs/bundle/release/$AAB_FILE" "$ASSET_DIR/$AAB_FILE"
+
+          size_mb() {
+            awk -v bytes="$(stat -c%s "$1")" 'BEGIN { printf "%.2f MB", bytes / 1000 / 1000 }'
+          }
+
+          sha256_upper() {
+            sha256sum "$1" | awk '{ print toupper($1) }'
+          }
+
+          ARM64_SIZE="$(size_mb "$ASSET_DIR/$ARM64_APK")"
+          ARMV7_SIZE="$(size_mb "$ASSET_DIR/$ARMV7_APK")"
+          X64_SIZE="$(size_mb "$ASSET_DIR/$X64_APK")"
+          AAB_SIZE="$(size_mb "$ASSET_DIR/$AAB_FILE")"
+
+          ARM64_SHA="$(sha256_upper "$ASSET_DIR/$ARM64_APK")"
+          ARMV7_SHA="$(sha256_upper "$ASSET_DIR/$ARMV7_APK")"
+          X64_SHA="$(sha256_upper "$ASSET_DIR/$X64_APK")"
+          AAB_SHA="$(sha256_upper "$ASSET_DIR/$AAB_FILE")"
+
+          cat > "$ASSET_DIR/SHA256SUMS.txt" <<EOF
+          $ARM64_SHA  $ARM64_APK
+          $ARMV7_SHA  $ARMV7_APK
+          $X64_SHA  $X64_APK
+          $AAB_SHA  $AAB_FILE
+          EOF
+
+          {
+            echo "## Highlights"
+            echo
+            if git log --no-merges --pretty=format:'- %s (%h)' "$COMMIT_RANGE" > release-commits.tmp && [ -s release-commits.tmp ]; then
+              cat release-commits.tmp
+              echo
+            else
+              echo "- Release build for $TAG_NAME"
+            fi
+          } > release-highlights.md
+
+          cat > release-notes.md <<EOF
+          # Veil $TAG_NAME
+
+          Release date: $RELEASE_DATE
+
+          Build number: $BUILD_NUMBER
+
+          ## Summary
+
+          Public beta release of Veil for Android.
+
+          This build includes the commits listed below and publishes signed Android APKs for manual installation.
+
+          Your notes stay on your device and are encrypted locally.
+
+          $(cat release-highlights.md)
+
+          ## Important Warnings
+
+          This is still an experimental build.
+
+          - Expect bugs
+          - Do not rely on it for critical data yet
+          - Password recovery is not available
+          - The app has not been security-audited
+
+          ## APK Assets
+
+          Recommended for most Android phones:
+
+          - \`$ARM64_APK\` - \`$ARM64_SIZE\`
+
+          Other builds:
+
+          - \`$ARMV7_APK\` - \`$ARMV7_SIZE\`
+          - \`$X64_APK\` - \`$X64_SIZE\`
+
+          Notes:
+
+          - \`arm64-v8a\` is the correct APK for most modern Android devices
+          - \`armeabi-v7a\` is for older 32-bit devices
+          - \`x86_64\` is mostly useful for emulators or specific x86_64 environments
+
+          Additional technical asset:
+
+          - \`$AAB_FILE\` - \`$AAB_SIZE\`
+
+          ## Installation
+
+          Android:
+
+          1. Download the APK that matches your device architecture
+          2. Allow installation from unknown sources if Android asks
+          3. Install the APK
+          4. Open Veil
+
+          If you are not sure which APK to use, start with \`$ARM64_APK\`.
+
+          ## SHA256
+
+          ### $ARM64_APK
+
+          \`\`\`text
+          $ARM64_SHA
+          \`\`\`
+
+          ### $ARMV7_APK
+
+          \`\`\`text
+          $ARMV7_SHA
+          \`\`\`
+
+          ### $X64_APK
+
+          \`\`\`text
+          $X64_SHA
+          \`\`\`
+
+          ### $AAB_FILE
+
+          \`\`\`text
+          $AAB_SHA
+          \`\`\`
+
+          ## Verification
+
+          Linux/macOS:
+
+          \`\`\`bash
+          sha256sum $ARM64_APK
+          sha256sum $ARMV7_APK
+          sha256sum $X64_APK
+          sha256sum $AAB_FILE
+          \`\`\`
+
+          PowerShell:
+
+          \`\`\`powershell
+          Get-FileHash .\\$ARM64_APK -Algorithm SHA256
+          Get-FileHash .\\$ARMV7_APK -Algorithm SHA256
+          Get-FileHash .\\$X64_APK -Algorithm SHA256
+          Get-FileHash .\\$AAB_FILE -Algorithm SHA256
+          \`\`\`
+
+          ## Current Limitations
+
+          - No cloud sync
+          - No import/export flow in the app yet
+          - No password recovery
+
+          ## Feedback
+
+          If you test this build and hit a bug, open an issue with:
+
+          - device model
+          - Android version
+          - app version
+          - steps to reproduce
+
+          ## Repo Context
+
+          This public repository is used for releases, notes, and user feedback while the source code remains private during early development.
+          EOF
+
+          echo "asset_dir=$ASSET_DIR" >> "$GITHUB_OUTPUT"
+          echo "release_notes=release-notes.md" >> "$GITHUB_OUTPUT"
+
+      - name: Upload workflow artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: android-release-${{ github.ref_name }}
+          path: release-assets/*
+          if-no-files-found: error
+
+      - name: Publish GitHub Release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: ${{ github.ref_name }}
+          RELEASE_NOTES: ${{ steps.assets.outputs.release_notes }}
+        run: |
+          FLAGS=()
+          if [[ "$TAG_NAME" =~ (alpha|beta|rc) ]]; then
+            FLAGS+=(--prerelease)
+          fi
+
+          if gh release view "$TAG_NAME" >/dev/null 2>&1; then
+            gh release edit "$TAG_NAME" \
+              --title "Veil $TAG_NAME" \
+              --notes-file "$RELEASE_NOTES" \
+              "${FLAGS[@]}"
+            gh release upload "$TAG_NAME" release-assets/* --clobber
+          else
+            gh release create "$TAG_NAME" release-assets/* \
+              --title "Veil $TAG_NAME" \
+              --notes-file "$RELEASE_NOTES" \
+              "${FLAGS[@]}"
+          fi

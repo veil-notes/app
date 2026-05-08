@@ -275,9 +275,6 @@ jobs:
           - app version
           - steps to reproduce
 
-          ## Repo Context
-
-          This public repository is used for releases, notes, and user feedback while the source code remains private during early development.
           EOF
 
           echo "asset_dir=$ASSET_DIR" >> "$GITHUB_OUTPUT"

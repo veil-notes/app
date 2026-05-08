@@ -75,6 +75,8 @@ jobs:
             pkg-config \
             libgtk-3-dev \
             liblzma-dev \
+            libsecret-1-dev \
+            libjsoncpp-dev \
             libstdc++-12-dev
 
       - name: Build Linux debug bundle for OpenPGP tests

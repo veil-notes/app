@@ -150,6 +150,20 @@ void main() {
 
       expect(find.text('Biometric authentication failed.'), findsOneWidget);
     });
+
+    testWidgets('auto-triggers biometrics when provider is already true', (
+      tester,
+    ) async {
+      final service = _FakeVeilService();
+
+      await tester.pumpWidget(
+        wrap(service: service, biometricsValue: const AsyncData<bool>(true)),
+      );
+      await tester.pump();
+      await tester.pump();
+
+      expect(service.biometricUnlockCalls, 1);
+    });
   });
 }
 

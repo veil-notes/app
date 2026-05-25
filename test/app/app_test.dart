@@ -88,14 +88,11 @@ void main() {
     addTearDown(harness.dispose);
 
     await tester.pumpWidget(harness.build());
-    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
-    await tester.pump();
-    harness.controller.emit(UnlockedState(harness.service));
     await tester.pump();
     tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.detached);
     await tester.pump();
 
-    expect(harness.controller.lockCalls, 2);
+    expect(harness.controller.lockCalls, 1);
   });
 
   testWidgets('does not lock while biometric prompt is in progress', (

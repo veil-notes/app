@@ -13,43 +13,49 @@ class UnlockScreen extends ConsumerStatefulWidget {
   ConsumerState<UnlockScreen> createState() => _UnlockScreenState();
 }
 
-class _UnlockScreenState extends ConsumerState<UnlockScreen> {
+class _UnlockScreenState extends ConsumerState<UnlockScreen>
+    with WidgetsBindingObserver {
   static const _errorMapper = AppErrorMapper();
 
   final TextEditingController _passwordController = TextEditingController();
 
   ProviderSubscription<AsyncValue<bool>>? _biometricSubscription;
   bool _autoBiometricTriggered = false;
+  bool _autoBiometricInFlight = false;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
 
     _biometricSubscription = ref.listenManual<AsyncValue<bool>>(
       canUseBiometricUnlockProvider,
       (_, next) {
         next.whenData((enabled) {
-          if (!enabled || _autoBiometricTriggered || !mounted) {
+          if (!enabled) {
             return;
           }
-
-          _autoBiometricTriggered = true;
-
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (!mounted) {
-              return;
-            }
-
-            final controller = ref.read(veilControllerProvider.notifier);
-            _unlockWithBiometrics(controller);
-          });
+          _attemptAutoBiometric();
         });
       },
     );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _attemptAutoBiometric();
+    });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _autoBiometricTriggered = false;
+      _attemptAutoBiometric();
+    }
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _biometricSubscription?.close();
     _passwordController.dispose();
     super.dispose();
@@ -123,6 +129,28 @@ class _UnlockScreenState extends ConsumerState<UnlockScreen> {
         return;
       }
       _showError(error);
+    }
+  }
+
+  Future<void> _attemptAutoBiometric() async {
+    if (!mounted || _autoBiometricTriggered || _autoBiometricInFlight) {
+      return;
+    }
+
+    final canUse =
+        ref.read(canUseBiometricUnlockProvider).asData?.value ?? false;
+    if (!canUse) {
+      return;
+    }
+
+    _autoBiometricTriggered = true;
+    _autoBiometricInFlight = true;
+
+    try {
+      final controller = ref.read(veilControllerProvider.notifier);
+      await _unlockWithBiometrics(controller);
+    } finally {
+      _autoBiometricInFlight = false;
     }
   }
 

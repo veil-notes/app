@@ -1,9 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:veil/app/app.dart';
 import 'package:veil/app/router.dart';
+import 'package:veil/app/shortcuts/app_shortcut_action.dart';
+import 'package:veil/app/shortcuts/shortcut_intent_service.dart';
+import 'package:veil/app/shortcuts/shortcut_provider.dart';
 import 'package:veil/features/veil/application/veil_controller.dart';
 import 'package:veil/features/veil/application/veil_service.dart';
 import 'package:veil/features/veil/application/veil_session_controller.dart';
@@ -141,10 +146,94 @@ void main() {
 
     expect(harness.sessionController.refreshCalls, 0);
   });
+
+  testWidgets(
+    'opens new note when shortcut arrives and veil becomes unlocked',
+    (tester) async {
+      final harness = _AppHarness(
+        initialStateBuilder: (service) => LockedState(service),
+      );
+      addTearDown(harness.dispose);
+
+      await tester.pumpWidget(harness.build());
+      await tester.pump();
+
+      harness.shortcutService.emit(AppShortcutAction.newNote);
+      await tester.pump();
+      await tester.pump();
+
+      harness.controller.emit(UnlockedState(harness.service));
+      await _pumpUntilFound(tester, find.text('note-route'));
+
+      expect(find.text('note-route'), findsOneWidget);
+    },
+  );
+
+  testWidgets('shortcut note opens on top of list so back returns to list', (
+    tester,
+  ) async {
+    final harness = _AppHarness(
+      initialStateBuilder: (service) => LockedState(service),
+    );
+    addTearDown(harness.dispose);
+
+    await tester.pumpWidget(harness.build());
+    await tester.pump();
+
+    harness.shortcutService.emit(AppShortcutAction.newNote);
+    await tester.pump();
+    await tester.pump();
+
+    harness.controller.emit(UnlockedState(harness.service));
+    await _pumpUntilFound(tester, find.text('note-route'));
+
+    expect(find.text('note-route'), findsOneWidget);
+
+    harness.router.pop();
+    await _pumpUntilFound(tester, find.text('list-route'));
+
+    expect(find.text('list-route'), findsOneWidget);
+  });
+
+  testWidgets('opens new note from initial shortcut action after unlock', (
+    tester,
+  ) async {
+    final harness = _AppHarness(
+      initialStateBuilder: (service) => LockedState(service),
+    );
+    addTearDown(harness.dispose);
+
+    harness.shortcutService.initialAction = AppShortcutAction.newNote;
+
+    await tester.pumpWidget(harness.build());
+    await tester.pump();
+    await tester.pump();
+
+    harness.controller.emit(UnlockedState(harness.service));
+    await _pumpUntilFound(tester, find.text('note-route'));
+
+    expect(find.text('note-route'), findsOneWidget);
+  });
+}
+
+Future<void> _pumpUntilFound(
+  WidgetTester tester,
+  Finder finder, {
+  int maxPumps = 40,
+}) async {
+  for (var i = 0; i < maxPumps; i++) {
+    await tester.pump();
+    if (finder.evaluate().isNotEmpty) {
+      return;
+    }
+  }
+
+  fail('Expected widget was not found after $maxPumps pumps.');
 }
 
 class _AppHarness {
   final _FakeVeilService service = _FakeVeilService();
+  late final _FakeShortcutIntentService shortcutService;
   late final _FakeVeilSessionController sessionController;
   late final _FakeVeilController controller;
   late final GoRouter router;
@@ -158,17 +247,26 @@ class _AppHarness {
       timeout: const Duration(minutes: 5),
     );
     controller = _FakeVeilController(initialStateBuilder(service));
+    shortcutService = _FakeShortcutIntentService();
     router = GoRouter(
       routes: [
         GoRoute(
           path: '/',
-          builder: (_, _) =>
-              const SizedBox.expand(child: ColoredBox(color: Colors.black)),
+          builder: (_, _) => const Scaffold(body: Text('root-route')),
+        ),
+        GoRoute(
+          path: '/note',
+          builder: (_, _) => const Scaffold(body: Text('note-route')),
+        ),
+        GoRoute(
+          path: '/list',
+          builder: (_, _) => const Scaffold(body: Text('list-route')),
         ),
       ],
     );
     container = ProviderContainer(
       overrides: [
+        shortcutIntentServiceProvider.overrideWithValue(shortcutService),
         routerProvider.overrideWithValue(router),
         veilServiceProvider.overrideWithValue(service),
         autoLockOptionProvider.overrideWith(
@@ -290,4 +388,24 @@ class _FakeVeilService implements VeilService {
 
   @override
   Future<bool> unlockWithBiometrics() async => true;
+}
+
+class _FakeShortcutIntentService implements ShortcutIntentService {
+  final StreamController<AppShortcutAction> _controller =
+      StreamController<AppShortcutAction>.broadcast();
+
+  AppShortcutAction? initialAction;
+
+  @override
+  Stream<AppShortcutAction> get actions => _controller.stream;
+
+  @override
+  Future<AppShortcutAction?> initialize() async => initialAction;
+
+  void emit(AppShortcutAction action) => _controller.add(action);
+
+  @override
+  void dispose() {
+    _controller.close();
+  }
 }

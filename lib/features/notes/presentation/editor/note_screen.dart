@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../i18n/translations.g.dart';
 import '../../domain/editor/markdown_block.dart';
@@ -72,7 +73,7 @@ class _NoteScreenState extends ConsumerState<NoteScreen> {
                 shape: BoxShape.circle,
                 border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
               ),
-              child: const BackButton(color: Colors.white),
+              child: BackButton(color: Colors.white, onPressed: _handleBack),
             ),
           ),
         ),
@@ -402,5 +403,15 @@ class _NoteScreenState extends ConsumerState<NoteScreen> {
         _saveStatus = NoteSaveStatus.error;
       });
     }
+  }
+
+  void _handleBack() {
+    final router = GoRouter.of(context);
+    if (router.canPop()) {
+      router.pop();
+      return;
+    }
+
+    router.go('/list');
   }
 }

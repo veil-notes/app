@@ -239,6 +239,7 @@ class _TranslationsVeilSetupRu extends TranslationsVeilSetupEn {
 	// Translations
 	@override String get passwordHint => 'Введите пароль, чтобы начать...';
 	@override String get cta => 'Начать!';
+	@override String get biometricsOptInTitle => 'Включить биометрию';
 }
 
 // Path: veil.unlock
@@ -345,6 +346,7 @@ extension on TranslationsRu {
 			'settings.confirmPassword.hint' => 'Введите пароль...',
 			'veil.setup.passwordHint' => 'Введите пароль, чтобы начать...',
 			'veil.setup.cta' => 'Начать!',
+			'veil.setup.biometricsOptInTitle' => 'Включить биометрию',
 			'veil.unlock.passwordHint' => 'Введите пароль...',
 			'veil.unlock.cta' => 'Разблокировать',
 			'veil.unlock.biometricTooltip' => 'Биометрия',

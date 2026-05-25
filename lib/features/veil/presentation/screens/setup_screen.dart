@@ -17,6 +17,9 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
 
   final TextEditingController _passwordController = TextEditingController();
 
+  bool _enableBiometricsOnboarding = true;
+  bool _isSubmitting = false;
+
   @override
   void dispose() {
     _passwordController.dispose();
@@ -39,7 +42,21 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
               decoration: InputDecoration(hintText: t.veil.setup.passwordHint),
             ),
             const SizedBox(height: 24),
-            ElevatedButton(onPressed: _submit, child: Text(t.veil.setup.cta)),
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              value: _enableBiometricsOnboarding,
+              onChanged: _isSubmitting
+                  ? null
+                  : (value) {
+                      setState(() => _enableBiometricsOnboarding = value);
+                    },
+              title: Text(t.veil.setup.biometricsOptInTitle),
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: _isSubmitting ? null : _submit,
+              child: Text(t.veil.setup.cta),
+            ),
           ],
         ),
       ),
@@ -47,11 +64,20 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
   }
 
   Future<void> _submit() async {
+    if (_isSubmitting) {
+      return;
+    }
+
+    setState(() => _isSubmitting = true);
+
     final controller = ref.read(veilControllerProvider.notifier);
     final password = _passwordController.text;
 
     try {
-      await controller.create(password);
+      await controller.createWithOnboardingBiometrics(
+        password: password,
+        enableBiometrics: _enableBiometricsOnboarding,
+      );
     } catch (error) {
       if (!mounted) {
         return;
@@ -60,6 +86,10 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(_errorMapper.map(context.t, error))),
       );
+    } finally {
+      if (mounted) {
+        setState(() => _isSubmitting = false);
+      }
     }
   }
 }

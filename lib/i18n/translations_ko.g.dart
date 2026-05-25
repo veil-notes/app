@@ -239,6 +239,7 @@ class _TranslationsVeilSetupKo extends TranslationsVeilSetupEn {
 	// Translations
 	@override String get passwordHint => '시작하려면 비밀번호를 입력하세요...';
 	@override String get cta => '시작하기!';
+	@override String get biometricsOptInTitle => '생체인식 활성화';
 }
 
 // Path: veil.unlock
@@ -345,6 +346,7 @@ extension on TranslationsKo {
 			'settings.confirmPassword.hint' => '비밀번호를 입력하세요...',
 			'veil.setup.passwordHint' => '시작하려면 비밀번호를 입력하세요...',
 			'veil.setup.cta' => '시작하기!',
+			'veil.setup.biometricsOptInTitle' => '생체인식 활성화',
 			'veil.unlock.passwordHint' => '비밀번호를 입력하세요...',
 			'veil.unlock.cta' => '잠금 해제',
 			'veil.unlock.biometricTooltip' => '생체 인증',

@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../domain/states/bootstrapping_state.dart';
 import '../providers/veil_provider.dart';
 import 'veil_service.dart';
+import '../domain/biometrics/biometric_auth_exception.dart';
 
 import '../domain/states/veil_state.dart';
 
@@ -25,6 +26,30 @@ class VeilController extends Notifier<VeilState> {
 
   Future<void> create(String password) async {
     state = await state.create(password);
+  }
+
+  Future<bool> createWithOnboardingBiometrics({
+    required String password,
+    required bool enableBiometrics,
+  }) async {
+    state = await state.create(password);
+
+    if (!enableBiometrics) {
+      return false;
+    }
+
+    try {
+      await _service.enableBiometricUnlock(password);
+      return true;
+    } on BiometricCanceledException {
+      return false;
+    } on BiometricUnavailableException {
+      return false;
+    } on BiometricLockedOutException {
+      return false;
+    } on BiometricFailedException {
+      return false;
+    }
   }
 
   Future<void> unlock(String password) async {

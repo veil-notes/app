@@ -1,7 +1,8 @@
 {
   "setup": {
     "passwordHint": "输入密码以开始...",
-    "cta": "开始吧！"
+    "cta": "开始吧！",
+    "biometricsOptInTitle": "启用生物识别技术"
   },
   "unlock": {
     "passwordHint": "输入你的密码...",

@@ -59,14 +59,56 @@ void main() {
 
       expect(find.text('Password is required.'), findsOneWidget);
     });
+
+    testWidgets('enables biometrics during onboarding by default', (
+      tester,
+    ) async {
+      final service = _FakeVeilService();
+
+      await tester.pumpWidget(wrap(service));
+      await tester.pump();
+      await tester.pump();
+
+      await tester.enterText(find.byType(TextField), 'abc12345');
+      await tester.tap(find.text("Let's start!"));
+      await tester.pumpAndSettle();
+
+      expect(service.createdPassword, 'abc12345');
+      expect(service.enableBiometricCalls, 1);
+      expect(service.enabledPassword, 'abc12345');
+    });
+
+    testWidgets('does not enable biometrics when user opts out', (
+      tester,
+    ) async {
+      final service = _FakeVeilService();
+
+      await tester.pumpWidget(wrap(service));
+      await tester.pump();
+      await tester.pump();
+
+      await tester.tap(find.byType(Switch));
+      await tester.pumpAndSettle();
+
+      await tester.enterText(find.byType(TextField), 'abc12345');
+      await tester.tap(find.text("Let's start!"));
+      await tester.pumpAndSettle();
+
+      expect(service.createdPassword, 'abc12345');
+      expect(service.enableBiometricCalls, 0);
+      expect(service.enabledPassword, isNull);
+    });
   });
 }
 
 class _FakeVeilService implements VeilService {
   final Object? throwOnCreate;
   String? createdPassword;
+  final Object? throwOnEnableBiometric;
+  String? enabledPassword;
+  int enableBiometricCalls = 0;
 
-  _FakeVeilService({this.throwOnCreate});
+  _FakeVeilService({this.throwOnCreate, this.throwOnEnableBiometric});
 
   @override
   Future<bool> isConfigured() async => false;
@@ -92,7 +134,13 @@ class _FakeVeilService implements VeilService {
   Future<bool> canUseBiometricUnlock() async => false;
 
   @override
-  Future<void> enableBiometricUnlock(String password) async {}
+  Future<void> enableBiometricUnlock(String password) async {
+    enabledPassword = password;
+    enableBiometricCalls++;
+    if (throwOnEnableBiometric != null) {
+      throw throwOnEnableBiometric!;
+    }
+  }
 
   @override
   Future<void> disableBiometricUnlock() async {}

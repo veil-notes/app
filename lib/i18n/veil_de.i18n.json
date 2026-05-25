@@ -1,7 +1,8 @@
 {
   "setup": {
     "passwordHint": "Gib ein Passwort ein, um zu starten...",
-    "cta": "Los geht's!"
+    "cta": "Los geht's!",
+    "biometricsOptInTitle": "Biometrie aktivieren"
   },
   "unlock": {
     "passwordHint": "Gib dein Passwort ein...",

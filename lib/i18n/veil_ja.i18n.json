@@ -1,7 +1,8 @@
 {
   "setup": {
     "passwordHint": "開始するにはパスワードを入力してください...",
-    "cta": "始めましょう！"
+    "cta": "始めましょう！",
+    "biometricsOptInTitle": "生体認証を有効にする"
   },
   "unlock": {
     "passwordHint": "パスワードを入力してください...",

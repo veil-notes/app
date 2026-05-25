@@ -315,6 +315,9 @@ class TranslationsVeilSetupEn {
 
 	/// en: 'Let's start!'
 	String get cta => 'Let\'s start!';
+
+	/// en: 'Enable biometrics'
+	String get biometricsOptInTitle => 'Enable biometrics';
 }
 
 // Path: veil.unlock
@@ -461,6 +464,7 @@ extension on Translations {
 			'settings.confirmPassword.hint' => 'Type your password...',
 			'veil.setup.passwordHint' => 'Type a password to start...',
 			'veil.setup.cta' => 'Let\'s start!',
+			'veil.setup.biometricsOptInTitle' => 'Enable biometrics',
 			'veil.unlock.passwordHint' => 'Type your password...',
 			'veil.unlock.cta' => 'Unlock',
 			'veil.unlock.biometricTooltip' => 'Biometrics',

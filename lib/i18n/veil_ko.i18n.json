@@ -1,7 +1,8 @@
 {
   "setup": {
     "passwordHint": "시작하려면 비밀번호를 입력하세요...",
-    "cta": "시작하기!"
+    "cta": "시작하기!",
+    "biometricsOptInTitle": "생체인식 활성화"
   },
   "unlock": {
     "passwordHint": "비밀번호를 입력하세요...",

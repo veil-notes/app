@@ -239,6 +239,7 @@ class _TranslationsVeilSetupZh extends TranslationsVeilSetupEn {
 	// Translations
 	@override String get passwordHint => '输入密码以开始...';
 	@override String get cta => '开始吧！';
+	@override String get biometricsOptInTitle => '启用生物识别技术';
 }
 
 // Path: veil.unlock
@@ -345,6 +346,7 @@ extension on TranslationsZh {
 			'settings.confirmPassword.hint' => '输入你的密码...',
 			'veil.setup.passwordHint' => '输入密码以开始...',
 			'veil.setup.cta' => '开始吧！',
+			'veil.setup.biometricsOptInTitle' => '启用生物识别技术',
 			'veil.unlock.passwordHint' => '输入你的密码...',
 			'veil.unlock.cta' => '解锁',
 			'veil.unlock.biometricTooltip' => '生物识别',

@@ -239,6 +239,7 @@ class _TranslationsVeilSetupJa extends TranslationsVeilSetupEn {
 	// Translations
 	@override String get passwordHint => '開始するにはパスワードを入力してください...';
 	@override String get cta => '始めましょう！';
+	@override String get biometricsOptInTitle => '生体認証を有効にする';
 }
 
 // Path: veil.unlock
@@ -345,6 +346,7 @@ extension on TranslationsJa {
 			'settings.confirmPassword.hint' => 'パスワードを入力...',
 			'veil.setup.passwordHint' => '開始するにはパスワードを入力してください...',
 			'veil.setup.cta' => '始めましょう！',
+			'veil.setup.biometricsOptInTitle' => '生体認証を有効にする',
 			'veil.unlock.passwordHint' => 'パスワードを入力してください...',
 			'veil.unlock.cta' => 'ロック解除',
 			'veil.unlock.biometricTooltip' => '生体認証',

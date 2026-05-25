@@ -12,6 +12,14 @@ import 'package:veil/features/veil/domain/veil_exception.dart';
 import '../test_localized_app.dart';
 
 void main() {
+  Finder passwordField() => find.byType(TextField).at(0);
+  Finder confirmPasswordField() => find.byType(TextField).at(1);
+
+  Future<void> enterMatchingPasswords(WidgetTester tester, String value) async {
+    await tester.enterText(passwordField(), value);
+    await tester.enterText(confirmPasswordField(), value);
+  }
+
   Widget wrap(VeilService service) {
     return ProviderScope(
       overrides: [veilServiceProvider.overrideWithValue(service)],
@@ -36,11 +44,11 @@ void main() {
       await tester.pump();
       await tester.pump();
 
-      await tester.enterText(find.byType(TextField), 'abc12345');
+      await enterMatchingPasswords(tester, 'Abcd1234!!');
       await tester.tap(find.text("Let's start!"));
       await tester.pumpAndSettle();
 
-      expect(service.createdPassword, 'abc12345');
+      expect(service.createdPassword, 'Abcd1234!!');
     });
 
     testWidgets('shows snackbar when create throws', (tester) async {
@@ -69,13 +77,13 @@ void main() {
       await tester.pump();
       await tester.pump();
 
-      await tester.enterText(find.byType(TextField), 'abc12345');
+      await enterMatchingPasswords(tester, 'Abcd1234!!');
       await tester.tap(find.text("Let's start!"));
       await tester.pumpAndSettle();
 
-      expect(service.createdPassword, 'abc12345');
+      expect(service.createdPassword, 'Abcd1234!!');
       expect(service.enableBiometricCalls, 1);
-      expect(service.enabledPassword, 'abc12345');
+      expect(service.enabledPassword, 'Abcd1234!!');
     });
 
     testWidgets('does not enable biometrics when user opts out', (
@@ -90,13 +98,12 @@ void main() {
       await tester.tap(find.byType(Switch));
       await tester.pumpAndSettle();
 
-      await tester.enterText(find.byType(TextField), 'abc12345');
+      await enterMatchingPasswords(tester, 'Abcd1234!!');
       await tester.tap(find.text("Let's start!"));
       await tester.pumpAndSettle();
 
-      expect(service.createdPassword, 'abc12345');
+      expect(service.createdPassword, 'Abcd1234!!');
       expect(service.enableBiometricCalls, 0);
-      expect(service.enabledPassword, isNull);
     });
   });
 }

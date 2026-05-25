@@ -240,6 +240,15 @@ class _TranslationsVeilSetupKo extends TranslationsVeilSetupEn {
 	@override String get passwordHint => '시작하려면 비밀번호를 입력하세요...';
 	@override String get cta => '시작하기!';
 	@override String get biometricsOptInTitle => '생체인식 활성화';
+	@override String get confirmPasswordHint => '비밀번호를 다시 입력하세요...';
+	@override String get passwordRulesCta => '비밀번호 규칙';
+	@override String get passwordRulesTitle => '비밀번호는 다음을 포함해야 합니다:';
+	@override String get passwordRuleMinLength => '최소 10자';
+	@override String get passwordRuleUppercase => '대문자 1개 이상';
+	@override String get passwordRuleLowercase => '소문자 1개 이상';
+	@override String get passwordRuleNumber => '숫자 1개 이상';
+	@override String get passwordRuleSpecialChar => '특수문자 1개 이상';
+	@override String get passwordsDoNotMatch => '비밀번호가 일치하지 않습니다.';
 }
 
 // Path: veil.unlock
@@ -272,7 +281,6 @@ class _TranslationsVeilErrorsKo extends TranslationsVeilErrorsEn {
 
 	// Translations
 	@override String get passwordRequired => '비밀번호가 필요합니다.';
-	@override String get passwordMinLength => '비밀번호는 최소 8자여야 합니다.';
 	@override String get passwordMissingLetter => '비밀번호에 문자가 하나 이상 포함되어야 합니다.';
 	@override String get passwordMissingNumber => '비밀번호에 숫자가 하나 이상 포함되어야 합니다.';
 	@override String get invalidPassword => '잘못된 비밀번호입니다.';
@@ -283,6 +291,10 @@ class _TranslationsVeilErrorsKo extends TranslationsVeilErrorsEn {
 	@override String get encryptedPrivateKeyNotFound => '암호화된 개인 키를 찾을 수 없습니다.';
 	@override String get publicKeyNotFound => '공개 키를 찾을 수 없습니다.';
 	@override String get vaultLocked => '볼트가 잠겨 있습니다.';
+	@override String get passwordMinLength => '비밀번호는 최소 10자여야 합니다.';
+	@override String get passwordMissingUppercase => '비밀번호에 대문자가 하나 이상 포함되어야 합니다.';
+	@override String get passwordMissingLowercase => '비밀번호에 소문자가 하나 이상 포함되어야 합니다.';
+	@override String get passwordMissingSpecialChar => '비밀번호에 특수문자가 하나 이상 포함되어야 합니다.';
 }
 
 // Path: settings.autoLock.options
@@ -347,12 +359,20 @@ extension on TranslationsKo {
 			'veil.setup.passwordHint' => '시작하려면 비밀번호를 입력하세요...',
 			'veil.setup.cta' => '시작하기!',
 			'veil.setup.biometricsOptInTitle' => '생체인식 활성화',
+			'veil.setup.confirmPasswordHint' => '비밀번호를 다시 입력하세요...',
+			'veil.setup.passwordRulesCta' => '비밀번호 규칙',
+			'veil.setup.passwordRulesTitle' => '비밀번호는 다음을 포함해야 합니다:',
+			'veil.setup.passwordRuleMinLength' => '최소 10자',
+			'veil.setup.passwordRuleUppercase' => '대문자 1개 이상',
+			'veil.setup.passwordRuleLowercase' => '소문자 1개 이상',
+			'veil.setup.passwordRuleNumber' => '숫자 1개 이상',
+			'veil.setup.passwordRuleSpecialChar' => '특수문자 1개 이상',
+			'veil.setup.passwordsDoNotMatch' => '비밀번호가 일치하지 않습니다.',
 			'veil.unlock.passwordHint' => '비밀번호를 입력하세요...',
 			'veil.unlock.cta' => '잠금 해제',
 			'veil.unlock.biometricTooltip' => '생체 인증',
 			'veil.splash.loading' => '불러오는 중...',
 			'veil.errors.passwordRequired' => '비밀번호가 필요합니다.',
-			'veil.errors.passwordMinLength' => '비밀번호는 최소 8자여야 합니다.',
 			'veil.errors.passwordMissingLetter' => '비밀번호에 문자가 하나 이상 포함되어야 합니다.',
 			'veil.errors.passwordMissingNumber' => '비밀번호에 숫자가 하나 이상 포함되어야 합니다.',
 			'veil.errors.invalidPassword' => '잘못된 비밀번호입니다.',
@@ -363,6 +383,10 @@ extension on TranslationsKo {
 			'veil.errors.encryptedPrivateKeyNotFound' => '암호화된 개인 키를 찾을 수 없습니다.',
 			'veil.errors.publicKeyNotFound' => '공개 키를 찾을 수 없습니다.',
 			'veil.errors.vaultLocked' => '볼트가 잠겨 있습니다.',
+			'veil.errors.passwordMinLength' => '비밀번호는 최소 10자여야 합니다.',
+			'veil.errors.passwordMissingUppercase' => '비밀번호에 대문자가 하나 이상 포함되어야 합니다.',
+			'veil.errors.passwordMissingLowercase' => '비밀번호에 소문자가 하나 이상 포함되어야 합니다.',
+			'veil.errors.passwordMissingSpecialChar' => '비밀번호에 특수문자가 하나 이상 포함되어야 합니다.',
 			_ => null,
 		};
 	}

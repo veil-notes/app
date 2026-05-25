@@ -49,10 +49,14 @@ class AppErrorMapper {
         return t.veil.errors.passwordRequired;
       case PasswordValidationError.minLength:
         return t.veil.errors.passwordMinLength;
-      case PasswordValidationError.missingLetter:
-        return t.veil.errors.passwordMissingLetter;
+      case PasswordValidationError.missingUppercase:
+        return t.veil.errors.passwordMissingUppercase;
+      case PasswordValidationError.missingLowercase:
+        return t.veil.errors.passwordMissingLowercase;
       case PasswordValidationError.missingNumber:
         return t.veil.errors.passwordMissingNumber;
+      case PasswordValidationError.missingSpecialChar:
+        return t.veil.errors.passwordMissingSpecialChar;
       case null:
         return t.common.errors.unexpected;
     }

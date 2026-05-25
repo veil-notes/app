@@ -2,7 +2,16 @@
   "setup": {
     "passwordHint": "Введите пароль, чтобы начать...",
     "cta": "Начать!",
-    "biometricsOptInTitle": "Включить биометрию"
+    "biometricsOptInTitle": "Включить биометрию",
+    "confirmPasswordHint": "Подтвердите пароль...",
+    "passwordRulesCta": "Правила пароля",
+    "passwordRulesTitle": "Ваш пароль должен содержать:",
+    "passwordRuleMinLength": "Минимум 10 символов",
+    "passwordRuleUppercase": "Хотя бы 1 заглавную букву",
+    "passwordRuleLowercase": "Хотя бы 1 строчную букву",
+    "passwordRuleNumber": "Хотя бы 1 цифру",
+    "passwordRuleSpecialChar": "Хотя бы 1 специальный символ",
+    "passwordsDoNotMatch": "Пароли не совпадают."
   },
   "unlock": {
     "passwordHint": "Введите пароль...",
@@ -14,7 +23,6 @@
   },
   "errors": {
     "passwordRequired": "Требуется пароль.",
-    "passwordMinLength": "Пароль должен содержать не менее 8 символов.",
     "passwordMissingLetter": "Пароль должен содержать хотя бы одну букву.",
     "passwordMissingNumber": "Пароль должен содержать хотя бы одну цифру.",
     "invalidPassword": "Неверный пароль.",
@@ -24,6 +32,10 @@
     "vaultNotConfigured": "Хранилище не настроено.",
     "encryptedPrivateKeyNotFound": "Зашифрованный приватный ключ не найден.",
     "publicKeyNotFound": "Публичный ключ не найден.",
-    "vaultLocked": "Хранилище заблокировано."
+    "vaultLocked": "Хранилище заблокировано.",
+    "passwordMinLength": "Пароль должен содержать не менее 10 символов.",
+    "passwordMissingUppercase": "Пароль должен содержать хотя бы одну заглавную букву.",
+    "passwordMissingLowercase": "Пароль должен содержать хотя бы одну строчную букву.",
+    "passwordMissingSpecialChar": "Пароль должен содержать хотя бы один специальный символ."
   }
 }

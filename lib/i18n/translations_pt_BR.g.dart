@@ -240,6 +240,15 @@ class _TranslationsVeilSetupPtBr extends TranslationsVeilSetupEn {
 	@override String get passwordHint => 'Digite uma senha para começar...';
 	@override String get cta => 'Vamos começar!';
 	@override String get biometricsOptInTitle => 'Ativar biometria';
+	@override String get confirmPasswordHint => 'Confirme sua senha...';
+	@override String get passwordRulesCta => 'Regras da senha';
+	@override String get passwordRulesTitle => 'Sua senha deve conter:';
+	@override String get passwordRuleMinLength => 'Pelo menos 10 caracteres';
+	@override String get passwordRuleUppercase => 'Pelo menos 1 letra maiúscula';
+	@override String get passwordRuleLowercase => 'Pelo menos 1 letra minúscula';
+	@override String get passwordRuleNumber => 'Pelo menos 1 número';
+	@override String get passwordRuleSpecialChar => 'Pelo menos 1 caractere especial';
+	@override String get passwordsDoNotMatch => 'As senhas não coincidem.';
 }
 
 // Path: veil.unlock
@@ -272,7 +281,6 @@ class _TranslationsVeilErrorsPtBr extends TranslationsVeilErrorsEn {
 
 	// Translations
 	@override String get passwordRequired => 'A senha é obrigatória.';
-	@override String get passwordMinLength => 'A senha deve ter pelo menos 8 caracteres.';
 	@override String get passwordMissingLetter => 'A senha deve conter ao menos uma letra.';
 	@override String get passwordMissingNumber => 'A senha deve conter ao menos um número.';
 	@override String get invalidPassword => 'Senha inválida.';
@@ -283,6 +291,10 @@ class _TranslationsVeilErrorsPtBr extends TranslationsVeilErrorsEn {
 	@override String get encryptedPrivateKeyNotFound => 'A chave privada criptografada não foi encontrada.';
 	@override String get publicKeyNotFound => 'A chave pública não foi encontrada.';
 	@override String get vaultLocked => 'O cofre está bloqueado.';
+	@override String get passwordMinLength => 'A senha deve ter pelo menos 10 caracteres.';
+	@override String get passwordMissingUppercase => 'A senha deve conter ao menos uma letra maiúscula.';
+	@override String get passwordMissingLowercase => 'A senha deve conter ao menos uma letra minúscula.';
+	@override String get passwordMissingSpecialChar => 'A senha deve conter ao menos um caractere especial.';
 }
 
 // Path: settings.autoLock.options
@@ -347,12 +359,20 @@ extension on TranslationsPtBr {
 			'veil.setup.passwordHint' => 'Digite uma senha para começar...',
 			'veil.setup.cta' => 'Vamos começar!',
 			'veil.setup.biometricsOptInTitle' => 'Ativar biometria',
+			'veil.setup.confirmPasswordHint' => 'Confirme sua senha...',
+			'veil.setup.passwordRulesCta' => 'Regras da senha',
+			'veil.setup.passwordRulesTitle' => 'Sua senha deve conter:',
+			'veil.setup.passwordRuleMinLength' => 'Pelo menos 10 caracteres',
+			'veil.setup.passwordRuleUppercase' => 'Pelo menos 1 letra maiúscula',
+			'veil.setup.passwordRuleLowercase' => 'Pelo menos 1 letra minúscula',
+			'veil.setup.passwordRuleNumber' => 'Pelo menos 1 número',
+			'veil.setup.passwordRuleSpecialChar' => 'Pelo menos 1 caractere especial',
+			'veil.setup.passwordsDoNotMatch' => 'As senhas não coincidem.',
 			'veil.unlock.passwordHint' => 'Digite sua senha...',
 			'veil.unlock.cta' => 'Desbloquear',
 			'veil.unlock.biometricTooltip' => 'Biometria',
 			'veil.splash.loading' => 'Carregando...',
 			'veil.errors.passwordRequired' => 'A senha é obrigatória.',
-			'veil.errors.passwordMinLength' => 'A senha deve ter pelo menos 8 caracteres.',
 			'veil.errors.passwordMissingLetter' => 'A senha deve conter ao menos uma letra.',
 			'veil.errors.passwordMissingNumber' => 'A senha deve conter ao menos um número.',
 			'veil.errors.invalidPassword' => 'Senha inválida.',
@@ -363,6 +383,10 @@ extension on TranslationsPtBr {
 			'veil.errors.encryptedPrivateKeyNotFound' => 'A chave privada criptografada não foi encontrada.',
 			'veil.errors.publicKeyNotFound' => 'A chave pública não foi encontrada.',
 			'veil.errors.vaultLocked' => 'O cofre está bloqueado.',
+			'veil.errors.passwordMinLength' => 'A senha deve ter pelo menos 10 caracteres.',
+			'veil.errors.passwordMissingUppercase' => 'A senha deve conter ao menos uma letra maiúscula.',
+			'veil.errors.passwordMissingLowercase' => 'A senha deve conter ao menos uma letra minúscula.',
+			'veil.errors.passwordMissingSpecialChar' => 'A senha deve conter ao menos um caractere especial.',
 			_ => null,
 		};
 	}

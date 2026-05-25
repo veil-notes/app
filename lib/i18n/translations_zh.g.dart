@@ -240,6 +240,15 @@ class _TranslationsVeilSetupZh extends TranslationsVeilSetupEn {
 	@override String get passwordHint => '输入密码以开始...';
 	@override String get cta => '开始吧！';
 	@override String get biometricsOptInTitle => '启用生物识别技术';
+	@override String get confirmPasswordHint => '请再次输入密码...';
+	@override String get passwordRulesCta => '密码规则';
+	@override String get passwordRulesTitle => '你的密码必须包含：';
+	@override String get passwordRuleMinLength => '至少 10 个字符';
+	@override String get passwordRuleUppercase => '至少 1 个大写字母';
+	@override String get passwordRuleLowercase => '至少 1 个小写字母';
+	@override String get passwordRuleNumber => '至少 1 个数字';
+	@override String get passwordRuleSpecialChar => '至少 1 个特殊字符';
+	@override String get passwordsDoNotMatch => '两次输入的密码不一致。';
 }
 
 // Path: veil.unlock
@@ -272,7 +281,6 @@ class _TranslationsVeilErrorsZh extends TranslationsVeilErrorsEn {
 
 	// Translations
 	@override String get passwordRequired => '密码是必填项。';
-	@override String get passwordMinLength => '密码至少需要 8 个字符。';
 	@override String get passwordMissingLetter => '密码必须至少包含一个字母。';
 	@override String get passwordMissingNumber => '密码必须至少包含一个数字。';
 	@override String get invalidPassword => '密码无效。';
@@ -283,6 +291,10 @@ class _TranslationsVeilErrorsZh extends TranslationsVeilErrorsEn {
 	@override String get encryptedPrivateKeyNotFound => '未找到加密私钥。';
 	@override String get publicKeyNotFound => '未找到公钥。';
 	@override String get vaultLocked => '保险库已锁定。';
+	@override String get passwordMinLength => '密码至少需要 10 个字符。';
+	@override String get passwordMissingUppercase => '密码必须至少包含一个大写字母。';
+	@override String get passwordMissingLowercase => '密码必须至少包含一个小写字母。';
+	@override String get passwordMissingSpecialChar => '密码必须至少包含一个特殊字符。';
 }
 
 // Path: settings.autoLock.options
@@ -347,12 +359,20 @@ extension on TranslationsZh {
 			'veil.setup.passwordHint' => '输入密码以开始...',
 			'veil.setup.cta' => '开始吧！',
 			'veil.setup.biometricsOptInTitle' => '启用生物识别技术',
+			'veil.setup.confirmPasswordHint' => '请再次输入密码...',
+			'veil.setup.passwordRulesCta' => '密码规则',
+			'veil.setup.passwordRulesTitle' => '你的密码必须包含：',
+			'veil.setup.passwordRuleMinLength' => '至少 10 个字符',
+			'veil.setup.passwordRuleUppercase' => '至少 1 个大写字母',
+			'veil.setup.passwordRuleLowercase' => '至少 1 个小写字母',
+			'veil.setup.passwordRuleNumber' => '至少 1 个数字',
+			'veil.setup.passwordRuleSpecialChar' => '至少 1 个特殊字符',
+			'veil.setup.passwordsDoNotMatch' => '两次输入的密码不一致。',
 			'veil.unlock.passwordHint' => '输入你的密码...',
 			'veil.unlock.cta' => '解锁',
 			'veil.unlock.biometricTooltip' => '生物识别',
 			'veil.splash.loading' => '加载中...',
 			'veil.errors.passwordRequired' => '密码是必填项。',
-			'veil.errors.passwordMinLength' => '密码至少需要 8 个字符。',
 			'veil.errors.passwordMissingLetter' => '密码必须至少包含一个字母。',
 			'veil.errors.passwordMissingNumber' => '密码必须至少包含一个数字。',
 			'veil.errors.invalidPassword' => '密码无效。',
@@ -363,6 +383,10 @@ extension on TranslationsZh {
 			'veil.errors.encryptedPrivateKeyNotFound' => '未找到加密私钥。',
 			'veil.errors.publicKeyNotFound' => '未找到公钥。',
 			'veil.errors.vaultLocked' => '保险库已锁定。',
+			'veil.errors.passwordMinLength' => '密码至少需要 10 个字符。',
+			'veil.errors.passwordMissingUppercase' => '密码必须至少包含一个大写字母。',
+			'veil.errors.passwordMissingLowercase' => '密码必须至少包含一个小写字母。',
+			'veil.errors.passwordMissingSpecialChar' => '密码必须至少包含一个特殊字符。',
 			_ => null,
 		};
 	}

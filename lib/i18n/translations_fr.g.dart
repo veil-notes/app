@@ -240,6 +240,15 @@ class _TranslationsVeilSetupFr extends TranslationsVeilSetupEn {
 	@override String get passwordHint => 'Saisissez un mot de passe pour commencer...';
 	@override String get cta => 'C\'est parti !';
 	@override String get biometricsOptInTitle => 'Activer la biométrie';
+	@override String get confirmPasswordHint => 'Confirmez votre mot de passe...';
+	@override String get passwordRulesCta => 'Règles du mot de passe';
+	@override String get passwordRulesTitle => 'Votre mot de passe doit contenir :';
+	@override String get passwordRuleMinLength => 'Au moins 10 caractères';
+	@override String get passwordRuleUppercase => 'Au moins 1 lettre majuscule';
+	@override String get passwordRuleLowercase => 'Au moins 1 lettre minuscule';
+	@override String get passwordRuleNumber => 'Au moins 1 chiffre';
+	@override String get passwordRuleSpecialChar => 'Au moins 1 caractère spécial';
+	@override String get passwordsDoNotMatch => 'Les mots de passe ne correspondent pas.';
 }
 
 // Path: veil.unlock
@@ -272,7 +281,6 @@ class _TranslationsVeilErrorsFr extends TranslationsVeilErrorsEn {
 
 	// Translations
 	@override String get passwordRequired => 'Le mot de passe est requis.';
-	@override String get passwordMinLength => 'Le mot de passe doit contenir au moins 8 caractères.';
 	@override String get passwordMissingLetter => 'Le mot de passe doit contenir au moins une lettre.';
 	@override String get passwordMissingNumber => 'Le mot de passe doit contenir au moins un chiffre.';
 	@override String get invalidPassword => 'Mot de passe invalide.';
@@ -283,6 +291,10 @@ class _TranslationsVeilErrorsFr extends TranslationsVeilErrorsEn {
 	@override String get encryptedPrivateKeyNotFound => 'Clé privée chiffrée introuvable.';
 	@override String get publicKeyNotFound => 'Clé publique introuvable.';
 	@override String get vaultLocked => 'Le coffre est verrouillé.';
+	@override String get passwordMinLength => 'Le mot de passe doit contenir au moins 10 caractères.';
+	@override String get passwordMissingUppercase => 'Le mot de passe doit contenir au moins une lettre majuscule.';
+	@override String get passwordMissingLowercase => 'Le mot de passe doit contenir au moins une lettre minuscule.';
+	@override String get passwordMissingSpecialChar => 'Le mot de passe doit contenir au moins un caractère spécial.';
 }
 
 // Path: settings.autoLock.options
@@ -347,12 +359,20 @@ extension on TranslationsFr {
 			'veil.setup.passwordHint' => 'Saisissez un mot de passe pour commencer...',
 			'veil.setup.cta' => 'C\'est parti !',
 			'veil.setup.biometricsOptInTitle' => 'Activer la biométrie',
+			'veil.setup.confirmPasswordHint' => 'Confirmez votre mot de passe...',
+			'veil.setup.passwordRulesCta' => 'Règles du mot de passe',
+			'veil.setup.passwordRulesTitle' => 'Votre mot de passe doit contenir :',
+			'veil.setup.passwordRuleMinLength' => 'Au moins 10 caractères',
+			'veil.setup.passwordRuleUppercase' => 'Au moins 1 lettre majuscule',
+			'veil.setup.passwordRuleLowercase' => 'Au moins 1 lettre minuscule',
+			'veil.setup.passwordRuleNumber' => 'Au moins 1 chiffre',
+			'veil.setup.passwordRuleSpecialChar' => 'Au moins 1 caractère spécial',
+			'veil.setup.passwordsDoNotMatch' => 'Les mots de passe ne correspondent pas.',
 			'veil.unlock.passwordHint' => 'Saisissez votre mot de passe...',
 			'veil.unlock.cta' => 'Déverrouiller',
 			'veil.unlock.biometricTooltip' => 'Biométrie',
 			'veil.splash.loading' => 'Chargement...',
 			'veil.errors.passwordRequired' => 'Le mot de passe est requis.',
-			'veil.errors.passwordMinLength' => 'Le mot de passe doit contenir au moins 8 caractères.',
 			'veil.errors.passwordMissingLetter' => 'Le mot de passe doit contenir au moins une lettre.',
 			'veil.errors.passwordMissingNumber' => 'Le mot de passe doit contenir au moins un chiffre.',
 			'veil.errors.invalidPassword' => 'Mot de passe invalide.',
@@ -363,6 +383,10 @@ extension on TranslationsFr {
 			'veil.errors.encryptedPrivateKeyNotFound' => 'Clé privée chiffrée introuvable.',
 			'veil.errors.publicKeyNotFound' => 'Clé publique introuvable.',
 			'veil.errors.vaultLocked' => 'Le coffre est verrouillé.',
+			'veil.errors.passwordMinLength' => 'Le mot de passe doit contenir au moins 10 caractères.',
+			'veil.errors.passwordMissingUppercase' => 'Le mot de passe doit contenir au moins une lettre majuscule.',
+			'veil.errors.passwordMissingLowercase' => 'Le mot de passe doit contenir au moins une lettre minuscule.',
+			'veil.errors.passwordMissingSpecialChar' => 'Le mot de passe doit contenir au moins un caractère spécial.',
 			_ => null,
 		};
 	}

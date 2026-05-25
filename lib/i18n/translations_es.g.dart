@@ -240,6 +240,15 @@ class _TranslationsVeilSetupEs extends TranslationsVeilSetupEn {
 	@override String get passwordHint => 'Escribe una contraseña para empezar...';
 	@override String get cta => '¡Empecemos!';
 	@override String get biometricsOptInTitle => 'Habilitar la biometría';
+	@override String get confirmPasswordHint => 'Confirma tu contraseña...';
+	@override String get passwordRulesCta => 'Reglas de contraseña';
+	@override String get passwordRulesTitle => 'Tu contraseña debe contener:';
+	@override String get passwordRuleMinLength => 'Al menos 10 caracteres';
+	@override String get passwordRuleUppercase => 'Al menos 1 letra mayúscula';
+	@override String get passwordRuleLowercase => 'Al menos 1 letra minúscula';
+	@override String get passwordRuleNumber => 'Al menos 1 número';
+	@override String get passwordRuleSpecialChar => 'Al menos 1 carácter especial';
+	@override String get passwordsDoNotMatch => 'Las contraseñas no coinciden.';
 }
 
 // Path: veil.unlock
@@ -272,7 +281,6 @@ class _TranslationsVeilErrorsEs extends TranslationsVeilErrorsEn {
 
 	// Translations
 	@override String get passwordRequired => 'La contraseña es obligatoria.';
-	@override String get passwordMinLength => 'La contraseña debe tener al menos 8 caracteres.';
 	@override String get passwordMissingLetter => 'La contraseña debe contener al menos una letra.';
 	@override String get passwordMissingNumber => 'La contraseña debe contener al menos un número.';
 	@override String get invalidPassword => 'Contraseña inválida.';
@@ -283,6 +291,10 @@ class _TranslationsVeilErrorsEs extends TranslationsVeilErrorsEn {
 	@override String get encryptedPrivateKeyNotFound => 'No se encontró la clave privada cifrada.';
 	@override String get publicKeyNotFound => 'No se encontró la clave pública.';
 	@override String get vaultLocked => 'La bóveda está bloqueada.';
+	@override String get passwordMinLength => 'La contraseña debe tener al menos 10 caracteres.';
+	@override String get passwordMissingUppercase => 'La contraseña debe contener al menos una letra mayúscula.';
+	@override String get passwordMissingLowercase => 'La contraseña debe contener al menos una letra minúscula.';
+	@override String get passwordMissingSpecialChar => 'La contraseña debe contener al menos un carácter especial.';
 }
 
 // Path: settings.autoLock.options
@@ -347,12 +359,20 @@ extension on TranslationsEs {
 			'veil.setup.passwordHint' => 'Escribe una contraseña para empezar...',
 			'veil.setup.cta' => '¡Empecemos!',
 			'veil.setup.biometricsOptInTitle' => 'Habilitar la biometría',
+			'veil.setup.confirmPasswordHint' => 'Confirma tu contraseña...',
+			'veil.setup.passwordRulesCta' => 'Reglas de contraseña',
+			'veil.setup.passwordRulesTitle' => 'Tu contraseña debe contener:',
+			'veil.setup.passwordRuleMinLength' => 'Al menos 10 caracteres',
+			'veil.setup.passwordRuleUppercase' => 'Al menos 1 letra mayúscula',
+			'veil.setup.passwordRuleLowercase' => 'Al menos 1 letra minúscula',
+			'veil.setup.passwordRuleNumber' => 'Al menos 1 número',
+			'veil.setup.passwordRuleSpecialChar' => 'Al menos 1 carácter especial',
+			'veil.setup.passwordsDoNotMatch' => 'Las contraseñas no coinciden.',
 			'veil.unlock.passwordHint' => 'Escribe tu contraseña...',
 			'veil.unlock.cta' => 'Desbloquear',
 			'veil.unlock.biometricTooltip' => 'Biometría',
 			'veil.splash.loading' => 'Cargando...',
 			'veil.errors.passwordRequired' => 'La contraseña es obligatoria.',
-			'veil.errors.passwordMinLength' => 'La contraseña debe tener al menos 8 caracteres.',
 			'veil.errors.passwordMissingLetter' => 'La contraseña debe contener al menos una letra.',
 			'veil.errors.passwordMissingNumber' => 'La contraseña debe contener al menos un número.',
 			'veil.errors.invalidPassword' => 'Contraseña inválida.',
@@ -363,6 +383,10 @@ extension on TranslationsEs {
 			'veil.errors.encryptedPrivateKeyNotFound' => 'No se encontró la clave privada cifrada.',
 			'veil.errors.publicKeyNotFound' => 'No se encontró la clave pública.',
 			'veil.errors.vaultLocked' => 'La bóveda está bloqueada.',
+			'veil.errors.passwordMinLength' => 'La contraseña debe tener al menos 10 caracteres.',
+			'veil.errors.passwordMissingUppercase' => 'La contraseña debe contener al menos una letra mayúscula.',
+			'veil.errors.passwordMissingLowercase' => 'La contraseña debe contener al menos una letra minúscula.',
+			'veil.errors.passwordMissingSpecialChar' => 'La contraseña debe contener al menos un carácter especial.',
 			_ => null,
 		};
 	}

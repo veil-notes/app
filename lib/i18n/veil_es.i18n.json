@@ -2,7 +2,16 @@
   "setup": {
     "passwordHint": "Escribe una contraseña para empezar...",
     "cta": "¡Empecemos!",
-    "biometricsOptInTitle": "Habilitar la biometría"
+    "biometricsOptInTitle": "Habilitar la biometría",
+    "confirmPasswordHint": "Confirma tu contraseña...",
+    "passwordRulesCta": "Reglas de contraseña",
+    "passwordRulesTitle": "Tu contraseña debe contener:",
+    "passwordRuleMinLength": "Al menos 10 caracteres",
+    "passwordRuleUppercase": "Al menos 1 letra mayúscula",
+    "passwordRuleLowercase": "Al menos 1 letra minúscula",
+    "passwordRuleNumber": "Al menos 1 número",
+    "passwordRuleSpecialChar": "Al menos 1 carácter especial",
+    "passwordsDoNotMatch": "Las contraseñas no coinciden."
   },
   "unlock": {
     "passwordHint": "Escribe tu contraseña...",
@@ -14,7 +23,6 @@
   },
   "errors": {
     "passwordRequired": "La contraseña es obligatoria.",
-    "passwordMinLength": "La contraseña debe tener al menos 8 caracteres.",
     "passwordMissingLetter": "La contraseña debe contener al menos una letra.",
     "passwordMissingNumber": "La contraseña debe contener al menos un número.",
     "invalidPassword": "Contraseña inválida.",
@@ -24,6 +32,10 @@
     "vaultNotConfigured": "La bóveda no está configurada.",
     "encryptedPrivateKeyNotFound": "No se encontró la clave privada cifrada.",
     "publicKeyNotFound": "No se encontró la clave pública.",
-    "vaultLocked": "La bóveda está bloqueada."
+    "vaultLocked": "La bóveda está bloqueada.",
+    "passwordMinLength": "La contraseña debe tener al menos 10 caracteres.",
+    "passwordMissingUppercase": "La contraseña debe contener al menos una letra mayúscula.",
+    "passwordMissingLowercase": "La contraseña debe contener al menos una letra minúscula.",
+    "passwordMissingSpecialChar": "La contraseña debe contener al menos un carácter especial."
   }
 }

@@ -240,6 +240,15 @@ class _TranslationsVeilSetupJa extends TranslationsVeilSetupEn {
 	@override String get passwordHint => '開始するにはパスワードを入力してください...';
 	@override String get cta => '始めましょう！';
 	@override String get biometricsOptInTitle => '生体認証を有効にする';
+	@override String get confirmPasswordHint => 'パスワードを確認してください...';
+	@override String get passwordRulesCta => 'パスワードルール';
+	@override String get passwordRulesTitle => 'パスワードは次を満たす必要があります:';
+	@override String get passwordRuleMinLength => '10文字以上';
+	@override String get passwordRuleUppercase => '英大文字を1文字以上';
+	@override String get passwordRuleLowercase => '英小文字を1文字以上';
+	@override String get passwordRuleNumber => '数字を1文字以上';
+	@override String get passwordRuleSpecialChar => '記号を1文字以上';
+	@override String get passwordsDoNotMatch => 'パスワードが一致しません。';
 }
 
 // Path: veil.unlock
@@ -272,7 +281,6 @@ class _TranslationsVeilErrorsJa extends TranslationsVeilErrorsEn {
 
 	// Translations
 	@override String get passwordRequired => 'パスワードは必須です。';
-	@override String get passwordMinLength => 'パスワードは8文字以上である必要があります。';
 	@override String get passwordMissingLetter => 'パスワードには少なくとも1文字の文字が必要です。';
 	@override String get passwordMissingNumber => 'パスワードには少なくとも1つの数字が必要です。';
 	@override String get invalidPassword => '無効なパスワードです。';
@@ -283,6 +291,10 @@ class _TranslationsVeilErrorsJa extends TranslationsVeilErrorsEn {
 	@override String get encryptedPrivateKeyNotFound => '暗号化された秘密鍵が見つかりません。';
 	@override String get publicKeyNotFound => '公開鍵が見つかりません。';
 	@override String get vaultLocked => '保管庫はロックされています。';
+	@override String get passwordMinLength => 'パスワードは10文字以上である必要があります。';
+	@override String get passwordMissingUppercase => 'パスワードには少なくとも1文字の英大文字が必要です。';
+	@override String get passwordMissingLowercase => 'パスワードには少なくとも1文字の英小文字が必要です。';
+	@override String get passwordMissingSpecialChar => 'パスワードには少なくとも1文字の記号が必要です。';
 }
 
 // Path: settings.autoLock.options
@@ -347,12 +359,20 @@ extension on TranslationsJa {
 			'veil.setup.passwordHint' => '開始するにはパスワードを入力してください...',
 			'veil.setup.cta' => '始めましょう！',
 			'veil.setup.biometricsOptInTitle' => '生体認証を有効にする',
+			'veil.setup.confirmPasswordHint' => 'パスワードを確認してください...',
+			'veil.setup.passwordRulesCta' => 'パスワードルール',
+			'veil.setup.passwordRulesTitle' => 'パスワードは次を満たす必要があります:',
+			'veil.setup.passwordRuleMinLength' => '10文字以上',
+			'veil.setup.passwordRuleUppercase' => '英大文字を1文字以上',
+			'veil.setup.passwordRuleLowercase' => '英小文字を1文字以上',
+			'veil.setup.passwordRuleNumber' => '数字を1文字以上',
+			'veil.setup.passwordRuleSpecialChar' => '記号を1文字以上',
+			'veil.setup.passwordsDoNotMatch' => 'パスワードが一致しません。',
 			'veil.unlock.passwordHint' => 'パスワードを入力してください...',
 			'veil.unlock.cta' => 'ロック解除',
 			'veil.unlock.biometricTooltip' => '生体認証',
 			'veil.splash.loading' => '読み込み中...',
 			'veil.errors.passwordRequired' => 'パスワードは必須です。',
-			'veil.errors.passwordMinLength' => 'パスワードは8文字以上である必要があります。',
 			'veil.errors.passwordMissingLetter' => 'パスワードには少なくとも1文字の文字が必要です。',
 			'veil.errors.passwordMissingNumber' => 'パスワードには少なくとも1つの数字が必要です。',
 			'veil.errors.invalidPassword' => '無効なパスワードです。',
@@ -363,6 +383,10 @@ extension on TranslationsJa {
 			'veil.errors.encryptedPrivateKeyNotFound' => '暗号化された秘密鍵が見つかりません。',
 			'veil.errors.publicKeyNotFound' => '公開鍵が見つかりません。',
 			'veil.errors.vaultLocked' => '保管庫はロックされています。',
+			'veil.errors.passwordMinLength' => 'パスワードは10文字以上である必要があります。',
+			'veil.errors.passwordMissingUppercase' => 'パスワードには少なくとも1文字の英大文字が必要です。',
+			'veil.errors.passwordMissingLowercase' => 'パスワードには少なくとも1文字の英小文字が必要です。',
+			'veil.errors.passwordMissingSpecialChar' => 'パスワードには少なくとも1文字の記号が必要です。',
 			_ => null,
 		};
 	}

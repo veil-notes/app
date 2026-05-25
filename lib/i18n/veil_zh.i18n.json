@@ -2,7 +2,16 @@
   "setup": {
     "passwordHint": "输入密码以开始...",
     "cta": "开始吧！",
-    "biometricsOptInTitle": "启用生物识别技术"
+    "biometricsOptInTitle": "启用生物识别技术",
+    "confirmPasswordHint": "请再次输入密码...",
+    "passwordRulesCta": "密码规则",
+    "passwordRulesTitle": "你的密码必须包含：",
+    "passwordRuleMinLength": "至少 10 个字符",
+    "passwordRuleUppercase": "至少 1 个大写字母",
+    "passwordRuleLowercase": "至少 1 个小写字母",
+    "passwordRuleNumber": "至少 1 个数字",
+    "passwordRuleSpecialChar": "至少 1 个特殊字符",
+    "passwordsDoNotMatch": "两次输入的密码不一致。"
   },
   "unlock": {
     "passwordHint": "输入你的密码...",
@@ -14,7 +23,6 @@
   },
   "errors": {
     "passwordRequired": "密码是必填项。",
-    "passwordMinLength": "密码至少需要 8 个字符。",
     "passwordMissingLetter": "密码必须至少包含一个字母。",
     "passwordMissingNumber": "密码必须至少包含一个数字。",
     "invalidPassword": "密码无效。",
@@ -24,6 +32,10 @@
     "vaultNotConfigured": "保险库尚未配置。",
     "encryptedPrivateKeyNotFound": "未找到加密私钥。",
     "publicKeyNotFound": "未找到公钥。",
-    "vaultLocked": "保险库已锁定。"
+    "vaultLocked": "保险库已锁定。",
+    "passwordMinLength": "密码至少需要 10 个字符。",
+    "passwordMissingUppercase": "密码必须至少包含一个大写字母。",
+    "passwordMissingLowercase": "密码必须至少包含一个小写字母。",
+    "passwordMissingSpecialChar": "密码必须至少包含一个特殊字符。"
   }
 }

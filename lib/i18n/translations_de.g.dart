@@ -240,6 +240,15 @@ class _TranslationsVeilSetupDe extends TranslationsVeilSetupEn {
 	@override String get passwordHint => 'Gib ein Passwort ein, um zu starten...';
 	@override String get cta => 'Los geht\'s!';
 	@override String get biometricsOptInTitle => 'Biometrie aktivieren';
+	@override String get confirmPasswordHint => 'Bestätige dein Passwort...';
+	@override String get passwordRulesCta => 'Passwortregeln';
+	@override String get passwordRulesTitle => 'Dein Passwort muss enthalten:';
+	@override String get passwordRuleMinLength => 'Mindestens 10 Zeichen';
+	@override String get passwordRuleUppercase => 'Mindestens 1 Großbuchstabe';
+	@override String get passwordRuleLowercase => 'Mindestens 1 Kleinbuchstabe';
+	@override String get passwordRuleNumber => 'Mindestens 1 Zahl';
+	@override String get passwordRuleSpecialChar => 'Mindestens 1 Sonderzeichen';
+	@override String get passwordsDoNotMatch => 'Passwörter stimmen nicht überein.';
 }
 
 // Path: veil.unlock
@@ -272,7 +281,6 @@ class _TranslationsVeilErrorsDe extends TranslationsVeilErrorsEn {
 
 	// Translations
 	@override String get passwordRequired => 'Passwort ist erforderlich.';
-	@override String get passwordMinLength => 'Das Passwort muss mindestens 8 Zeichen lang sein.';
 	@override String get passwordMissingLetter => 'Das Passwort muss mindestens einen Buchstaben enthalten.';
 	@override String get passwordMissingNumber => 'Das Passwort muss mindestens eine Zahl enthalten.';
 	@override String get invalidPassword => 'Ungültiges Passwort.';
@@ -283,6 +291,10 @@ class _TranslationsVeilErrorsDe extends TranslationsVeilErrorsEn {
 	@override String get encryptedPrivateKeyNotFound => 'Verschlüsselter privater Schlüssel wurde nicht gefunden.';
 	@override String get publicKeyNotFound => 'Öffentlicher Schlüssel wurde nicht gefunden.';
 	@override String get vaultLocked => 'Tresor ist gesperrt.';
+	@override String get passwordMinLength => 'Das Passwort muss mindestens 10 Zeichen lang sein.';
+	@override String get passwordMissingUppercase => 'Das Passwort muss mindestens einen Großbuchstaben enthalten.';
+	@override String get passwordMissingLowercase => 'Das Passwort muss mindestens einen Kleinbuchstaben enthalten.';
+	@override String get passwordMissingSpecialChar => 'Das Passwort muss mindestens ein Sonderzeichen enthalten.';
 }
 
 // Path: settings.autoLock.options
@@ -347,12 +359,20 @@ extension on TranslationsDe {
 			'veil.setup.passwordHint' => 'Gib ein Passwort ein, um zu starten...',
 			'veil.setup.cta' => 'Los geht\'s!',
 			'veil.setup.biometricsOptInTitle' => 'Biometrie aktivieren',
+			'veil.setup.confirmPasswordHint' => 'Bestätige dein Passwort...',
+			'veil.setup.passwordRulesCta' => 'Passwortregeln',
+			'veil.setup.passwordRulesTitle' => 'Dein Passwort muss enthalten:',
+			'veil.setup.passwordRuleMinLength' => 'Mindestens 10 Zeichen',
+			'veil.setup.passwordRuleUppercase' => 'Mindestens 1 Großbuchstabe',
+			'veil.setup.passwordRuleLowercase' => 'Mindestens 1 Kleinbuchstabe',
+			'veil.setup.passwordRuleNumber' => 'Mindestens 1 Zahl',
+			'veil.setup.passwordRuleSpecialChar' => 'Mindestens 1 Sonderzeichen',
+			'veil.setup.passwordsDoNotMatch' => 'Passwörter stimmen nicht überein.',
 			'veil.unlock.passwordHint' => 'Gib dein Passwort ein...',
 			'veil.unlock.cta' => 'Entsperren',
 			'veil.unlock.biometricTooltip' => 'Biometrie',
 			'veil.splash.loading' => 'Wird geladen...',
 			'veil.errors.passwordRequired' => 'Passwort ist erforderlich.',
-			'veil.errors.passwordMinLength' => 'Das Passwort muss mindestens 8 Zeichen lang sein.',
 			'veil.errors.passwordMissingLetter' => 'Das Passwort muss mindestens einen Buchstaben enthalten.',
 			'veil.errors.passwordMissingNumber' => 'Das Passwort muss mindestens eine Zahl enthalten.',
 			'veil.errors.invalidPassword' => 'Ungültiges Passwort.',
@@ -363,6 +383,10 @@ extension on TranslationsDe {
 			'veil.errors.encryptedPrivateKeyNotFound' => 'Verschlüsselter privater Schlüssel wurde nicht gefunden.',
 			'veil.errors.publicKeyNotFound' => 'Öffentlicher Schlüssel wurde nicht gefunden.',
 			'veil.errors.vaultLocked' => 'Tresor ist gesperrt.',
+			'veil.errors.passwordMinLength' => 'Das Passwort muss mindestens 10 Zeichen lang sein.',
+			'veil.errors.passwordMissingUppercase' => 'Das Passwort muss mindestens einen Großbuchstaben enthalten.',
+			'veil.errors.passwordMissingLowercase' => 'Das Passwort muss mindestens einen Kleinbuchstaben enthalten.',
+			'veil.errors.passwordMissingSpecialChar' => 'Das Passwort muss mindestens ein Sonderzeichen enthalten.',
 			_ => null,
 		};
 	}

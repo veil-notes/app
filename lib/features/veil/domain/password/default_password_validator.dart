@@ -12,16 +12,23 @@ class DefaultPasswordValidator implements PasswordValidator {
       );
     }
 
-    if (normalized.length < 8) {
+    if (normalized.length < 10) {
       return const PasswordValidationResult.invalid(
         PasswordValidationError.minLength,
       );
     }
 
-    final hasLetter = RegExp(r'[A-Za-z]').hasMatch(normalized);
-    if (!hasLetter) {
+    final hasUppercase = RegExp(r'[A-Z]').hasMatch(normalized);
+    if (!hasUppercase) {
       return const PasswordValidationResult.invalid(
-        PasswordValidationError.missingLetter,
+        PasswordValidationError.missingUppercase,
+      );
+    }
+
+    final hasLowercase = RegExp(r'[a-z]').hasMatch(normalized);
+    if (!hasLowercase) {
+      return const PasswordValidationResult.invalid(
+        PasswordValidationError.missingLowercase,
       );
     }
 
@@ -29,6 +36,15 @@ class DefaultPasswordValidator implements PasswordValidator {
     if (!hasNumber) {
       return const PasswordValidationResult.invalid(
         PasswordValidationError.missingNumber,
+      );
+    }
+
+    final hasSpecialChar = RegExp(
+      r'[!@#$%^&*(),.?":{}|<>\[\]\\\/_\-+=~`]',
+    ).hasMatch(normalized);
+    if (!hasSpecialChar) {
+      return const PasswordValidationResult.invalid(
+        PasswordValidationError.missingSpecialChar,
       );
     }
 

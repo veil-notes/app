@@ -2,7 +2,16 @@
   "setup": {
     "passwordHint": "Digite uma senha para começar...",
     "cta": "Vamos começar!",
-    "biometricsOptInTitle": "Ativar biometria"
+    "biometricsOptInTitle": "Ativar biometria",
+    "confirmPasswordHint": "Confirme sua senha...",
+    "passwordRulesCta": "Regras da senha",
+    "passwordRulesTitle": "Sua senha deve conter:",
+    "passwordRuleMinLength": "Pelo menos 10 caracteres",
+    "passwordRuleUppercase": "Pelo menos 1 letra maiúscula",
+    "passwordRuleLowercase": "Pelo menos 1 letra minúscula",
+    "passwordRuleNumber": "Pelo menos 1 número",
+    "passwordRuleSpecialChar": "Pelo menos 1 caractere especial",
+    "passwordsDoNotMatch": "As senhas não coincidem."
   },
   "unlock": {
     "passwordHint": "Digite sua senha...",
@@ -14,7 +23,6 @@
   },
   "errors": {
     "passwordRequired": "A senha é obrigatória.",
-    "passwordMinLength": "A senha deve ter pelo menos 8 caracteres.",
     "passwordMissingLetter": "A senha deve conter ao menos uma letra.",
     "passwordMissingNumber": "A senha deve conter ao menos um número.",
     "invalidPassword": "Senha inválida.",
@@ -24,6 +32,10 @@
     "vaultNotConfigured": "O cofre ainda não foi configurado.",
     "encryptedPrivateKeyNotFound": "A chave privada criptografada não foi encontrada.",
     "publicKeyNotFound": "A chave pública não foi encontrada.",
-    "vaultLocked": "O cofre está bloqueado."
+    "vaultLocked": "O cofre está bloqueado.",
+    "passwordMinLength": "A senha deve ter pelo menos 10 caracteres.",
+    "passwordMissingUppercase": "A senha deve conter ao menos uma letra maiúscula.",
+    "passwordMissingLowercase": "A senha deve conter ao menos uma letra minúscula.",
+    "passwordMissingSpecialChar": "A senha deve conter ao menos um caractere especial."
   }
 }

@@ -2,7 +2,16 @@
   "setup": {
     "passwordHint": "Type a password to start...",
     "cta": "Let's start!",
-    "biometricsOptInTitle": "Enable biometrics"
+    "biometricsOptInTitle": "Enable biometrics",
+    "confirmPasswordHint": "Confirm your password...",
+    "passwordRulesCta": "Password rules",
+    "passwordRulesTitle": "Your password must contain:",
+    "passwordRuleMinLength": "At least 10 characters",
+    "passwordRuleUppercase": "At least 1 uppercase letter",
+    "passwordRuleLowercase": "At least 1 lowercase letter",
+    "passwordRuleNumber": "At least 1 number",
+    "passwordRuleSpecialChar": "At least 1 special character",
+    "passwordsDoNotMatch": "Passwords do not match."
   },
   "unlock": {
     "passwordHint": "Type your password...",
@@ -24,6 +33,9 @@
     "vaultNotConfigured": "Vault is not configured.",
     "encryptedPrivateKeyNotFound": "Encrypted private key not found.",
     "publicKeyNotFound": "Public key not found.",
-    "vaultLocked": "Vault is locked."
+    "vaultLocked": "Vault is locked.",
+    "passwordMissingUppercase": "Password must contain at least one uppercase letter.",
+    "passwordMissingLowercase": "Password must contain at least one lowercase letter.",
+    "passwordMissingSpecialChar": "Password must contain at least one special character."
   }
 }

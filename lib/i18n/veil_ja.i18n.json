@@ -2,7 +2,16 @@
   "setup": {
     "passwordHint": "開始するにはパスワードを入力してください...",
     "cta": "始めましょう！",
-    "biometricsOptInTitle": "生体認証を有効にする"
+    "biometricsOptInTitle": "生体認証を有効にする",
+    "confirmPasswordHint": "パスワードを確認してください...",
+    "passwordRulesCta": "パスワードルール",
+    "passwordRulesTitle": "パスワードは次を満たす必要があります:",
+    "passwordRuleMinLength": "10文字以上",
+    "passwordRuleUppercase": "英大文字を1文字以上",
+    "passwordRuleLowercase": "英小文字を1文字以上",
+    "passwordRuleNumber": "数字を1文字以上",
+    "passwordRuleSpecialChar": "記号を1文字以上",
+    "passwordsDoNotMatch": "パスワードが一致しません。"
   },
   "unlock": {
     "passwordHint": "パスワードを入力してください...",
@@ -14,7 +23,6 @@
   },
   "errors": {
     "passwordRequired": "パスワードは必須です。",
-    "passwordMinLength": "パスワードは8文字以上である必要があります。",
     "passwordMissingLetter": "パスワードには少なくとも1文字の文字が必要です。",
     "passwordMissingNumber": "パスワードには少なくとも1つの数字が必要です。",
     "invalidPassword": "無効なパスワードです。",
@@ -24,6 +32,10 @@
     "vaultNotConfigured": "保管庫は設定されていません。",
     "encryptedPrivateKeyNotFound": "暗号化された秘密鍵が見つかりません。",
     "publicKeyNotFound": "公開鍵が見つかりません。",
-    "vaultLocked": "保管庫はロックされています。"
+    "vaultLocked": "保管庫はロックされています。",
+    "passwordMinLength": "パスワードは10文字以上である必要があります。",
+    "passwordMissingUppercase": "パスワードには少なくとも1文字の英大文字が必要です。",
+    "passwordMissingLowercase": "パスワードには少なくとも1文字の英小文字が必要です。",
+    "passwordMissingSpecialChar": "パスワードには少なくとも1文字の記号が必要です。"
   }
 }

@@ -1,8 +1,10 @@
 enum PasswordValidationError {
   required,
   minLength,
-  missingLetter,
+  missingUppercase,
+  missingLowercase,
   missingNumber,
+  missingSpecialChar,
 }
 
 class PasswordValidationResult {

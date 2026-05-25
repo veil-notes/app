@@ -318,6 +318,33 @@ class TranslationsVeilSetupEn {
 
 	/// en: 'Enable biometrics'
 	String get biometricsOptInTitle => 'Enable biometrics';
+
+	/// en: 'Confirm your password...'
+	String get confirmPasswordHint => 'Confirm your password...';
+
+	/// en: 'Password rules'
+	String get passwordRulesCta => 'Password rules';
+
+	/// en: 'Your password must contain:'
+	String get passwordRulesTitle => 'Your password must contain:';
+
+	/// en: 'At least 10 characters'
+	String get passwordRuleMinLength => 'At least 10 characters';
+
+	/// en: 'At least 1 uppercase letter'
+	String get passwordRuleUppercase => 'At least 1 uppercase letter';
+
+	/// en: 'At least 1 lowercase letter'
+	String get passwordRuleLowercase => 'At least 1 lowercase letter';
+
+	/// en: 'At least 1 number'
+	String get passwordRuleNumber => 'At least 1 number';
+
+	/// en: 'At least 1 special character'
+	String get passwordRuleSpecialChar => 'At least 1 special character';
+
+	/// en: 'Passwords do not match.'
+	String get passwordsDoNotMatch => 'Passwords do not match.';
 }
 
 // Path: veil.unlock
@@ -393,6 +420,15 @@ class TranslationsVeilErrorsEn {
 
 	/// en: 'Vault is locked.'
 	String get vaultLocked => 'Vault is locked.';
+
+	/// en: 'Password must contain at least one uppercase letter.'
+	String get passwordMissingUppercase => 'Password must contain at least one uppercase letter.';
+
+	/// en: 'Password must contain at least one lowercase letter.'
+	String get passwordMissingLowercase => 'Password must contain at least one lowercase letter.';
+
+	/// en: 'Password must contain at least one special character.'
+	String get passwordMissingSpecialChar => 'Password must contain at least one special character.';
 }
 
 // Path: settings.autoLock.options
@@ -465,6 +501,15 @@ extension on Translations {
 			'veil.setup.passwordHint' => 'Type a password to start...',
 			'veil.setup.cta' => 'Let\'s start!',
 			'veil.setup.biometricsOptInTitle' => 'Enable biometrics',
+			'veil.setup.confirmPasswordHint' => 'Confirm your password...',
+			'veil.setup.passwordRulesCta' => 'Password rules',
+			'veil.setup.passwordRulesTitle' => 'Your password must contain:',
+			'veil.setup.passwordRuleMinLength' => 'At least 10 characters',
+			'veil.setup.passwordRuleUppercase' => 'At least 1 uppercase letter',
+			'veil.setup.passwordRuleLowercase' => 'At least 1 lowercase letter',
+			'veil.setup.passwordRuleNumber' => 'At least 1 number',
+			'veil.setup.passwordRuleSpecialChar' => 'At least 1 special character',
+			'veil.setup.passwordsDoNotMatch' => 'Passwords do not match.',
 			'veil.unlock.passwordHint' => 'Type your password...',
 			'veil.unlock.cta' => 'Unlock',
 			'veil.unlock.biometricTooltip' => 'Biometrics',
@@ -481,6 +526,9 @@ extension on Translations {
 			'veil.errors.encryptedPrivateKeyNotFound' => 'Encrypted private key not found.',
 			'veil.errors.publicKeyNotFound' => 'Public key not found.',
 			'veil.errors.vaultLocked' => 'Vault is locked.',
+			'veil.errors.passwordMissingUppercase' => 'Password must contain at least one uppercase letter.',
+			'veil.errors.passwordMissingLowercase' => 'Password must contain at least one lowercase letter.',
+			'veil.errors.passwordMissingSpecialChar' => 'Password must contain at least one special character.',
 			_ => null,
 		};
 	}

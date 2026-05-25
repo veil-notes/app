@@ -240,6 +240,15 @@ class _TranslationsVeilSetupRu extends TranslationsVeilSetupEn {
 	@override String get passwordHint => 'Введите пароль, чтобы начать...';
 	@override String get cta => 'Начать!';
 	@override String get biometricsOptInTitle => 'Включить биометрию';
+	@override String get confirmPasswordHint => 'Подтвердите пароль...';
+	@override String get passwordRulesCta => 'Правила пароля';
+	@override String get passwordRulesTitle => 'Ваш пароль должен содержать:';
+	@override String get passwordRuleMinLength => 'Минимум 10 символов';
+	@override String get passwordRuleUppercase => 'Хотя бы 1 заглавную букву';
+	@override String get passwordRuleLowercase => 'Хотя бы 1 строчную букву';
+	@override String get passwordRuleNumber => 'Хотя бы 1 цифру';
+	@override String get passwordRuleSpecialChar => 'Хотя бы 1 специальный символ';
+	@override String get passwordsDoNotMatch => 'Пароли не совпадают.';
 }
 
 // Path: veil.unlock
@@ -272,7 +281,6 @@ class _TranslationsVeilErrorsRu extends TranslationsVeilErrorsEn {
 
 	// Translations
 	@override String get passwordRequired => 'Требуется пароль.';
-	@override String get passwordMinLength => 'Пароль должен содержать не менее 8 символов.';
 	@override String get passwordMissingLetter => 'Пароль должен содержать хотя бы одну букву.';
 	@override String get passwordMissingNumber => 'Пароль должен содержать хотя бы одну цифру.';
 	@override String get invalidPassword => 'Неверный пароль.';
@@ -283,6 +291,10 @@ class _TranslationsVeilErrorsRu extends TranslationsVeilErrorsEn {
 	@override String get encryptedPrivateKeyNotFound => 'Зашифрованный приватный ключ не найден.';
 	@override String get publicKeyNotFound => 'Публичный ключ не найден.';
 	@override String get vaultLocked => 'Хранилище заблокировано.';
+	@override String get passwordMinLength => 'Пароль должен содержать не менее 10 символов.';
+	@override String get passwordMissingUppercase => 'Пароль должен содержать хотя бы одну заглавную букву.';
+	@override String get passwordMissingLowercase => 'Пароль должен содержать хотя бы одну строчную букву.';
+	@override String get passwordMissingSpecialChar => 'Пароль должен содержать хотя бы один специальный символ.';
 }
 
 // Path: settings.autoLock.options
@@ -347,12 +359,20 @@ extension on TranslationsRu {
 			'veil.setup.passwordHint' => 'Введите пароль, чтобы начать...',
 			'veil.setup.cta' => 'Начать!',
 			'veil.setup.biometricsOptInTitle' => 'Включить биометрию',
+			'veil.setup.confirmPasswordHint' => 'Подтвердите пароль...',
+			'veil.setup.passwordRulesCta' => 'Правила пароля',
+			'veil.setup.passwordRulesTitle' => 'Ваш пароль должен содержать:',
+			'veil.setup.passwordRuleMinLength' => 'Минимум 10 символов',
+			'veil.setup.passwordRuleUppercase' => 'Хотя бы 1 заглавную букву',
+			'veil.setup.passwordRuleLowercase' => 'Хотя бы 1 строчную букву',
+			'veil.setup.passwordRuleNumber' => 'Хотя бы 1 цифру',
+			'veil.setup.passwordRuleSpecialChar' => 'Хотя бы 1 специальный символ',
+			'veil.setup.passwordsDoNotMatch' => 'Пароли не совпадают.',
 			'veil.unlock.passwordHint' => 'Введите пароль...',
 			'veil.unlock.cta' => 'Разблокировать',
 			'veil.unlock.biometricTooltip' => 'Биометрия',
 			'veil.splash.loading' => 'Загрузка...',
 			'veil.errors.passwordRequired' => 'Требуется пароль.',
-			'veil.errors.passwordMinLength' => 'Пароль должен содержать не менее 8 символов.',
 			'veil.errors.passwordMissingLetter' => 'Пароль должен содержать хотя бы одну букву.',
 			'veil.errors.passwordMissingNumber' => 'Пароль должен содержать хотя бы одну цифру.',
 			'veil.errors.invalidPassword' => 'Неверный пароль.',
@@ -363,6 +383,10 @@ extension on TranslationsRu {
 			'veil.errors.encryptedPrivateKeyNotFound' => 'Зашифрованный приватный ключ не найден.',
 			'veil.errors.publicKeyNotFound' => 'Публичный ключ не найден.',
 			'veil.errors.vaultLocked' => 'Хранилище заблокировано.',
+			'veil.errors.passwordMinLength' => 'Пароль должен содержать не менее 10 символов.',
+			'veil.errors.passwordMissingUppercase' => 'Пароль должен содержать хотя бы одну заглавную букву.',
+			'veil.errors.passwordMissingLowercase' => 'Пароль должен содержать хотя бы одну строчную букву.',
+			'veil.errors.passwordMissingSpecialChar' => 'Пароль должен содержать хотя бы один специальный символ.',
 			_ => null,
 		};
 	}

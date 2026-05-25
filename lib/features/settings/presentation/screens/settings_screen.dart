@@ -228,42 +228,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   Future<bool> _enableBiometrics(VeilService veilService) async {
-    final passwordController = TextEditingController();
-    final t = context.t;
+    final password = await _showConfirmPasswordSheet();
 
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(t.settings.confirmPassword.title),
-          content: TextField(
-            controller: passwordController,
-            obscureText: true,
-            decoration: InputDecoration(
-              hintText: t.settings.confirmPassword.hint,
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: Text(t.common.actions.cancel),
-            ),
-            FilledButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: Text(t.common.actions.confirm),
-            ),
-          ],
-        );
-      },
-    );
-
-    if (confirmed != true) {
-      passwordController.dispose();
+    if (password == null) {
       return false;
     }
-
-    final password = passwordController.text;
-    passwordController.dispose();
 
     if (!mounted) {
       return false;
@@ -465,6 +434,26 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
+  Future<String?> _showConfirmPasswordSheet() {
+    return showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: const Color(0xFF171336),
+      barrierColor: Colors.black.withValues(alpha: 0.45),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.viewInsetsOf(context).bottom,
+          ),
+          child: _ConfirmPasswordSheet(t: context.t),
+        );
+      },
+    );
+  }
+
   String _autoLockLabel(Translations t, AutoLockOption option) {
     switch (option.id) {
       case '1m':
@@ -511,5 +500,118 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(_errorMapper.map(context.t, error))));
+  }
+}
+
+
+class _ConfirmPasswordSheet extends StatefulWidget {
+  final Translations t;
+
+  const _ConfirmPasswordSheet({required this.t});
+
+  @override
+  State<_ConfirmPasswordSheet> createState() => _ConfirmPasswordSheetState();
+}
+
+class _ConfirmPasswordSheetState extends State<_ConfirmPasswordSheet> {
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return SafeArea(
+      top: false,
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                width: 50,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: colorScheme.onPrimary,
+                  borderRadius: BorderRadius.circular(999),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Center(
+              child: Text(
+                widget.t.settings.confirmPassword.title,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: colorScheme.onSurface,
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _passwordController,
+              obscureText: true,
+              autofocus: true,
+              decoration: InputDecoration(
+                hintText: widget.t.settings.confirmPassword.hint,
+              ),
+              onSubmitted: (_) => Navigator.of(
+                context,
+              ).pop(_passwordController.text),
+            ),
+            const SizedBox(height: 16),
+            Divider(height: 1, color: colorScheme.onSurface.withValues(alpha: 0.05)),
+            const SizedBox(height: 8),
+            SizedBox(
+              width: double.infinity,
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () => Navigator.of(context).pop(_passwordController.text),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(
+                      widget.t.common.actions.confirm,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: colorScheme.onSurface,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Divider(height: 1, color: colorScheme.onSurface.withValues(alpha: 0.05)),
+            const SizedBox(height: 8),
+            SizedBox(
+              width: double.infinity,
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () => Navigator.of(context).pop(),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(
+                      widget.t.common.actions.cancel,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: colorScheme.onSurface,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

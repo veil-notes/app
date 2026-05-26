@@ -34,7 +34,9 @@ void main() {
       expect(find.text('Hello'), findsOneWidget);
     });
 
-    testWidgets('uses multiline field config for line wrapping', (tester) async {
+    testWidgets('uses multiline field config for line wrapping', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         wrap(
           MarkdownBlockEditor(
@@ -557,6 +559,86 @@ void main() {
 
         expect(changedValue, 'helo');
         expect(find.text('helo'), findsOneWidget);
+      },
+    );
+
+    testWidgets('sentinel-only empty state requests block deletion', (
+      tester,
+    ) async {
+      var deleteCalls = 0;
+
+      await tester.pumpWidget(
+        wrap(
+          MarkdownBlockEditor(
+            initialValue: '',
+            onChanged: (_) {},
+            onSubmittedNewBlock: (_) {},
+            onPasteRequested: () async {},
+            onDeleteEmptyBlock: () => deleteCalls++,
+          ),
+        ),
+      );
+
+      await tester.tap(find.byType(TextField));
+      await tester.pump();
+
+      final textField = tester.widget<TextField>(find.byType(TextField));
+      textField.controller!.value = const TextEditingValue(
+        text: '\u200B',
+        selection: TextSelection.collapsed(offset: 1),
+      );
+      await tester.pump();
+
+      expect(deleteCalls, 1);
+    });
+
+    testWidgets(
+      'resets empty-delete guard when switching to another empty block',
+      (tester) async {
+        var deleteCalls = 0;
+        var blockId = 1;
+
+        await tester.pumpWidget(
+          wrap(
+            StatefulBuilder(
+              builder: (context, setState) {
+                return Column(
+                  children: [
+                    MarkdownBlockEditor(
+                      blockId: blockId,
+                      initialValue: '',
+                      onChanged: (_) {},
+                      onSubmittedNewBlock: (_) {},
+                      onPasteRequested: () async {},
+                      onDeleteEmptyBlock: () => deleteCalls++,
+                    ),
+                    TextButton(
+                      onPressed: () => setState(() => blockId = 2),
+                      child: const Text('next-block'),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        );
+
+        await tester.tap(find.byType(TextField));
+        await tester.pump();
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.backspace);
+        await tester.pump();
+        expect(deleteCalls, 1);
+
+        await tester.tap(find.text('next-block'));
+        await tester.pump();
+
+        await tester.tap(find.byType(TextField));
+        await tester.pump();
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.backspace);
+        await tester.pump();
+        expect(deleteCalls, 2);
       },
     );
   });

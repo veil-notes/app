@@ -98,6 +98,7 @@ class _NoteScreenState extends ConsumerState<NoteScreen> {
                     if (isEditing) {
                       return MarkdownBlockEditor(
                         key: _editorKey,
+                        blockId: index,
                         initialValue: block.raw,
                         onChanged: (value) => _onBlockChanged(index, value),
                         onDeleteEmptyBlock: () {

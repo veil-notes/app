@@ -14,11 +14,12 @@ import '../features/veil/providers/veil_provider.dart';
 import '../features/veil/presentation/screens/splash_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
-  final veilState = ref.watch(veilControllerProvider);
+  late final GoRouter router;
 
-  return GoRouter(
+  router = GoRouter(
     initialLocation: '/',
     redirect: (context, state) {
+      final veilState = ref.read(veilControllerProvider);
       final location = state.matchedLocation;
 
       final isBootstrapping = veilState is BootstrappingState;
@@ -30,8 +31,6 @@ final routerProvider = Provider<GoRouter>((ref) {
       final isSetupRoute = location == '/setup';
       final isUnlockRoute = location == '/unlock';
 
-      final isPublicRoute = isSplashRoute || isSetupRoute || isUnlockRoute;
-
       if (isBootstrapping) {
         return isSplashRoute ? null : '/';
       }
@@ -41,11 +40,33 @@ final routerProvider = Provider<GoRouter>((ref) {
       }
 
       if (isLocked) {
-        return isUnlockRoute ? null : '/unlock';
+        if (isUnlockRoute) {
+          return null;
+        }
+
+        final from = state.uri.toString();
+        return Uri(path: '/unlock', queryParameters: {'from': from}).toString();
       }
 
       if (isUnlocked) {
-        return isPublicRoute ? '/list' : null;
+        if (isUnlockRoute) {
+          final from = state.uri.queryParameters['from'];
+          if (from != null &&
+              from.isNotEmpty &&
+              from != '/' &&
+              from != '/setup' &&
+              !from.startsWith('/unlock')) {
+            return from;
+          }
+
+          return '/list';
+        }
+
+        if (isSplashRoute || isSetupRoute) {
+          return '/list';
+        }
+
+        return null;
       }
 
       return null;
@@ -66,4 +87,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
     ],
   );
+
+  ref.listen(veilControllerProvider, (_, __) {
+    router.refresh();
+  });
+
+  return router;
 });

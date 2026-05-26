@@ -6,6 +6,7 @@ import 'package:veil/app/app_theme.dart';
 import 'package:veil/app/router.dart';
 import 'package:veil/features/notes/application/notes_service.dart';
 import 'package:veil/features/notes/domain/note.dart';
+import 'package:veil/features/notes/presentation/screens/note_list_screen.dart';
 import 'package:veil/features/notes/providers/notes_provider.dart';
 import 'package:veil/features/veil/application/veil_controller.dart';
 import 'package:veil/features/veil/application/veil_service.dart';
@@ -71,8 +72,8 @@ void main() {
         await tester.pumpWidget(harness.build());
         await _pumpRouter(tester);
 
-        expect(find.text('no notes yet.'), findsOneWidget);
         expect(harness.router.state.matchedLocation, '/list');
+        expect(find.byType(NoteListScreen), findsOneWidget);
       },
     );
 
@@ -105,6 +106,81 @@ void main() {
       await _pumpRouter(tester);
 
       expect(find.text('Opened note'), findsOneWidget);
+      expect(harness.router.state.matchedLocation, '/note/note-42');
+    });
+
+    testWidgets('locked redirect preserves current route in from query', (
+      tester,
+    ) async {
+      final harness = _RouterHarness(state: (service) => LockedState(service));
+      addTearDown(harness.dispose);
+
+      harness.router.go('/note/note-42');
+      await tester.pump();
+
+      await tester.pumpWidget(harness.build());
+      await _pumpRouter(tester);
+
+      expect(harness.router.state.matchedLocation, '/unlock');
+      expect(harness.router.state.uri.queryParameters['from'], '/note/note-42');
+    });
+
+    testWidgets('unlocked user on unlock route restores from query route', (
+      tester,
+    ) async {
+      final harness = _RouterHarness(
+        state: (service) => UnlockedState(service),
+      );
+      addTearDown(harness.dispose);
+
+      harness.router.go('/unlock?from=%2Fnote%2Fnote-42');
+      await tester.pump();
+
+      await tester.pumpWidget(harness.build());
+      await _pumpRouter(tester);
+
+      expect(harness.router.state.matchedLocation, '/note/note-42');
+      expect(find.text('Opened note'), findsOneWidget);
+    });
+
+    testWidgets(
+      'unlocked user ignores public from route and falls back to list',
+      (tester) async {
+        final harness = _RouterHarness(
+          state: (service) => UnlockedState(service),
+        );
+        addTearDown(harness.dispose);
+
+        harness.router.go('/unlock?from=%2Funlock');
+        await tester.pump();
+
+        await tester.pumpWidget(harness.build());
+        await _pumpRouter(tester);
+
+        expect(harness.router.state.matchedLocation, '/list');
+      },
+    );
+
+    testWidgets('restores note route after lock then unlock', (tester) async {
+      final harness = _RouterHarness(
+        state: (service) => UnlockedState(service),
+      );
+      addTearDown(harness.dispose);
+
+      await tester.pumpWidget(harness.build());
+      await _pumpRouter(tester);
+
+      harness.router.go('/note/note-42');
+      await _pumpRouter(tester);
+      expect(harness.router.state.matchedLocation, '/note/note-42');
+
+      harness.controller.setVeilState(LockedState(harness.service));
+      await _pumpRouter(tester);
+      expect(harness.router.state.matchedLocation, '/unlock');
+      expect(harness.router.state.uri.queryParameters['from'], '/note/note-42');
+
+      harness.controller.setVeilState(UnlockedState(harness.service));
+      await _pumpRouter(tester);
       expect(harness.router.state.matchedLocation, '/note/note-42');
     });
   });
@@ -165,6 +241,10 @@ class _FakeVeilController extends VeilController {
 
   @override
   VeilState build() => initialState;
+
+  void setVeilState(VeilState next) {
+    state = next;
+  }
 }
 
 class _FakeVeilService implements VeilService {

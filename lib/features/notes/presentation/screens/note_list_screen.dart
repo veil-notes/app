@@ -56,7 +56,7 @@ class NoteListScreen extends ConsumerWidget {
         padding: const EdgeInsets.all(16),
         child: FloatingActionButton(
           shape: const CircleBorder(),
-          onPressed: () => context.push('/note'),
+          onPressed: () => context.go('/note'),
           child: const Icon(Icons.add),
         ),
       ),
@@ -115,7 +115,7 @@ class NoteListScreen extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  onTap: () => context.push('/note/${note.id}'),
+                  onTap: () => context.go('/note/${note.id}'),
                 ),
               );
             },

@@ -20,6 +20,32 @@ class MarkdownInlineTextBuilder {
     }
 
     while (i < text.length) {
+      if (_startsWith(text, i, '***')) {
+        flushBuffer();
+
+        final end = text.indexOf('***', i + 3);
+        if (end != -1) {
+          final content = text.substring(i + 3, end);
+
+          spans.add(
+            TextSpan(
+              text: content,
+              style: (style ?? const TextStyle()).copyWith(
+                fontWeight: FontWeight.bold,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          );
+
+          i = end + 3;
+          continue;
+        }
+
+        buffer.write('***');
+        i += 3;
+        continue;
+      }
+
       if (_startsWith(text, i, '**')) {
         flushBuffer();
 

@@ -67,5 +67,15 @@ void main() {
       expect(span.toPlainText(), 'Just text');
       expect((span.children!.single as TextSpan).text, 'Just text');
     });
+
+    test('builds combined bold and italic spans with triple asterisks', () {
+      final span = builder.build('***both***');
+      final children = span.children!.cast<TextSpan>();
+
+      expect(children, hasLength(1));
+      expect(children.single.text, 'both');
+      expect(children.single.style?.fontWeight, FontWeight.bold);
+      expect(children.single.style?.fontStyle, FontStyle.italic);
+    });
   });
 }

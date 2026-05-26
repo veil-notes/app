@@ -116,6 +116,28 @@ void main() {
       expect(textWidget('Four').textSpan?.style?.fontSize, 18);
       expect(textWidget('Five').textSpan?.style?.fontSize, 16);
     });
+
+    testWidgets('renders triple-asterisk emphasis as bold and italic', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        wrap(
+          const MarkdownBlockView(
+            block: ParagraphBlock('***both***'),
+            onTap: _noop,
+          ),
+        ),
+      );
+
+      final textWidget = tester.widget<Text>(find.byType(Text).first);
+      final rootSpan = textWidget.textSpan! as TextSpan;
+      final children = rootSpan.children!.whereType<TextSpan>().toList();
+
+      expect(children, hasLength(1));
+      expect(children.single.text, 'both');
+      expect(children.single.style?.fontWeight, FontWeight.bold);
+      expect(children.single.style?.fontStyle, FontStyle.italic);
+    });
   });
 }
 

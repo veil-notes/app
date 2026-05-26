@@ -81,6 +81,26 @@ class MarkdownBlockEditorState extends State<MarkdownBlockEditor> {
     final controllerText = _controller.text;
     final rawText = _rawTextFromController(controllerText);
 
+    final newlineMatch = RegExp(r'\r?\n').firstMatch(rawText);
+    if (newlineMatch != null) {
+      final splitOffset = newlineMatch.start;
+      final newlineLength = newlineMatch.group(0)!.length;
+      final nextRawText = rawText.replaceRange(
+        splitOffset,
+        splitOffset + newlineLength,
+        '',
+      );
+
+      _applyControllerValue(
+        rawText: nextRawText,
+        rawSelection: TextSelection.collapsed(offset: splitOffset),
+      );
+      widget.onSubmittedNewBlock(
+        TextSelection.collapsed(offset: splitOffset),
+      );
+      return;
+    }
+
     // Soft keyboards like HeliBoard do not emit a hardware backspace event
     // when the field is empty. They delete the invisible sentinel instead.
     if (_lastLocalValue.isEmpty && controllerText.isEmpty) {
@@ -192,8 +212,9 @@ class MarkdownBlockEditorState extends State<MarkdownBlockEditor> {
           controller: _controller,
           focusNode: _focusNode,
           autofocus: true,
-          maxLines: 1,
-          keyboardType: TextInputType.text,
+          minLines: 1,
+          maxLines: null,
+          keyboardType: TextInputType.multiline,
           textInputAction: TextInputAction.next,
           decoration: const InputDecoration(
             isDense: true,

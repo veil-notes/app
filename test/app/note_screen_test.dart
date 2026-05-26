@@ -115,6 +115,33 @@ void main() {
       expect(service.savedNotes.last.content, 'Title\nBody');
     });
 
+    testWidgets('splits into a new block when a newline is inserted', (
+      tester,
+    ) async {
+      final service = _FakeNotesService(
+        openHandler: (_) async => Note(
+          id: 'note-1',
+          content: 'Title',
+          createdAt: DateTime(2026, 4, 10, 9, 0),
+          updatedAt: DateTime(2026, 4, 10, 9, 0),
+        ),
+      );
+
+      await tester.pumpWidget(wrap(service: service, id: 'note-1'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+
+      await tester.tap(find.text('Title'));
+      await tester.pump();
+
+      await tester.enterText(find.byType(TextField), 'Title\nBody');
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 650));
+
+      expect(service.savedNotes, isNotEmpty);
+      expect(service.savedNotes.last.content, 'Title\nBody');
+    });
+
     testWidgets('toggles checklist items and saves the checked markdown', (
       tester,
     ) async {

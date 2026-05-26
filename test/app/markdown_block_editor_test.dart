@@ -34,6 +34,25 @@ void main() {
       expect(find.text('Hello'), findsOneWidget);
     });
 
+    testWidgets('uses multiline field config for line wrapping', (tester) async {
+      await tester.pumpWidget(
+        wrap(
+          MarkdownBlockEditor(
+            initialValue: '',
+            onChanged: (_) {},
+            onSubmittedNewBlock: (_) {},
+            onPasteRequested: () async {},
+            onDeleteEmptyBlock: () {},
+          ),
+        ),
+      );
+
+      final textField = tester.widget<TextField>(find.byType(TextField));
+      expect(textField.minLines, 1);
+      expect(textField.maxLines, isNull);
+      expect(textField.keyboardType, TextInputType.multiline);
+    });
+
     testWidgets('applyWrap wraps the selected text', (tester) async {
       final key = GlobalKey<MarkdownBlockEditorState>();
       String? changedValue;
@@ -181,6 +200,34 @@ void main() {
       expect(submittedSelection, isNotNull);
       expect(submittedSelection!.baseOffset, 4);
       expect(submittedSelection!.extentOffset, 4);
+    });
+
+    testWidgets('converts newline insertion into a block submission', (
+      tester,
+    ) async {
+      TextSelection? submittedSelection;
+      String? changedValue;
+
+      await tester.pumpWidget(
+        wrap(
+          MarkdownBlockEditor(
+            initialValue: 'Title',
+            onChanged: (value) => changedValue = value,
+            onSubmittedNewBlock: (selection) => submittedSelection = selection,
+            onPasteRequested: () async {},
+            onDeleteEmptyBlock: () {},
+          ),
+        ),
+      );
+
+      await tester.enterText(find.byType(TextField), 'Title\n');
+      await tester.pump();
+
+      expect(changedValue, 'Title');
+      expect(find.text('Title'), findsOneWidget);
+      expect(submittedSelection, isNotNull);
+      expect(submittedSelection!.baseOffset, 5);
+      expect(submittedSelection!.extentOffset, 5);
     });
 
     testWidgets(

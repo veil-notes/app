@@ -88,7 +88,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     ],
   );
 
-  ref.listen(veilControllerProvider, (_, __) {
+  ref.listen(veilControllerProvider, (_, _) {
     router.refresh();
   });
 

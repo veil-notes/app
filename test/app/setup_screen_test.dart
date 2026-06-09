@@ -111,11 +111,11 @@ void main() {
 class _FakeVeilService implements VeilService {
   final Object? throwOnCreate;
   String? createdPassword;
-  final Object? throwOnEnableBiometric;
+  Object? throwOnEnableBiometric;
   String? enabledPassword;
   int enableBiometricCalls = 0;
 
-  _FakeVeilService({this.throwOnCreate, this.throwOnEnableBiometric});
+  _FakeVeilService({this.throwOnCreate});
 
   @override
   Future<bool> isConfigured() async => false;

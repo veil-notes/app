@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../i18n/translations.g.dart';
 import '../../domain/editor/markdown_block.dart';
@@ -113,6 +114,7 @@ class _NoteScreenState extends ConsumerState<NoteScreen> {
 
                     return MarkdownBlockView(
                       block: block,
+                      onOpenLink: _openLink,
                       onTap: () {
                         setState(() {
                           _documentController.startEditing(index);
@@ -161,6 +163,14 @@ class _NoteScreenState extends ConsumerState<NoteScreen> {
     _documentController.removeBlockAt(index);
     _onContentChanged();
     setState(() {});
+  }
+
+  void _openLink(Uri uri) {
+    unawaited(_launchLink(uri));
+  }
+
+  Future<void> _launchLink(Uri uri) async {
+    await launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 
   Future<void> _pasteFromClipboardIntoEditingBlock() async {

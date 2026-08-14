@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:veil/features/notes/presentation/editor/markdown_inline_text_builder.dart';
 
 void main() {
-  const builder = MarkdownInlineTextBuilder();
+  late MarkdownInlineTextBuilder builder;
+
+  setUp(() {
+    builder = MarkdownInlineTextBuilder();
+  });
+
+  tearDown(() {
+    builder.dispose();
+  });
 
   group('MarkdownInlineTextBuilder', () {
     test('builds bold, italic and strike spans', () {
@@ -76,6 +85,59 @@ void main() {
       expect(children.single.text, 'both');
       expect(children.single.style?.fontWeight, FontWeight.bold);
       expect(children.single.style?.fontStyle, FontStyle.italic);
+    });
+
+    test('recognizes standard URLs and removes trailing punctuation', () {
+      final span = builder.build('Access https://github.com/veil-notes/veil.');
+
+      final link = span.children!.whereType<TextSpan>().singleWhere(
+        (child) => child.recognizer != null,
+      );
+
+      expect(link.text, 'https://github.com/veil-notes/veil');
+      expect(span.toPlainText(), 'Access https://github.com/veil-notes/veil.');
+    });
+
+    test('renders Markdown links with their label', () {
+      final span = builder.build(
+        'Read [the docs](https://github.com/veil-notes/veil).',
+      );
+
+      final link = span.children!.whereType<TextSpan>().singleWhere(
+        (child) => child.recognizer != null,
+      );
+
+      expect(link.text, 'the docs');
+      expect(span.toPlainText(), 'Read the docs.');
+    });
+
+    test('renders a Markdown link nested in bold text', () {
+      final openedLinks = <Uri>[];
+
+      final linkBuilder = MarkdownInlineTextBuilder(
+        onOpenLink: openedLinks.add,
+      );
+
+      addTearDown(linkBuilder.dispose);
+
+      final span = linkBuilder.build(
+        '**Read [the docs](https://github.com/veil-notes/veil)**',
+      );
+
+      final boldSpan = span.children!.single as TextSpan;
+      final linkSpan = boldSpan.children!.whereType<TextSpan>().singleWhere(
+        (child) => child.recognizer != null,
+      );
+      final recognizer = linkSpan.recognizer! as TapGestureRecognizer;
+
+      expect(boldSpan.style?.fontWeight, FontWeight.bold);
+      expect(linkSpan.text, 'the docs');
+      expect(linkSpan.style?.fontWeight, FontWeight.bold);
+      expect(linkSpan.style?.decoration, TextDecoration.underline);
+
+      recognizer.onTap!.call();
+
+      expect(openedLinks, [Uri.parse('https://github.com/veil-notes/veil')]);
     });
   });
 }

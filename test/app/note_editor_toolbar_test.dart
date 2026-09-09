@@ -62,7 +62,7 @@ void main() {
       await tester.pumpWidget(
         wrap(
           NoteEditorToolbar(
-            saveStatus: NoteSaveStatus.saving,
+            saveStatus: NoteSaveStatus.saved,
             onBold: () {},
             onItalic: () {},
             onHeadingSelected: (level) => selectedLevel = level,
@@ -130,13 +130,18 @@ void main() {
         );
 
         expect(find.byType(NoteEditorToolbar), findsOneWidget);
-        final icon = tester.widget<Icon>(find.byIcon(expectation.icon));
+        final statusIconFinder = find.byIcon(expectation.icon);
+        final icon = tester.widget<Icon>(statusIconFinder);
         expect(icon.color, expectation.color);
 
+        final statusScaleTransition = find.ancestor(
+          of: statusIconFinder,
+          matching: find.byType(ScaleTransition),
+        );
         if (expectation.status == NoteSaveStatus.saving) {
-          expect(find.byType(ScaleTransition), findsOneWidget);
+          expect(statusScaleTransition, findsOneWidget);
         } else {
-          expect(find.byType(ScaleTransition), findsNothing);
+          expect(statusScaleTransition, findsNothing);
         }
       }
     });

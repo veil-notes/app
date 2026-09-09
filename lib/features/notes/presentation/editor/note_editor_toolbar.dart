@@ -225,33 +225,93 @@ class _ToolbarButton extends StatelessWidget {
   }
 }
 
-class _StatusDot extends StatelessWidget {
+class _StatusDot extends StatefulWidget {
   final NoteSaveStatus saveStatus;
 
   const _StatusDot({required this.saveStatus});
 
   @override
+  State<_StatusDot> createState() => _StatusDotState();
+}
+
+class _StatusDotState extends State<_StatusDot>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _pulseController;
+  late final Animation<double> _pulseAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _pulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 700),
+    );
+    _pulseAnimation = Tween<double>(
+      begin: 0.58,
+      end: 1,
+    ).animate(
+      CurvedAnimation(
+        parent: _pulseController,
+        curve: Curves.easeInOut,
+      ),
+    );
+    _updatePulse();
+  }
+
+  @override
+  void didUpdateWidget(covariant _StatusDot oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.saveStatus != widget.saveStatus) {
+      _updatePulse();
+    }
+  }
+
+  void _updatePulse() {
+    if (widget.saveStatus == NoteSaveStatus.saving) {
+      _pulseController.repeat(reverse: true);
+    } else {
+      _pulseController.stop();
+    }
+  }
+
+  @override
+  void dispose() {
+    _pulseController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final color = switch (saveStatus) {
-      NoteSaveStatus.saved => const Color(0xFF5AD13F),
-      NoteSaveStatus.saving => const Color(0xFFE2B93B),
-      NoteSaveStatus.error => const Color(0xFFE25555),
+    final (icon, color) = switch (widget.saveStatus) {
+      NoteSaveStatus.saved => (
+        Icons.check,
+        const Color(0xFF5AD13F),
+      ),
+      NoteSaveStatus.saving => (
+        Icons.save_outlined,
+        const Color(0xFFE2B93B),
+      ),
+      NoteSaveStatus.error => (
+        Icons.priority_high,
+        const Color(0xFFE25555),
+      ),
     };
 
-    return Container(
-      width: 14,
-      height: 14,
-      decoration: BoxDecoration(
-        color: color,
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: color.withValues(alpha: 0.28),
-            blurRadius: 8,
-            spreadRadius: 1,
-          ),
-        ],
-      ),
+    final iconWidget = Icon(
+      icon,
+      color: color,
+      size: 18,
+    );
+
+    return SizedBox(
+      width: 18,
+      height: 18,
+      child: widget.saveStatus == NoteSaveStatus.saving
+          ? ScaleTransition(
+              scale: _pulseAnimation,
+              child: iconWidget,
+            )
+          : iconWidget,
     );
   }
 }

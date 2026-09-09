@@ -89,12 +89,32 @@ void main() {
       expect(selectedLevel, 4);
     });
 
-    testWidgets('renders for each save status', (tester) async {
-      for (final status in NoteSaveStatus.values) {
+    testWidgets('renders the expected icon and color for each save status', (
+      tester,
+    ) async {
+      final expectations = [
+        (
+          status: NoteSaveStatus.saved,
+          icon: Icons.check,
+          color: const Color(0xFF5AD13F),
+        ),
+        (
+          status: NoteSaveStatus.saving,
+          icon: Icons.save_outlined,
+          color: const Color(0xFFE2B93B),
+        ),
+        (
+          status: NoteSaveStatus.error,
+          icon: Icons.priority_high,
+          color: const Color(0xFFE25555),
+        ),
+      ];
+
+      for (final expectation in expectations) {
         await tester.pumpWidget(
           wrap(
             NoteEditorToolbar(
-              saveStatus: status,
+              saveStatus: expectation.status,
               onBold: () {},
               onItalic: () {},
               onHeadingSelected: (_) {},
@@ -110,6 +130,14 @@ void main() {
         );
 
         expect(find.byType(NoteEditorToolbar), findsOneWidget);
+        final icon = tester.widget<Icon>(find.byIcon(expectation.icon));
+        expect(icon.color, expectation.color);
+
+        if (expectation.status == NoteSaveStatus.saving) {
+          expect(find.byType(ScaleTransition), findsOneWidget);
+        } else {
+          expect(find.byType(ScaleTransition), findsNothing);
+        }
       }
     });
   });

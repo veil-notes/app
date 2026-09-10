@@ -1,0 +1,6 @@
+Beta 4
+
+- Improved the save-status indicator with animated feedback while notes are being saved
+- Prepared the Android release for reproducible F-Droid builds
+
+Veil is still experimental. Do not use it as the only copy of critical data.

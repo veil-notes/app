@@ -127,8 +127,8 @@ jobs:
             https://github.com/jerson/openpgp-mobile.git \
             "$RUNNER_TEMP/openpgp-mobile"
 
-          pushd "$RUNNER_TEMP/openpgp-mobile"
           export SOURCE_DATE_EPOCH="$(git log -1 --pretty=%ct)"
+          pushd "$RUNNER_TEMP/openpgp-mobile"
           export GOFLAGS='-trimpath -buildid='
           make binding_android
           popd

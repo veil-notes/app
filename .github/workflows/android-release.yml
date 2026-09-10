@@ -92,12 +92,6 @@ jobs:
       - name: Test
         run: flutter test
 
-      - name: Build Android App Bundle
-        run: flutter build appbundle --release
-
-      - name: Build Android APKs
-        run: flutter build apk --release --split-per-abi
-
       - name: Build OpenPGP native bridge from source
         run: |
           sudo apt-get update
@@ -126,6 +120,12 @@ jobs:
 
           flutter clean
           flutter pub get
+
+      - name: Build Android App Bundle
+        run: flutter build appbundle --release
+
+      - name: Build Android APKs
+        run: flutter build apk --release --split-per-abi
 
       - name: Build F-Droid-compatible signed APKs
         run: |

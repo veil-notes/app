@@ -1,0 +1,15 @@
+Veil is a local-first encrypted notes app for Android.
+
+Keep your notes on your device without an account or cloud sync. Notes are encrypted locally before they are written to the app's private storage.
+
+Features:
+- Markdown editor
+- Local OpenPGP-based encryption
+- Password-protected vault with Argon2 key derivation
+- Optional biometric unlock
+- Automatic locking
+- Offline-first design
+
+Veil is in beta. There is no password recovery, cloud backup, or import/export flow yet. Do not use it as the only copy of critical data.
+
+Veil is free and open-source software licensed under GPL-3.0-only. Contributions, bug reports, tests, documentation, accessibility improvements, and translations are welcome.

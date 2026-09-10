@@ -1,0 +1,15 @@
+Veil é um aplicativo Android de notas criptografadas e com armazenamento local.
+
+Mantenha suas notas no dispositivo sem criar uma conta ou depender de sincronização na nuvem. As notas são criptografadas localmente antes de serem gravadas no armazenamento privado do aplicativo.
+
+Recursos:
+- Editor Markdown
+- Criptografia local baseada em OpenPGP
+- Cofre protegido por senha com derivação de chave Argon2
+- Desbloqueio biométrico opcional
+- Bloqueio automático
+- Funcionamento sem depender de serviços online
+
+Veil está em beta. Ainda não há recuperação de senha, backup na nuvem ou fluxo de importação e exportação. Não use o aplicativo como a única cópia de dados importantes.
+
+Veil é software livre e de código aberto, licenciado sob a GPL-3.0-only. Contribuições, relatos de bugs, testes, documentação, melhorias de acessibilidade e traduções são bem-vindos.

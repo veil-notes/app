@@ -43,3 +43,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Local F-Droid submission staging (copy manually to fdroiddata)
+/.fdroid-staging/

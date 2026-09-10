@@ -4,6 +4,12 @@ on:
   push:
     tags:
       - "v*"
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Existing tag to rebuild (for example, v1.0.0-beta.5)"
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -12,12 +18,19 @@ jobs:
   build:
     name: Build signed Android artifacts
     runs-on: ubuntu-latest
+    env:
+      RELEASE_TAG: ${{ inputs.release_tag || github.ref_name }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          ref: ${{ inputs.release_tag || github.ref }}
+
+      - name: Validate release tag
+        run: |
+          [[ "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z.-]+)?$ ]]
 
       - name: Set up Java
         uses: actions/setup-java@v5
@@ -145,19 +158,26 @@ jobs:
       - name: Build F-Droid-compatible signed APKs
         run: |
           export SOURCE_DATE_EPOCH="$(git log -1 --pretty=%ct)"
-          flutter build apk --release --build-number=1007 --split-per-abi --target-platform=android-arm \
+          VERSION_LINE="$(grep -E '^version:' pubspec.yaml | head -n 1 | awk '{print $2}')"
+          BASE_BUILD_NUMBER="${VERSION_LINE##*+}"
+          test "$BASE_BUILD_NUMBER" -gt 0
+          FDROID_ARMV7_BUILD_NUMBER=$((BASE_BUILD_NUMBER + 1000))
+          FDROID_ARM64_BUILD_NUMBER=$((BASE_BUILD_NUMBER + 2000))
+          FDROID_X64_BUILD_NUMBER=$((BASE_BUILD_NUMBER + 4000))
+
+          flutter build apk --release --build-number="$FDROID_ARMV7_BUILD_NUMBER" --split-per-abi --target-platform=android-arm \
             --android-project-arg="filesystem-roots=$GITHUB_WORKSPACE" \
             --android-project-arg=filesystem-scheme=org-dartlang-root
           cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk \
             build/app/outputs/flutter-apk/app-fdroid-armeabi-v7a-release.apk
 
-          flutter build apk --release --build-number=2007 --split-per-abi --target-platform=android-arm64 \
+          flutter build apk --release --build-number="$FDROID_ARM64_BUILD_NUMBER" --split-per-abi --target-platform=android-arm64 \
             --android-project-arg="filesystem-roots=$GITHUB_WORKSPACE" \
             --android-project-arg=filesystem-scheme=org-dartlang-root
           cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk \
             build/app/outputs/flutter-apk/app-fdroid-arm64-v8a-release.apk
 
-          flutter build apk --release --build-number=4007 --split-per-abi --target-platform=android-x64 \
+          flutter build apk --release --build-number="$FDROID_X64_BUILD_NUMBER" --split-per-abi --target-platform=android-x64 \
             --android-project-arg="filesystem-roots=$GITHUB_WORKSPACE" \
             --android-project-arg=filesystem-scheme=org-dartlang-root
           cp build/app/outputs/flutter-apk/app-x86_64-release.apk \
@@ -170,10 +190,13 @@ jobs:
       - name: Prepare release assets
         id: assets
         run: |
-          TAG_NAME="${GITHUB_REF_NAME}"
+          TAG_NAME="$RELEASE_TAG"
           RELEASE_DATE="$(date -u +%F)"
           VERSION_LINE="$(grep -E '^version:' pubspec.yaml | head -n 1 | awk '{print $2}')"
           BUILD_NUMBER="${VERSION_LINE##*+}"
+          FDROID_ARMV7_BUILD_NUMBER=$((BUILD_NUMBER + 1000))
+          FDROID_ARM64_BUILD_NUMBER=$((BUILD_NUMBER + 2000))
+          FDROID_X64_BUILD_NUMBER=$((BUILD_NUMBER + 4000))
           PREVIOUS_TAG="$(git tag --list 'v*' --sort=-v:refname | grep -v "^${TAG_NAME}$" | head -n 1 || true)"
           ASSET_DIR="release-assets"
           ARM64_APK="app-arm64-v8a-release.apk"
@@ -293,9 +316,9 @@ jobs:
 
           F-Droid reproducible-build assets:
 
-          - \`$FDROID_ARM64_APK\` - \`$FDROID_ARM64_SIZE\` - version code 2007
-          - \`$FDROID_ARMV7_APK\` - \`$FDROID_ARMV7_SIZE\` - version code 1007
-          - \`$FDROID_X64_APK\` - \`$FDROID_X64_SIZE\` - version code 4007
+          - \`$FDROID_ARM64_APK\` - \`$FDROID_ARM64_SIZE\` - version code $FDROID_ARM64_BUILD_NUMBER
+          - \`$FDROID_ARMV7_APK\` - \`$FDROID_ARMV7_SIZE\` - version code $FDROID_ARMV7_BUILD_NUMBER
+          - \`$FDROID_X64_APK\` - \`$FDROID_X64_SIZE\` - version code $FDROID_X64_BUILD_NUMBER
 
           ## Installation
 
@@ -395,14 +418,14 @@ jobs:
       - name: Upload workflow artifacts
         uses: actions/upload-artifact@v7
         with:
-          name: android-release-${{ github.ref_name }}
+          name: android-release-${{ inputs.release_tag || github.ref_name }}
           path: release-assets/*
           if-no-files-found: error
 
       - name: Publish GitHub Release assets
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG_NAME: ${{ github.ref_name }}
+          TAG_NAME: ${{ inputs.release_tag || github.ref_name }}
           RELEASE_NOTES: ${{ steps.assets.outputs.release_notes }}
         run: |
           FLAGS=()

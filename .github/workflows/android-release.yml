@@ -130,8 +130,8 @@ jobs:
           export SOURCE_DATE_EPOCH="$(git log -1 --pretty=%ct)"
           pushd "$RUNNER_TEMP/openpgp-mobile"
           sed -i \
-            's/go build -ldflags="/go build -trimpath -buildvcs=false -ldflags="/; \
-             s/-ldflags="-w -s -extldflags=/-ldflags="-w -s -buildid= -extldflags=/' \
+            -e 's|go build -ldflags="|go build -trimpath -buildvcs=false -ldflags="|' \
+            -e 's|-ldflags="-w -s -extldflags=|-ldflags="-w -s -buildid= -extldflags=|' \
             Makefile
           make binding_android
           popd

@@ -128,6 +128,8 @@ jobs:
             "$RUNNER_TEMP/openpgp-mobile"
 
           pushd "$RUNNER_TEMP/openpgp-mobile"
+          export SOURCE_DATE_EPOCH="$(git log -1 --pretty=%ct)"
+          export GOFLAGS='-trimpath -buildid='
           make binding_android
           popd
 

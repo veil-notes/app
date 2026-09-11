@@ -67,8 +67,8 @@ def main():
                     assert build.versionCode == next_base + offset
                     assert build.versionName == version
                     assert build.commit == f"v{version}"
-                    url = build.binary.replace("%v", build.versionName)
-                    assert url.endswith(f"/v{version}/app-fdroid-{abi}-release.apk")
+                    url = build.binary.replace("%v", build.versionName).replace("%c", str(build.versionCode))
+                    assert url.endswith(f"/v{version}/{build.versionCode}.apk")
                     command = next(line for line in build.build if "--build-number=" in line)
                     expression = re.search(r"--build-number=(\$\(\(.*?\)\))", command)[1]
                     base = subprocess.check_output(

@@ -1,5 +1,30 @@
 # F-Droid releases
 
+## GitLab submission checks for beta.7
+
+The three beta.7 builds passed locally and GitLab pipeline 2841366083 also
+passed `fdroid build`. Its remaining failures were canonical YAML formatting,
+`checkupdates` adding `AutoName: Veil`, and `check apk` rejecting AGP's encrypted
+`Dependency metadata` signing block (ID 0x504b4453).
+
+The staging recipe now sets AutoName, uses the already-published Flutter/JNI
+preparation helper instead of inline Python, and is formatted by rewritemeta.
+This also avoids a formatter issue that added indentation inside inline Python.
+Future builds disable dependency metadata in `android/app/build.gradle.kts`.
+
+Copies of all three existing beta.7 F-Droid APKs were cleaned with apksigtool
+82b7be08f9f39c584a82b26a620be641a1227428. All ZIP entry contents stayed identical;
+apksigner verified the original certificate, and `fdroid scanner --exit-code`
+passed for all three. No app recompilation or new tag is needed for that cleanup.
+Prepared additional assets `8010.apk`, `9010.apk`, `11010.apk` and
+`FDROID-SHA256SUMS.txt` are in the ignored local
+`build/fdroid-pipeline-audit/upload/` directory. They have not been uploaded.
+Add these four files to beta.7, preserving all its existing assets. The recipe
+uses `v%v/%c.apk` URLs and future workflows publish the same numeric aliases.
+Short URLs also avoid trailing whitespace emitted by rewritemeta for long
+binary URLs. Then push the normalized recipe to the existing fdroiddata branch
+to trigger a new pipeline. No new app version is required for this cleanup.
+
 The current draft is **1.0.0-beta.7+7010**: ARMv7 8010, ARM64 9010 and
 x86_64 11010. The beta.6 version-code checks passed, but its OpenPGP native
 library failed binary reproducibility. Publish the corrected source as a new

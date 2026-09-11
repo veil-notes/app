@@ -210,6 +210,11 @@ jobs:
           FDROID_X64_APK="app-fdroid-x86_64-release.apk"
           AAB_FILE="app-release.aab"
 
+          # Short, versioned names used by the F-Droid metadata binary URLs.
+          cp "$ASSET_DIR/$FDROID_ARMV7_APK" "$ASSET_DIR/$FDROID_ARMV7_BUILD_NUMBER.apk"
+          cp "$ASSET_DIR/$FDROID_ARM64_APK" "$ASSET_DIR/$FDROID_ARM64_BUILD_NUMBER.apk"
+          cp "$ASSET_DIR/$FDROID_X64_APK" "$ASSET_DIR/$FDROID_X64_BUILD_NUMBER.apk"
+
           if [ -n "$PREVIOUS_TAG" ]; then
             COMMIT_RANGE="$PREVIOUS_TAG..$TAG_NAME"
           else
@@ -247,6 +252,9 @@ jobs:
           $FDROID_ARMV7_SHA  $FDROID_ARMV7_APK
           $FDROID_ARM64_SHA  $FDROID_ARM64_APK
           $FDROID_X64_SHA  $FDROID_X64_APK
+          $FDROID_ARMV7_SHA  $FDROID_ARMV7_BUILD_NUMBER.apk
+          $FDROID_ARM64_SHA  $FDROID_ARM64_BUILD_NUMBER.apk
+          $FDROID_X64_SHA  $FDROID_X64_BUILD_NUMBER.apk
           $AAB_SHA  $AAB_FILE
           EOF
 

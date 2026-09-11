@@ -4,8 +4,11 @@
 import argparse
 import re
 import subprocess
+import tempfile
 from pathlib import Path
 from zipfile import ZipFile
+
+from build_openpgp import GO_VERSION, LIBRARY
 
 
 ABI_OFFSETS = {"armeabi-v7a": 1000, "arm64-v8a": 2000, "x86_64": 4000}
@@ -65,6 +68,16 @@ def check_certificate(output):
         raise ValueError("APK signing certificate does not match AllowedAPKSigningKeys")
 
 
+def check_native_build_info(output):
+    lines = output.splitlines()
+    if not lines or not lines[0].endswith(f": {GO_VERSION}"):
+        raise ValueError(f"OpenPGP library must be built with {GO_VERSION}")
+    # Go intentionally omits ldflags from build-info when -trimpath is set.
+    required = {"\tbuild\t-trimpath=true", "\tbuild\tGOOS=android", "\tbuild\t-buildmode=c-shared"}
+    if not required.issubset(lines):
+        raise ValueError("OpenPGP library must use -trimpath and Android c-shared mode")
+
+
 def verify_apk(apk, build_tools, version, code, abi):
     badging = subprocess.check_output(
         [str(build_tools / "aapt"), "dump", "badging", str(apk)], text=True,
@@ -73,8 +86,14 @@ def verify_apk(apk, build_tools, version, code, abi):
     with ZipFile(apk) as archive:
         abis = {name.split("/")[1] for name in archive.namelist()
                 if name.startswith("lib/") and name.endswith(".so")}
+        native_library = archive.read(f"lib/{abi}/{LIBRARY}")
     if abis != {abi}:
         raise ValueError(f"unexpected native library directories: {abis}")
+    with tempfile.TemporaryDirectory(prefix="veil-apk-native-") as directory:
+        library = Path(directory) / LIBRARY
+        library.write_bytes(native_library)
+        info = subprocess.check_output(["go", "version", "-m", str(library)], text=True)
+        check_native_build_info(info)
     signature = subprocess.check_output(
         [str(build_tools / "apksigner"), "verify", "--verbose", "--print-certs", str(apk)],
         text=True,

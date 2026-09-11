@@ -47,8 +47,15 @@ def main():
 
             # Inject only remote discovery; exercise fdroidserver's actual
             # multi-ABI build generation and serialization offline.
-            for version, next_base, count in (("1.0.0-beta.7", 7010, 6),
-                                               ("1.0.0-beta.8", 10011, 9)):
+            current_beta = re.fullmatch(r"(.+-beta\.)(\d+)", app.CurrentVersion)
+            if not current_beta:
+                raise ValueError("This update simulation expects a numbered beta recipe")
+            initial_base = app.CurrentVersionCode - 4000
+            initial_count = len(app.Builds)
+            for increment in (1, 2):
+                version = current_beta[1] + str(int(current_beta[2]) + increment)
+                next_base = initial_base + 3001 * increment
+                count = initial_count + 3 * increment
                 with patch.object(checkupdates, "check_tags", return_value=(
                     version, next_base, f"v{version}",
                 )), patch.object(checkupdates, "fetch_autoname", return_value=None):
@@ -69,7 +76,7 @@ def main():
                         text=True,
                     ).strip()
                     assert base == str(next_base), base
-            print("F-Droid readmeta/lint and consecutive three-ABI beta.7/beta.8 updates passed")
+            print("F-Droid readmeta/lint and two consecutive three-ABI beta updates passed")
         finally:
             os.chdir(original)
 

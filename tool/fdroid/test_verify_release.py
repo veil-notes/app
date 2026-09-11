@@ -4,11 +4,22 @@ from pathlib import Path
 from unittest.mock import patch
 
 from verify_release import (
-    ABI_OFFSETS, SIGNING_CERTIFICATE, check_badging, check_certificate, check_history, release_version,
+    ABI_OFFSETS, SIGNING_CERTIFICATE, check_badging, check_certificate, check_history,
+    check_native_build_info, release_version,
 )
+from build_openpgp import GO_VERSION
 
 
 class ReleaseChecksTest(unittest.TestCase):
+    def test_native_library_must_have_pinned_go_and_reproducible_flags(self):
+        info = f'library.so: {GO_VERSION}\n\tbuild\t-trimpath=true\n\tbuild\tGOOS=android\n\tbuild\t-buildmode=c-shared\n'
+        check_native_build_info(info)
+        for wrong in (info.replace(GO_VERSION, "go1.26.0"),
+                      info.replace("-trimpath=true", "-trimpath=false"),
+                      info.replace("GOOS=android", "GOOS=linux")):
+            with self.assertRaises(ValueError):
+                check_native_build_info(wrong)
+
     def test_history_keeps_three_abi_recipes_together(self):
         for base, valid in ((4010, False), (7009, False), (7010, True)):
             with patch("verify_release.subprocess.check_output", side_effect=[

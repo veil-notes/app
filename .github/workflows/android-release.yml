@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       release_tag:
-        description: "Existing tag to rebuild (for example, v1.0.0-beta.5)"
+        description: "Existing tag to rebuild (for example, v1.0.0-beta.6)"
         required: true
         type: string
 
@@ -30,7 +30,8 @@ jobs:
 
       - name: Validate release tag
         run: |
-          [[ "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z.-]+)?$ ]]
+          python3 tool/fdroid/verify_release.py --tag "$RELEASE_TAG" --check-history
+          python3 -m unittest discover -s tool/fdroid -p 'test_*.py'
 
       - name: Set up Java
         uses: actions/setup-java@v5
@@ -158,7 +159,11 @@ jobs:
         run: flutter build appbundle --release
 
       - name: Build Android APKs
-        run: flutter build apk --release --split-per-abi
+        run: |
+          flutter build apk --release --split-per-abi
+          mkdir -p release-assets
+          cp build/app/outputs/flutter-apk/app-*-release.apk release-assets/
+          cp build/app/outputs/bundle/release/app-release.aab release-assets/
 
       - name: Build F-Droid-compatible signed APKs
         run: |
@@ -166,31 +171,29 @@ jobs:
           VERSION_LINE="$(grep -E '^version:' pubspec.yaml | head -n 1 | awk '{print $2}')"
           BASE_BUILD_NUMBER="${VERSION_LINE##*+}"
           test "$BASE_BUILD_NUMBER" -gt 0
-          FDROID_ARMV7_BUILD_NUMBER=$((BASE_BUILD_NUMBER + 1000))
-          FDROID_ARM64_BUILD_NUMBER=$((BASE_BUILD_NUMBER + 2000))
-          FDROID_X64_BUILD_NUMBER=$((BASE_BUILD_NUMBER + 4000))
-
-          flutter build apk --release --build-number="$FDROID_ARMV7_BUILD_NUMBER" --split-per-abi --target-platform=android-arm \
+          # Flutter adds the ABI offset; --build-number is always the base.
+          flutter build apk --release --build-number="$BASE_BUILD_NUMBER" --split-per-abi --target-platform=android-arm \
             --android-project-arg="filesystem-roots=$GITHUB_WORKSPACE" \
             --android-project-arg=filesystem-scheme=org-dartlang-root
           cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk \
-            build/app/outputs/flutter-apk/app-fdroid-armeabi-v7a-release.apk
+            release-assets/app-fdroid-armeabi-v7a-release.apk
 
-          flutter build apk --release --build-number="$FDROID_ARM64_BUILD_NUMBER" --split-per-abi --target-platform=android-arm64 \
+          flutter build apk --release --build-number="$BASE_BUILD_NUMBER" --split-per-abi --target-platform=android-arm64 \
             --android-project-arg="filesystem-roots=$GITHUB_WORKSPACE" \
             --android-project-arg=filesystem-scheme=org-dartlang-root
           cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk \
-            build/app/outputs/flutter-apk/app-fdroid-arm64-v8a-release.apk
+            release-assets/app-fdroid-arm64-v8a-release.apk
 
-          flutter build apk --release --build-number="$FDROID_X64_BUILD_NUMBER" --split-per-abi --target-platform=android-x64 \
+          flutter build apk --release --build-number="$BASE_BUILD_NUMBER" --split-per-abi --target-platform=android-x64 \
             --android-project-arg="filesystem-roots=$GITHUB_WORKSPACE" \
             --android-project-arg=filesystem-scheme=org-dartlang-root
           cp build/app/outputs/flutter-apk/app-x86_64-release.apk \
-            build/app/outputs/flutter-apk/app-fdroid-x86_64-release.apk
+            release-assets/app-fdroid-x86_64-release.apk
 
-          test -s build/app/outputs/flutter-apk/app-fdroid-armeabi-v7a-release.apk
-          test -s build/app/outputs/flutter-apk/app-fdroid-arm64-v8a-release.apk
-          test -s build/app/outputs/flutter-apk/app-fdroid-x86_64-release.apk
+      - name: Verify signed release APKs
+        run: |
+          python3 tool/fdroid/verify_release.py --tag "$RELEASE_TAG" \
+            --assets release-assets --build-tools "$ANDROID_HOME/build-tools/35.0.0"
 
       - name: Prepare release assets
         id: assets
@@ -217,15 +220,6 @@ jobs:
           else
             COMMIT_RANGE="$TAG_NAME"
           fi
-
-          mkdir -p "$ASSET_DIR"
-          cp "build/app/outputs/flutter-apk/$ARM64_APK" "$ASSET_DIR/$ARM64_APK"
-          cp "build/app/outputs/flutter-apk/$ARMV7_APK" "$ASSET_DIR/$ARMV7_APK"
-          cp "build/app/outputs/flutter-apk/$X64_APK" "$ASSET_DIR/$X64_APK"
-          cp "build/app/outputs/flutter-apk/$FDROID_ARMV7_APK" "$ASSET_DIR/$FDROID_ARMV7_APK"
-          cp "build/app/outputs/flutter-apk/$FDROID_ARM64_APK" "$ASSET_DIR/$FDROID_ARM64_APK"
-          cp "build/app/outputs/flutter-apk/$FDROID_X64_APK" "$ASSET_DIR/$FDROID_X64_APK"
-          cp "build/app/outputs/bundle/release/$AAB_FILE" "$ASSET_DIR/$AAB_FILE"
 
           size_mb() {
             awk -v bytes="$(stat -c%s "$1")" 'BEGIN { printf "%.2f MB", bytes / 1000 / 1000 }'

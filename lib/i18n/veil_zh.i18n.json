@@ -36,6 +36,7 @@
     "passwordMinLength": "密码至少需要 10 个字符。",
     "passwordMissingUppercase": "密码必须至少包含一个大写字母。",
     "passwordMissingLowercase": "密码必须至少包含一个小写字母。",
-    "passwordMissingSpecialChar": "密码必须至少包含一个特殊字符。"
+    "passwordMissingSpecialChar": "密码必须至少包含一个特殊字符。",
+    "passwordChangeFailed": "无法更改密码。保险库未发生变化。"
   }
 }

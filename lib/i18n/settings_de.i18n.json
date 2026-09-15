@@ -28,5 +28,14 @@
   "confirmPassword": {
     "title": "Passwort bestätigen",
     "hint": "Gib dein Passwort ein..."
+  },
+  "changePassword": {
+    "title": "Passwort ändern",
+    "subtitle": "Ändere das Passwort zum Schutz deines Tresors.",
+    "sheetTitle": "Tresor-Passwort ändern",
+    "currentPasswordHint": "Aktuelles Passwort...",
+    "newPasswordHint": "Neues Passwort...",
+    "confirmPasswordHint": "Neues Passwort bestätigen...",
+    "success": "Passwort erfolgreich geändert."
   }
 }

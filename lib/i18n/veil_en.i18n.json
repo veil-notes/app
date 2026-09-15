@@ -36,6 +36,7 @@
     "vaultLocked": "Vault is locked.",
     "passwordMissingUppercase": "Password must contain at least one uppercase letter.",
     "passwordMissingLowercase": "Password must contain at least one lowercase letter.",
-    "passwordMissingSpecialChar": "Password must contain at least one special character."
+    "passwordMissingSpecialChar": "Password must contain at least one special character.",
+    "passwordChangeFailed": "Could not change the password. Your vault is unchanged."
   }
 }

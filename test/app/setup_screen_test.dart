@@ -129,6 +129,9 @@ class _FakeVeilService implements VeilService {
   }
 
   @override
+  Future<void> changePassword(String currentPassword, String newPassword) async {}
+
+  @override
   Future<bool> unlock(String password) async => true;
 
   @override

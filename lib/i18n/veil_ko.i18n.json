@@ -36,6 +36,7 @@
     "passwordMinLength": "비밀번호는 최소 10자여야 합니다.",
     "passwordMissingUppercase": "비밀번호에 대문자가 하나 이상 포함되어야 합니다.",
     "passwordMissingLowercase": "비밀번호에 소문자가 하나 이상 포함되어야 합니다.",
-    "passwordMissingSpecialChar": "비밀번호에 특수문자가 하나 이상 포함되어야 합니다."
+    "passwordMissingSpecialChar": "비밀번호에 특수문자가 하나 이상 포함되어야 합니다.",
+    "passwordChangeFailed": "비밀번호를 변경하지 못했습니다. 볼트는 변경되지 않았습니다."
   }
 }

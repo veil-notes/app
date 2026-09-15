@@ -68,6 +68,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               biometricEnabledAsync: biometricEnabledAsync,
               canUseBiometricsAsync: canUseBiometricsAsync,
             ),
+            ListTile(
+              title: Text(
+                t.settings.changePassword.title,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              subtitle: Text(
+                t.settings.changePassword.subtitle,
+                style: const TextStyle(fontSize: 12),
+              ),
+              onTap: _isLoading ? null : _changePassword,
+            ),
             autoLockOptionAsync.when(
               data: (option) {
                 return ListTile(
@@ -273,6 +284,37 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     }
   }
 
+  Future<void> _changePassword() async {
+    final input = await _showChangePasswordSheet();
+
+    if (input == null || !mounted) {
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      await ref
+          .read(veilServiceProvider)
+          .changePassword(input.currentPassword, input.newPassword);
+
+      ref.invalidate(isBiometricEnabledProvider);
+      ref.invalidate(canUseBiometricUnlockProvider);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(context.t.settings.changePassword.success)),
+        );
+      }
+    } catch (error) {
+      _showError(error);
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
   Future<void> _selectAutoLockOption() async {
     final options = AutoLockOption.options;
     final current = await ref.read(veilServiceProvider).getAutoLockOption();
@@ -454,6 +496,26 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
+  Future<_ChangePasswordInput?> _showChangePasswordSheet() {
+    return showModalBottomSheet<_ChangePasswordInput>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: const Color(0xFF171336),
+      barrierColor: Colors.black.withValues(alpha: 0.45),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.viewInsetsOf(context).bottom,
+          ),
+          child: _ChangePasswordSheet(t: context.t),
+        );
+      },
+    );
+  }
+
   String _autoLockLabel(Translations t, AutoLockOption option) {
     switch (option.id) {
       case '1m':
@@ -503,6 +565,169 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 }
 
+class _ChangePasswordInput {
+  final String currentPassword;
+  final String newPassword;
+
+  const _ChangePasswordInput({
+    required this.currentPassword,
+    required this.newPassword,
+  });
+}
+
+class _ChangePasswordSheet extends StatefulWidget {
+  final Translations t;
+
+  const _ChangePasswordSheet({required this.t});
+
+  @override
+  State<_ChangePasswordSheet> createState() => _ChangePasswordSheetState();
+}
+
+class _ChangePasswordSheetState extends State<_ChangePasswordSheet> {
+  final _currentPasswordController = TextEditingController();
+  final _newPasswordController = TextEditingController();
+  final _confirmationController = TextEditingController();
+  String? _validationMessage;
+
+  @override
+  void dispose() {
+    _currentPasswordController.dispose();
+    _newPasswordController.dispose();
+    _confirmationController.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    if (_newPasswordController.text != _confirmationController.text) {
+      setState(() {
+        _validationMessage = widget.t.veil.setup.passwordsDoNotMatch;
+      });
+      return;
+    }
+
+    Navigator.of(context).pop(
+      _ChangePasswordInput(
+        currentPassword: _currentPasswordController.text,
+        newPassword: _newPasswordController.text,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return SafeArea(
+      top: false,
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                width: 50,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: colorScheme.onPrimary,
+                  borderRadius: BorderRadius.circular(999),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Center(
+              child: Text(
+                widget.t.settings.changePassword.sheetTitle,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: colorScheme.onSurface,
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _currentPasswordController,
+              obscureText: true,
+              autofocus: true,
+              decoration: InputDecoration(
+                hintText: widget.t.settings.changePassword.currentPasswordHint,
+              ),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _newPasswordController,
+              obscureText: true,
+              decoration: InputDecoration(
+                hintText: widget.t.settings.changePassword.newPasswordHint,
+              ),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _confirmationController,
+              obscureText: true,
+              decoration: InputDecoration(
+                hintText:
+                    widget.t.settings.changePassword.confirmPasswordHint,
+                errorText: _validationMessage,
+              ),
+              onSubmitted: (_) => _submit(),
+            ),
+            const SizedBox(height: 16),
+            Divider(
+              height: 1,
+              color: colorScheme.onSurface.withValues(alpha: 0.05),
+            ),
+            const SizedBox(height: 8),
+            SizedBox(
+              width: double.infinity,
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: _submit,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(
+                      widget.t.common.actions.confirm,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: colorScheme.onSurface,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Divider(
+              height: 1,
+              color: colorScheme.onSurface.withValues(alpha: 0.05),
+            ),
+            const SizedBox(height: 8),
+            SizedBox(
+              width: double.infinity,
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () => Navigator.of(context).pop(),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(
+                      widget.t.common.actions.cancel,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: colorScheme.onSurface,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 class _ConfirmPasswordSheet extends StatefulWidget {
   final Translations t;

@@ -75,6 +75,170 @@ void main() {
       );
     });
 
+    test(
+      'changePassword rewraps the existing key and keeps the public key',
+      () async {
+        final storage = _configuredStorage(
+          biometricEnabled: true,
+          biometricPassphrase: 'old-biometric-passphrase',
+        );
+        final crypto = _FakeCryptoService();
+        final service = _buildService(
+          storage: storage,
+          crypto: crypto,
+          random: _FixedRandom(),
+        );
+
+        await service.unlock('CurrentPassword1!');
+        await service.changePassword('CurrentPassword1!', 'NewPassword2@');
+
+        final params = KdfParams.fromJson(
+          jsonDecode(storage.values['veil.kdf_params']!)
+              as Map<String, dynamic>,
+        );
+
+        expect(params.salt, isNot(_kdfParams.salt));
+        expect(storage.values['veil.public_key'], 'public-key');
+        expect(storage.values['veil.private_key_encrypted'], 'sym:private-key');
+        expect(storage.values['veil.biometric_enabled'], 'true');
+        expect(
+          storage.values['veil.biometric_passphrase'],
+          crypto.lastEncryptSymmetricPassphrase,
+        );
+        expect(storage.values['veil.password_change_transaction'], '');
+        expect(await service.getUnlockedPrivateKey(), 'private-key');
+      },
+    );
+
+    test('changePassword rejects the current password without writes', () async {
+      final storage = _configuredStorage();
+      final service = _buildService(
+        storage: storage,
+        crypto: _FakeCryptoService(shouldThrowOnDecryptSymmetric: true),
+      );
+      final initialValues = Map<String, String>.from(storage.values);
+
+      await expectLater(
+        () => service.changePassword('wrong', 'NewPassword2@'),
+        throwsA(
+          isA<VeilException>().having(
+            (error) => error.code,
+            'code',
+            VeilExceptionCode.invalidPassword,
+          ),
+        ),
+      );
+
+      expect(storage.values, initialValues);
+      expect(storage.writeCount, 0);
+    });
+
+    test('changePassword rejects an invalid new password without writes', () async {
+      final storage = _configuredStorage();
+      final service = _buildService(
+        storage: storage,
+        validator: _FixedPasswordValidator(
+          const PasswordValidationResult.invalid(
+            PasswordValidationError.minLength,
+          ),
+        ),
+      );
+      final initialValues = Map<String, String>.from(storage.values);
+
+      await expectLater(
+        () => service.changePassword('CurrentPassword1!', 'short'),
+        throwsA(isA<VeilException>()),
+      );
+
+      expect(storage.values, initialValues);
+      expect(storage.writeCount, 0);
+    });
+
+    test('changePassword keeps biometrics disabled when they are disabled', () async {
+      final storage = _configuredStorage();
+      final service = _buildService(storage: storage);
+
+      await service.changePassword('CurrentPassword1!', 'NewPassword2@');
+
+      expect(storage.values['veil.biometric_enabled'], 'false');
+      expect(storage.values['veil.biometric_passphrase'], '');
+    });
+
+    test('new password and biometric unlock the existing private key', () async {
+      final storage = _configuredStorage(
+        biometricEnabled: true,
+        biometricPassphrase: _passwordPassphrase('CurrentPassword1!'),
+      );
+      final crypto = _FakeCryptoService(
+        acceptedPassphrases: {
+          _passwordPassphrase('CurrentPassword1!'),
+        },
+      );
+      final service = _buildService(
+        storage: storage,
+        crypto: crypto,
+        biometrics: _FakeBiometricAuthService(
+          isAvailableResult: true,
+          authenticateResult: true,
+        ),
+      );
+
+      await service.changePassword('CurrentPassword1!', 'NewPassword2@');
+      service.lock();
+
+      expect(await service.unlock('CurrentPassword1!'), isFalse);
+      expect(await service.unlock('NewPassword2@'), isTrue);
+      service.lock();
+      expect(await service.unlockWithBiometrics(), isTrue);
+      expect(await service.getUnlockedPrivateKey(), 'private-key');
+    });
+
+    test('changePassword rolls back when a secure storage write fails', () async {
+      final storage = _configuredStorage(
+        biometricEnabled: true,
+        biometricPassphrase: 'old-biometric-passphrase',
+        failWrites: {'veil.private_key_encrypted': 1},
+      );
+      final service = _buildService(storage: storage);
+
+      await expectLater(
+        () => service.changePassword('CurrentPassword1!', 'NewPassword2@'),
+        throwsA(
+          isA<VeilException>().having(
+            (error) => error.code,
+            'code',
+            VeilExceptionCode.passwordChangeFailed,
+          ),
+        ),
+      );
+
+      expect(storage.values['veil.kdf_params'], jsonEncode(_kdfParams.toJson()));
+      expect(storage.values['veil.private_key_encrypted'], 'sym:private-key');
+      expect(storage.values['veil.biometric_enabled'], 'true');
+      expect(storage.values['veil.biometric_passphrase'], 'old-biometric-passphrase');
+      expect(storage.values['veil.password_change_transaction'], '');
+    });
+
+    test('changePassword locks when rollback fails and recovers on next startup', () async {
+      final storage = _configuredStorage(
+        failWrites: {'veil.private_key_encrypted': 2},
+      );
+      final service = _buildService(storage: storage);
+      await service.unlock('CurrentPassword1!');
+
+      await expectLater(
+        () => service.changePassword('CurrentPassword1!', 'NewPassword2@'),
+        throwsA(isA<VeilException>()),
+      );
+      await expectLater(service.getUnlockedPrivateKey, throwsException);
+      expect(storage.values['veil.password_change_transaction'], isNotEmpty);
+
+      final recoveredService = _buildService(storage: storage);
+      expect(await recoveredService.isConfigured(), isTrue);
+      expect(storage.values['veil.password_change_transaction'], '');
+      expect(await recoveredService.unlock('CurrentPassword1!'), isTrue);
+    });
+
     test('unlock returns false when configuration is incomplete', () async {
       final service = _buildService();
 
@@ -427,6 +591,23 @@ VeilStateService _buildService({
   );
 }
 
+_FakeSecureStorageService _configuredStorage({
+  bool biometricEnabled = false,
+  String? biometricPassphrase,
+  Map<String, int>? failWrites,
+}) {
+  return _FakeSecureStorageService(
+    values: {
+      'veil.kdf_params': jsonEncode(_kdfParams.toJson()),
+      'veil.public_key': 'public-key',
+      'veil.private_key_encrypted': 'sym:private-key',
+      'veil.biometric_enabled': biometricEnabled ? 'true' : 'false',
+      'veil.biometric_passphrase': biometricPassphrase ?? '',
+    },
+    failWrites: failWrites,
+  );
+}
+
 class _FixedPasswordValidator implements PasswordValidator {
   final PasswordValidationResult result;
 
@@ -447,18 +628,29 @@ class _FakeKeyDerivationService implements KeyDerivationService {
   }) async {
     lastPassword = password;
     lastParams = params;
-    return const DerivedKey([1, 2, 3, 4]);
+    return DerivedKey(password.codeUnits);
   }
 }
 
 class _FakeSecureStorageService implements SecureStorageService {
   final Map<String, String> values;
+  final Map<String, int> failWrites;
+  int writeCount = 0;
 
-  _FakeSecureStorageService({Map<String, String>? values})
-    : values = values ?? {};
+  _FakeSecureStorageService({
+    Map<String, String>? values,
+    Map<String, int>? failWrites,
+  }) : values = values ?? {},
+       failWrites = failWrites ?? {};
 
   @override
   Future<void> write(String key, String value) async {
+    writeCount++;
+    final remainingFailures = failWrites[key] ?? 0;
+    if (remainingFailures > 0) {
+      failWrites[key] = remainingFailures - 1;
+      throw Exception('write failed for $key');
+    }
     values[key] = value;
   }
 
@@ -468,11 +660,16 @@ class _FakeSecureStorageService implements SecureStorageService {
 
 class _FakeCryptoService implements CryptoService {
   final bool shouldThrowOnDecryptSymmetric;
+  Set<String>? acceptedPassphrases;
 
   String? lastEncryptSymmetricPlainText;
+  String? lastEncryptSymmetricPassphrase;
   String? lastDecryptSymmetricPayload;
 
-  _FakeCryptoService({this.shouldThrowOnDecryptSymmetric = false});
+  _FakeCryptoService({
+    this.shouldThrowOnDecryptSymmetric = false,
+    this.acceptedPassphrases,
+  });
 
   @override
   Future<CryptoKeyPair> generateKeys() async =>
@@ -489,6 +686,8 @@ class _FakeCryptoService implements CryptoService {
     String passphrase,
   ) async {
     lastEncryptSymmetricPlainText = plainText;
+    lastEncryptSymmetricPassphrase = passphrase;
+    acceptedPassphrases = {passphrase};
     return EncryptedData('sym:$plainText');
   }
 
@@ -503,6 +702,11 @@ class _FakeCryptoService implements CryptoService {
 
     if (shouldThrowOnDecryptSymmetric) {
       throw Exception('decrypt failed');
+    }
+
+    if (acceptedPassphrases != null &&
+        !acceptedPassphrases!.contains(passphrase)) {
+      throw Exception('invalid passphrase');
     }
 
     return data.payload.replaceFirst('sym:', '');
@@ -540,4 +744,8 @@ class _FixedRandom implements Random {
     _next++;
     return value;
   }
+}
+
+String _passwordPassphrase(String password) {
+  return base64UrlEncode(password.codeUnits);
 }

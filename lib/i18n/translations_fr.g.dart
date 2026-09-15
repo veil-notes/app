@@ -93,6 +93,7 @@ class _TranslationsSettingsFr extends TranslationsSettingsEn {
 	@override late final _TranslationsSettingsLanguageFr language = _TranslationsSettingsLanguageFr._(_root);
 	@override late final _TranslationsSettingsLockFr lock = _TranslationsSettingsLockFr._(_root);
 	@override late final _TranslationsSettingsConfirmPasswordFr confirmPassword = _TranslationsSettingsConfirmPasswordFr._(_root);
+	@override late final _TranslationsSettingsChangePasswordFr changePassword = _TranslationsSettingsChangePasswordFr._(_root);
 }
 
 // Path: veil
@@ -230,6 +231,22 @@ class _TranslationsSettingsConfirmPasswordFr extends TranslationsSettingsConfirm
 	@override String get hint => 'Saisissez votre mot de passe...';
 }
 
+// Path: settings.changePassword
+class _TranslationsSettingsChangePasswordFr extends TranslationsSettingsChangePasswordEn {
+	_TranslationsSettingsChangePasswordFr._(TranslationsFr root) : this._root = root, super.internal(root);
+
+	final TranslationsFr _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Modifier le mot de passe';
+	@override String get subtitle => 'Remplacez le mot de passe qui protège votre coffre.';
+	@override String get sheetTitle => 'Modifier le mot de passe du coffre';
+	@override String get currentPasswordHint => 'Mot de passe actuel...';
+	@override String get newPasswordHint => 'Nouveau mot de passe...';
+	@override String get confirmPasswordHint => 'Confirmez le nouveau mot de passe...';
+	@override String get success => 'Mot de passe modifié avec succès.';
+}
+
 // Path: veil.setup
 class _TranslationsVeilSetupFr extends TranslationsVeilSetupEn {
 	_TranslationsVeilSetupFr._(TranslationsFr root) : this._root = root, super.internal(root);
@@ -295,6 +312,7 @@ class _TranslationsVeilErrorsFr extends TranslationsVeilErrorsEn {
 	@override String get passwordMissingUppercase => 'Le mot de passe doit contenir au moins une lettre majuscule.';
 	@override String get passwordMissingLowercase => 'Le mot de passe doit contenir au moins une lettre minuscule.';
 	@override String get passwordMissingSpecialChar => 'Le mot de passe doit contenir au moins un caractère spécial.';
+	@override String get passwordChangeFailed => 'Impossible de modifier le mot de passe. Votre coffre est inchangé.';
 }
 
 // Path: settings.autoLock.options
@@ -356,6 +374,13 @@ extension on TranslationsFr {
 			'settings.lock.subtitle' => 'Efface la session actuelle. Vous devrez déverrouiller à nouveau.',
 			'settings.confirmPassword.title' => 'Confirmer le mot de passe',
 			'settings.confirmPassword.hint' => 'Saisissez votre mot de passe...',
+			'settings.changePassword.title' => 'Modifier le mot de passe',
+			'settings.changePassword.subtitle' => 'Remplacez le mot de passe qui protège votre coffre.',
+			'settings.changePassword.sheetTitle' => 'Modifier le mot de passe du coffre',
+			'settings.changePassword.currentPasswordHint' => 'Mot de passe actuel...',
+			'settings.changePassword.newPasswordHint' => 'Nouveau mot de passe...',
+			'settings.changePassword.confirmPasswordHint' => 'Confirmez le nouveau mot de passe...',
+			'settings.changePassword.success' => 'Mot de passe modifié avec succès.',
 			'veil.setup.passwordHint' => 'Saisissez un mot de passe pour commencer...',
 			'veil.setup.cta' => 'C\'est parti !',
 			'veil.setup.biometricsOptInTitle' => 'Activer la biométrie',
@@ -387,6 +412,7 @@ extension on TranslationsFr {
 			'veil.errors.passwordMissingUppercase' => 'Le mot de passe doit contenir au moins une lettre majuscule.',
 			'veil.errors.passwordMissingLowercase' => 'Le mot de passe doit contenir au moins une lettre minuscule.',
 			'veil.errors.passwordMissingSpecialChar' => 'Le mot de passe doit contenir au moins un caractère spécial.',
+			'veil.errors.passwordChangeFailed' => 'Impossible de modifier le mot de passe. Votre coffre est inchangé.',
 			_ => null,
 		};
 	}

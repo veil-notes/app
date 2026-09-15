@@ -28,5 +28,14 @@
   "confirmPassword": {
     "title": "Confirmar senha",
     "hint": "Digite sua senha..."
+  },
+  "changePassword": {
+    "title": "Alterar senha",
+    "subtitle": "Substitua a senha usada para proteger seu cofre.",
+    "sheetTitle": "Alterar senha do cofre",
+    "currentPasswordHint": "Senha atual...",
+    "newPasswordHint": "Nova senha...",
+    "confirmPasswordHint": "Confirme a nova senha...",
+    "success": "Senha alterada com sucesso."
   }
 }

@@ -28,5 +28,14 @@
   "confirmPassword": {
     "title": "Подтвердите пароль",
     "hint": "Введите пароль..."
+  },
+  "changePassword": {
+    "title": "Изменить пароль",
+    "subtitle": "Замените пароль, защищающий хранилище.",
+    "sheetTitle": "Изменить пароль хранилища",
+    "currentPasswordHint": "Текущий пароль...",
+    "newPasswordHint": "Новый пароль...",
+    "confirmPasswordHint": "Подтвердите новый пароль...",
+    "success": "Пароль успешно изменён."
   }
 }

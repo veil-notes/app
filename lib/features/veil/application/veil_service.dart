@@ -5,6 +5,8 @@ abstract class VeilService {
 
   Future<void> create(String password);
 
+  Future<void> changePassword(String currentPassword, String newPassword);
+
   Future<bool> unlock(String password);
   Future<bool> unlockWithBiometrics();
 

@@ -28,5 +28,14 @@
   "confirmPassword": {
     "title": "비밀번호 확인",
     "hint": "비밀번호를 입력하세요..."
+  },
+  "changePassword": {
+    "title": "비밀번호 변경",
+    "subtitle": "볼트를 보호하는 비밀번호를 변경합니다.",
+    "sheetTitle": "볼트 비밀번호 변경",
+    "currentPasswordHint": "현재 비밀번호...",
+    "newPasswordHint": "새 비밀번호...",
+    "confirmPasswordHint": "새 비밀번호 확인...",
+    "success": "비밀번호가 변경되었습니다."
   }
 }

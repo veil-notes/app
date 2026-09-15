@@ -102,6 +102,7 @@ class TranslationsSettingsEn {
 	late final TranslationsSettingsLanguageEn language = TranslationsSettingsLanguageEn.internal(_root);
 	late final TranslationsSettingsLockEn lock = TranslationsSettingsLockEn.internal(_root);
 	late final TranslationsSettingsConfirmPasswordEn confirmPassword = TranslationsSettingsConfirmPasswordEn.internal(_root);
+	late final TranslationsSettingsChangePasswordEn changePassword = TranslationsSettingsChangePasswordEn.internal(_root);
 }
 
 // Path: veil
@@ -302,6 +303,36 @@ class TranslationsSettingsConfirmPasswordEn {
 	String get hint => 'Type your password...';
 }
 
+// Path: settings.changePassword
+class TranslationsSettingsChangePasswordEn {
+	TranslationsSettingsChangePasswordEn.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Change password'
+	String get title => 'Change password';
+
+	/// en: 'Replace the password used to protect your vault.'
+	String get subtitle => 'Replace the password used to protect your vault.';
+
+	/// en: 'Change vault password'
+	String get sheetTitle => 'Change vault password';
+
+	/// en: 'Current password...'
+	String get currentPasswordHint => 'Current password...';
+
+	/// en: 'New password...'
+	String get newPasswordHint => 'New password...';
+
+	/// en: 'Confirm new password...'
+	String get confirmPasswordHint => 'Confirm new password...';
+
+	/// en: 'Password changed successfully.'
+	String get success => 'Password changed successfully.';
+}
+
 // Path: veil.setup
 class TranslationsVeilSetupEn {
 	TranslationsVeilSetupEn.internal(this._root);
@@ -429,6 +460,9 @@ class TranslationsVeilErrorsEn {
 
 	/// en: 'Password must contain at least one special character.'
 	String get passwordMissingSpecialChar => 'Password must contain at least one special character.';
+
+	/// en: 'Could not change the password. Your vault is unchanged.'
+	String get passwordChangeFailed => 'Could not change the password. Your vault is unchanged.';
 }
 
 // Path: settings.autoLock.options
@@ -498,6 +532,13 @@ extension on Translations {
 			'settings.lock.subtitle' => 'Clears the current session. You will need to unlock again.',
 			'settings.confirmPassword.title' => 'Confirm password',
 			'settings.confirmPassword.hint' => 'Type your password...',
+			'settings.changePassword.title' => 'Change password',
+			'settings.changePassword.subtitle' => 'Replace the password used to protect your vault.',
+			'settings.changePassword.sheetTitle' => 'Change vault password',
+			'settings.changePassword.currentPasswordHint' => 'Current password...',
+			'settings.changePassword.newPasswordHint' => 'New password...',
+			'settings.changePassword.confirmPasswordHint' => 'Confirm new password...',
+			'settings.changePassword.success' => 'Password changed successfully.',
 			'veil.setup.passwordHint' => 'Type a password to start...',
 			'veil.setup.cta' => 'Let\'s start!',
 			'veil.setup.biometricsOptInTitle' => 'Enable biometrics',
@@ -529,6 +570,7 @@ extension on Translations {
 			'veil.errors.passwordMissingUppercase' => 'Password must contain at least one uppercase letter.',
 			'veil.errors.passwordMissingLowercase' => 'Password must contain at least one lowercase letter.',
 			'veil.errors.passwordMissingSpecialChar' => 'Password must contain at least one special character.',
+			'veil.errors.passwordChangeFailed' => 'Could not change the password. Your vault is unchanged.',
 			_ => null,
 		};
 	}

@@ -177,6 +177,9 @@ class _FakeVeilService implements VeilService, VaultKeyProvider {
   Future<void> create(String password) async {}
 
   @override
+  Future<void> changePassword(String currentPassword, String newPassword) async {}
+
+  @override
   Future<void> disableBiometricUnlock() async {}
 
   @override

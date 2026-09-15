@@ -93,6 +93,7 @@ class _TranslationsSettingsEs extends TranslationsSettingsEn {
 	@override late final _TranslationsSettingsLanguageEs language = _TranslationsSettingsLanguageEs._(_root);
 	@override late final _TranslationsSettingsLockEs lock = _TranslationsSettingsLockEs._(_root);
 	@override late final _TranslationsSettingsConfirmPasswordEs confirmPassword = _TranslationsSettingsConfirmPasswordEs._(_root);
+	@override late final _TranslationsSettingsChangePasswordEs changePassword = _TranslationsSettingsChangePasswordEs._(_root);
 }
 
 // Path: veil
@@ -230,6 +231,22 @@ class _TranslationsSettingsConfirmPasswordEs extends TranslationsSettingsConfirm
 	@override String get hint => 'Escribe tu contraseña...';
 }
 
+// Path: settings.changePassword
+class _TranslationsSettingsChangePasswordEs extends TranslationsSettingsChangePasswordEn {
+	_TranslationsSettingsChangePasswordEs._(TranslationsEs root) : this._root = root, super.internal(root);
+
+	final TranslationsEs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Cambiar contraseña';
+	@override String get subtitle => 'Reemplaza la contraseña que protege tu bóveda.';
+	@override String get sheetTitle => 'Cambiar la contraseña de la bóveda';
+	@override String get currentPasswordHint => 'Contraseña actual...';
+	@override String get newPasswordHint => 'Nueva contraseña...';
+	@override String get confirmPasswordHint => 'Confirma la nueva contraseña...';
+	@override String get success => 'Contraseña cambiada correctamente.';
+}
+
 // Path: veil.setup
 class _TranslationsVeilSetupEs extends TranslationsVeilSetupEn {
 	_TranslationsVeilSetupEs._(TranslationsEs root) : this._root = root, super.internal(root);
@@ -295,6 +312,7 @@ class _TranslationsVeilErrorsEs extends TranslationsVeilErrorsEn {
 	@override String get passwordMissingUppercase => 'La contraseña debe contener al menos una letra mayúscula.';
 	@override String get passwordMissingLowercase => 'La contraseña debe contener al menos una letra minúscula.';
 	@override String get passwordMissingSpecialChar => 'La contraseña debe contener al menos un carácter especial.';
+	@override String get passwordChangeFailed => 'No se pudo cambiar la contraseña. Tu bóveda no ha cambiado.';
 }
 
 // Path: settings.autoLock.options
@@ -356,6 +374,13 @@ extension on TranslationsEs {
 			'settings.lock.subtitle' => 'Borra la sesión actual. Tendrás que desbloquear de nuevo.',
 			'settings.confirmPassword.title' => 'Confirmar contraseña',
 			'settings.confirmPassword.hint' => 'Escribe tu contraseña...',
+			'settings.changePassword.title' => 'Cambiar contraseña',
+			'settings.changePassword.subtitle' => 'Reemplaza la contraseña que protege tu bóveda.',
+			'settings.changePassword.sheetTitle' => 'Cambiar la contraseña de la bóveda',
+			'settings.changePassword.currentPasswordHint' => 'Contraseña actual...',
+			'settings.changePassword.newPasswordHint' => 'Nueva contraseña...',
+			'settings.changePassword.confirmPasswordHint' => 'Confirma la nueva contraseña...',
+			'settings.changePassword.success' => 'Contraseña cambiada correctamente.',
 			'veil.setup.passwordHint' => 'Escribe una contraseña para empezar...',
 			'veil.setup.cta' => '¡Empecemos!',
 			'veil.setup.biometricsOptInTitle' => 'Habilitar la biometría',
@@ -387,6 +412,7 @@ extension on TranslationsEs {
 			'veil.errors.passwordMissingUppercase' => 'La contraseña debe contener al menos una letra mayúscula.',
 			'veil.errors.passwordMissingLowercase' => 'La contraseña debe contener al menos una letra minúscula.',
 			'veil.errors.passwordMissingSpecialChar' => 'La contraseña debe contener al menos un carácter especial.',
+			'veil.errors.passwordChangeFailed' => 'No se pudo cambiar la contraseña. Tu bóveda no ha cambiado.',
 			_ => null,
 		};
 	}

@@ -93,6 +93,7 @@ class _TranslationsSettingsDe extends TranslationsSettingsEn {
 	@override late final _TranslationsSettingsLanguageDe language = _TranslationsSettingsLanguageDe._(_root);
 	@override late final _TranslationsSettingsLockDe lock = _TranslationsSettingsLockDe._(_root);
 	@override late final _TranslationsSettingsConfirmPasswordDe confirmPassword = _TranslationsSettingsConfirmPasswordDe._(_root);
+	@override late final _TranslationsSettingsChangePasswordDe changePassword = _TranslationsSettingsChangePasswordDe._(_root);
 }
 
 // Path: veil
@@ -230,6 +231,22 @@ class _TranslationsSettingsConfirmPasswordDe extends TranslationsSettingsConfirm
 	@override String get hint => 'Gib dein Passwort ein...';
 }
 
+// Path: settings.changePassword
+class _TranslationsSettingsChangePasswordDe extends TranslationsSettingsChangePasswordEn {
+	_TranslationsSettingsChangePasswordDe._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Passwort ändern';
+	@override String get subtitle => 'Ändere das Passwort zum Schutz deines Tresors.';
+	@override String get sheetTitle => 'Tresor-Passwort ändern';
+	@override String get currentPasswordHint => 'Aktuelles Passwort...';
+	@override String get newPasswordHint => 'Neues Passwort...';
+	@override String get confirmPasswordHint => 'Neues Passwort bestätigen...';
+	@override String get success => 'Passwort erfolgreich geändert.';
+}
+
 // Path: veil.setup
 class _TranslationsVeilSetupDe extends TranslationsVeilSetupEn {
 	_TranslationsVeilSetupDe._(TranslationsDe root) : this._root = root, super.internal(root);
@@ -295,6 +312,7 @@ class _TranslationsVeilErrorsDe extends TranslationsVeilErrorsEn {
 	@override String get passwordMissingUppercase => 'Das Passwort muss mindestens einen Großbuchstaben enthalten.';
 	@override String get passwordMissingLowercase => 'Das Passwort muss mindestens einen Kleinbuchstaben enthalten.';
 	@override String get passwordMissingSpecialChar => 'Das Passwort muss mindestens ein Sonderzeichen enthalten.';
+	@override String get passwordChangeFailed => 'Das Passwort konnte nicht geändert werden. Dein Tresor ist unverändert.';
 }
 
 // Path: settings.autoLock.options
@@ -356,6 +374,13 @@ extension on TranslationsDe {
 			'settings.lock.subtitle' => 'Löscht die aktuelle Sitzung. Du musst erneut entsperren.',
 			'settings.confirmPassword.title' => 'Passwort bestätigen',
 			'settings.confirmPassword.hint' => 'Gib dein Passwort ein...',
+			'settings.changePassword.title' => 'Passwort ändern',
+			'settings.changePassword.subtitle' => 'Ändere das Passwort zum Schutz deines Tresors.',
+			'settings.changePassword.sheetTitle' => 'Tresor-Passwort ändern',
+			'settings.changePassword.currentPasswordHint' => 'Aktuelles Passwort...',
+			'settings.changePassword.newPasswordHint' => 'Neues Passwort...',
+			'settings.changePassword.confirmPasswordHint' => 'Neues Passwort bestätigen...',
+			'settings.changePassword.success' => 'Passwort erfolgreich geändert.',
 			'veil.setup.passwordHint' => 'Gib ein Passwort ein, um zu starten...',
 			'veil.setup.cta' => 'Los geht\'s!',
 			'veil.setup.biometricsOptInTitle' => 'Biometrie aktivieren',
@@ -387,6 +412,7 @@ extension on TranslationsDe {
 			'veil.errors.passwordMissingUppercase' => 'Das Passwort muss mindestens einen Großbuchstaben enthalten.',
 			'veil.errors.passwordMissingLowercase' => 'Das Passwort muss mindestens einen Kleinbuchstaben enthalten.',
 			'veil.errors.passwordMissingSpecialChar' => 'Das Passwort muss mindestens ein Sonderzeichen enthalten.',
+			'veil.errors.passwordChangeFailed' => 'Das Passwort konnte nicht geändert werden. Dein Tresor ist unverändert.',
 			_ => null,
 		};
 	}

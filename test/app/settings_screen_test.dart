@@ -90,6 +90,106 @@ void main() {
       expect(find.text('Locks the app after 5 minutes.'), findsOneWidget);
     });
 
+    testWidgets('shows the change password option', (tester) async {
+      final service = _FakeVeilService(
+        biometricEnabled: false,
+        canUseBiometrics: false,
+        autoLockOption: AutoLockOption.fiveMinutes,
+      );
+
+      await tester.pumpWidget(wrap(service: service));
+      await tester.pump();
+      await tester.pump();
+
+      expect(find.text('Change password'), findsOneWidget);
+      expect(
+        find.text('Replace the password used to protect your vault.'),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('submits the change password form and shows success', (
+      tester,
+    ) async {
+      final service = _FakeVeilService(
+        biometricEnabled: false,
+        canUseBiometrics: false,
+        autoLockOption: AutoLockOption.fiveMinutes,
+      );
+
+      await tester.pumpWidget(wrap(service: service));
+      await tester.pump();
+      await tester.pump();
+      await tester.tap(find.text('Change password'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Change vault password'), findsOneWidget);
+      final fields = find.byType(TextField);
+      await tester.enterText(fields.at(0), 'CurrentPassword1!');
+      await tester.enterText(fields.at(1), 'NewPassword2@');
+      await tester.enterText(fields.at(2), 'NewPassword2@');
+      await tester.tap(find.text('Confirm').last);
+      await tester.pumpAndSettle();
+
+      expect(service.currentPassword, 'CurrentPassword1!');
+      expect(service.newPassword, 'NewPassword2@');
+      expect(find.text('Password changed successfully.'), findsOneWidget);
+    });
+
+    testWidgets('keeps settings available when changing password fails', (
+      tester,
+    ) async {
+      final service = _FakeVeilService(
+        biometricEnabled: false,
+        canUseBiometrics: false,
+        autoLockOption: AutoLockOption.fiveMinutes,
+        changePasswordException: const VeilException(
+          VeilExceptionCode.invalidPassword,
+        ),
+      );
+
+      await tester.pumpWidget(wrap(service: service));
+      await tester.pump();
+      await tester.pump();
+      await tester.tap(find.text('Change password'));
+      await tester.pumpAndSettle();
+
+      final fields = find.byType(TextField);
+      await tester.enterText(fields.at(0), 'wrong');
+      await tester.enterText(fields.at(1), 'NewPassword2@');
+      await tester.enterText(fields.at(2), 'NewPassword2@');
+      await tester.tap(find.text('Confirm').last);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Invalid password.'), findsOneWidget);
+      expect(find.text('Change password'), findsOneWidget);
+    });
+
+    testWidgets('does not submit when password confirmation differs', (
+      tester,
+    ) async {
+      final service = _FakeVeilService(
+        biometricEnabled: false,
+        canUseBiometrics: false,
+        autoLockOption: AutoLockOption.fiveMinutes,
+      );
+
+      await tester.pumpWidget(wrap(service: service));
+      await tester.pump();
+      await tester.pump();
+      await tester.tap(find.text('Change password'));
+      await tester.pumpAndSettle();
+
+      final fields = find.byType(TextField);
+      await tester.enterText(fields.at(1), 'NewPassword2@');
+      await tester.enterText(fields.at(2), 'DifferentPassword3#');
+      await tester.tap(find.text('Confirm').last);
+      await tester.pump();
+
+      expect(find.text('Passwords do not match.'), findsOneWidget);
+      expect(service.newPassword, isNull);
+    });
+
     testWidgets('enables biometrics after password confirmation', (
       tester,
     ) async {
@@ -443,8 +543,11 @@ class _FakeVeilService implements VeilService {
   final Object? enableException;
   final Object? disableException;
   final Object? autoLockException;
+  final Object? changePasswordException;
 
   String? enabledPassword;
+  String? currentPassword;
+  String? newPassword;
   int disableBiometricsCalls = 0;
 
   _FakeVeilService({
@@ -454,6 +557,7 @@ class _FakeVeilService implements VeilService {
     this.enableException,
     this.disableException,
     this.autoLockException,
+    this.changePasswordException,
   });
 
   @override
@@ -461,6 +565,18 @@ class _FakeVeilService implements VeilService {
 
   @override
   Future<void> create(String password) async {}
+
+  @override
+  Future<void> changePassword(
+    String currentPassword,
+    String newPassword,
+  ) async {
+    this.currentPassword = currentPassword;
+    this.newPassword = newPassword;
+    if (changePasswordException != null) {
+      throw changePasswordException!;
+    }
+  }
 
   @override
   Future<void> disableBiometricUnlock() async {

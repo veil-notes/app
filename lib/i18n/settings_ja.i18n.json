@@ -28,5 +28,14 @@
   "confirmPassword": {
     "title": "パスワードを確認",
     "hint": "パスワードを入力..."
+  },
+  "changePassword": {
+    "title": "パスワードを変更",
+    "subtitle": "保管庫を保護するパスワードを変更します。",
+    "sheetTitle": "保管庫のパスワードを変更",
+    "currentPasswordHint": "現在のパスワード...",
+    "newPasswordHint": "新しいパスワード...",
+    "confirmPasswordHint": "新しいパスワードを確認...",
+    "success": "パスワードを変更しました。"
   }
 }

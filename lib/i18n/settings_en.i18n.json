@@ -28,5 +28,14 @@
   "confirmPassword": {
     "title": "Confirm password",
     "hint": "Type your password..."
+  },
+  "changePassword": {
+    "title": "Change password",
+    "subtitle": "Replace the password used to protect your vault.",
+    "sheetTitle": "Change vault password",
+    "currentPasswordHint": "Current password...",
+    "newPasswordHint": "New password...",
+    "confirmPasswordHint": "Confirm new password...",
+    "success": "Password changed successfully."
   }
 }

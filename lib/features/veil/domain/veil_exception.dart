@@ -8,6 +8,7 @@ enum VeilExceptionCode {
   encryptedPrivateKeyNotFound,
   publicKeyNotFound,
   vaultLocked,
+  passwordChangeFailed,
 }
 
 class VeilException implements Exception {

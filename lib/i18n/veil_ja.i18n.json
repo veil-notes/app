@@ -36,6 +36,7 @@
     "passwordMinLength": "パスワードは10文字以上である必要があります。",
     "passwordMissingUppercase": "パスワードには少なくとも1文字の英大文字が必要です。",
     "passwordMissingLowercase": "パスワードには少なくとも1文字の英小文字が必要です。",
-    "passwordMissingSpecialChar": "パスワードには少なくとも1文字の記号が必要です。"
+    "passwordMissingSpecialChar": "パスワードには少なくとも1文字の記号が必要です。",
+    "passwordChangeFailed": "パスワードを変更できませんでした。保管庫は変更されていません。"
   }
 }

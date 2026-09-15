@@ -28,5 +28,14 @@
   "confirmPassword": {
     "title": "确认密码",
     "hint": "输入你的密码..."
+  },
+  "changePassword": {
+    "title": "更改密码",
+    "subtitle": "更改用于保护保险库的密码。",
+    "sheetTitle": "更改保险库密码",
+    "currentPasswordHint": "当前密码...",
+    "newPasswordHint": "新密码...",
+    "confirmPasswordHint": "确认新密码...",
+    "success": "密码更改成功。"
   }
 }

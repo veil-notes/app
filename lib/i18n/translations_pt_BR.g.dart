@@ -93,6 +93,7 @@ class _TranslationsSettingsPtBr extends TranslationsSettingsEn {
 	@override late final _TranslationsSettingsLanguagePtBr language = _TranslationsSettingsLanguagePtBr._(_root);
 	@override late final _TranslationsSettingsLockPtBr lock = _TranslationsSettingsLockPtBr._(_root);
 	@override late final _TranslationsSettingsConfirmPasswordPtBr confirmPassword = _TranslationsSettingsConfirmPasswordPtBr._(_root);
+	@override late final _TranslationsSettingsChangePasswordPtBr changePassword = _TranslationsSettingsChangePasswordPtBr._(_root);
 }
 
 // Path: veil
@@ -230,6 +231,22 @@ class _TranslationsSettingsConfirmPasswordPtBr extends TranslationsSettingsConfi
 	@override String get hint => 'Digite sua senha...';
 }
 
+// Path: settings.changePassword
+class _TranslationsSettingsChangePasswordPtBr extends TranslationsSettingsChangePasswordEn {
+	_TranslationsSettingsChangePasswordPtBr._(TranslationsPtBr root) : this._root = root, super.internal(root);
+
+	final TranslationsPtBr _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Alterar senha';
+	@override String get subtitle => 'Substitua a senha usada para proteger seu cofre.';
+	@override String get sheetTitle => 'Alterar senha do cofre';
+	@override String get currentPasswordHint => 'Senha atual...';
+	@override String get newPasswordHint => 'Nova senha...';
+	@override String get confirmPasswordHint => 'Confirme a nova senha...';
+	@override String get success => 'Senha alterada com sucesso.';
+}
+
 // Path: veil.setup
 class _TranslationsVeilSetupPtBr extends TranslationsVeilSetupEn {
 	_TranslationsVeilSetupPtBr._(TranslationsPtBr root) : this._root = root, super.internal(root);
@@ -295,6 +312,7 @@ class _TranslationsVeilErrorsPtBr extends TranslationsVeilErrorsEn {
 	@override String get passwordMissingUppercase => 'A senha deve conter ao menos uma letra maiúscula.';
 	@override String get passwordMissingLowercase => 'A senha deve conter ao menos uma letra minúscula.';
 	@override String get passwordMissingSpecialChar => 'A senha deve conter ao menos um caractere especial.';
+	@override String get passwordChangeFailed => 'Não foi possível alterar a senha. Seu cofre não foi alterado.';
 }
 
 // Path: settings.autoLock.options
@@ -356,6 +374,13 @@ extension on TranslationsPtBr {
 			'settings.lock.subtitle' => 'Limpa a sessão atual. Você precisará desbloquear novamente.',
 			'settings.confirmPassword.title' => 'Confirmar senha',
 			'settings.confirmPassword.hint' => 'Digite sua senha...',
+			'settings.changePassword.title' => 'Alterar senha',
+			'settings.changePassword.subtitle' => 'Substitua a senha usada para proteger seu cofre.',
+			'settings.changePassword.sheetTitle' => 'Alterar senha do cofre',
+			'settings.changePassword.currentPasswordHint' => 'Senha atual...',
+			'settings.changePassword.newPasswordHint' => 'Nova senha...',
+			'settings.changePassword.confirmPasswordHint' => 'Confirme a nova senha...',
+			'settings.changePassword.success' => 'Senha alterada com sucesso.',
 			'veil.setup.passwordHint' => 'Digite uma senha para começar...',
 			'veil.setup.cta' => 'Vamos começar!',
 			'veil.setup.biometricsOptInTitle' => 'Ativar biometria',
@@ -387,6 +412,7 @@ extension on TranslationsPtBr {
 			'veil.errors.passwordMissingUppercase' => 'A senha deve conter ao menos uma letra maiúscula.',
 			'veil.errors.passwordMissingLowercase' => 'A senha deve conter ao menos uma letra minúscula.',
 			'veil.errors.passwordMissingSpecialChar' => 'A senha deve conter ao menos um caractere especial.',
+			'veil.errors.passwordChangeFailed' => 'Não foi possível alterar a senha. Seu cofre não foi alterado.',
 			_ => null,
 		};
 	}

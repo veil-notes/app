@@ -35,6 +35,8 @@ class AppErrorMapper {
         return t.veil.errors.publicKeyNotFound;
       case VeilExceptionCode.vaultLocked:
         return t.veil.errors.vaultLocked;
+      case VeilExceptionCode.passwordChangeFailed:
+        return t.veil.errors.passwordChangeFailed;
       case VeilExceptionCode.vaultAlreadyConfigured:
         return t.common.errors.unexpected;
     }

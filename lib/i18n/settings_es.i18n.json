@@ -28,5 +28,14 @@
   "confirmPassword": {
     "title": "Confirmar contraseña",
     "hint": "Escribe tu contraseña..."
+  },
+  "changePassword": {
+    "title": "Cambiar contraseña",
+    "subtitle": "Reemplaza la contraseña que protege tu bóveda.",
+    "sheetTitle": "Cambiar la contraseña de la bóveda",
+    "currentPasswordHint": "Contraseña actual...",
+    "newPasswordHint": "Nueva contraseña...",
+    "confirmPasswordHint": "Confirma la nueva contraseña...",
+    "success": "Contraseña cambiada correctamente."
   }
 }

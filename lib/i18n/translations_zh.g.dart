@@ -93,6 +93,7 @@ class _TranslationsSettingsZh extends TranslationsSettingsEn {
 	@override late final _TranslationsSettingsLanguageZh language = _TranslationsSettingsLanguageZh._(_root);
 	@override late final _TranslationsSettingsLockZh lock = _TranslationsSettingsLockZh._(_root);
 	@override late final _TranslationsSettingsConfirmPasswordZh confirmPassword = _TranslationsSettingsConfirmPasswordZh._(_root);
+	@override late final _TranslationsSettingsChangePasswordZh changePassword = _TranslationsSettingsChangePasswordZh._(_root);
 }
 
 // Path: veil
@@ -230,6 +231,22 @@ class _TranslationsSettingsConfirmPasswordZh extends TranslationsSettingsConfirm
 	@override String get hint => '输入你的密码...';
 }
 
+// Path: settings.changePassword
+class _TranslationsSettingsChangePasswordZh extends TranslationsSettingsChangePasswordEn {
+	_TranslationsSettingsChangePasswordZh._(TranslationsZh root) : this._root = root, super.internal(root);
+
+	final TranslationsZh _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '更改密码';
+	@override String get subtitle => '更改用于保护保险库的密码。';
+	@override String get sheetTitle => '更改保险库密码';
+	@override String get currentPasswordHint => '当前密码...';
+	@override String get newPasswordHint => '新密码...';
+	@override String get confirmPasswordHint => '确认新密码...';
+	@override String get success => '密码更改成功。';
+}
+
 // Path: veil.setup
 class _TranslationsVeilSetupZh extends TranslationsVeilSetupEn {
 	_TranslationsVeilSetupZh._(TranslationsZh root) : this._root = root, super.internal(root);
@@ -295,6 +312,7 @@ class _TranslationsVeilErrorsZh extends TranslationsVeilErrorsEn {
 	@override String get passwordMissingUppercase => '密码必须至少包含一个大写字母。';
 	@override String get passwordMissingLowercase => '密码必须至少包含一个小写字母。';
 	@override String get passwordMissingSpecialChar => '密码必须至少包含一个特殊字符。';
+	@override String get passwordChangeFailed => '无法更改密码。保险库未发生变化。';
 }
 
 // Path: settings.autoLock.options
@@ -356,6 +374,13 @@ extension on TranslationsZh {
 			'settings.lock.subtitle' => '清除当前会话。你需要重新解锁。',
 			'settings.confirmPassword.title' => '确认密码',
 			'settings.confirmPassword.hint' => '输入你的密码...',
+			'settings.changePassword.title' => '更改密码',
+			'settings.changePassword.subtitle' => '更改用于保护保险库的密码。',
+			'settings.changePassword.sheetTitle' => '更改保险库密码',
+			'settings.changePassword.currentPasswordHint' => '当前密码...',
+			'settings.changePassword.newPasswordHint' => '新密码...',
+			'settings.changePassword.confirmPasswordHint' => '确认新密码...',
+			'settings.changePassword.success' => '密码更改成功。',
 			'veil.setup.passwordHint' => '输入密码以开始...',
 			'veil.setup.cta' => '开始吧！',
 			'veil.setup.biometricsOptInTitle' => '启用生物识别技术',
@@ -387,6 +412,7 @@ extension on TranslationsZh {
 			'veil.errors.passwordMissingUppercase' => '密码必须至少包含一个大写字母。',
 			'veil.errors.passwordMissingLowercase' => '密码必须至少包含一个小写字母。',
 			'veil.errors.passwordMissingSpecialChar' => '密码必须至少包含一个特殊字符。',
+			'veil.errors.passwordChangeFailed' => '无法更改密码。保险库未发生变化。',
 			_ => null,
 		};
 	}

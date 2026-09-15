@@ -28,5 +28,14 @@
   "confirmPassword": {
     "title": "Confirmer le mot de passe",
     "hint": "Saisissez votre mot de passe..."
+  },
+  "changePassword": {
+    "title": "Modifier le mot de passe",
+    "subtitle": "Remplacez le mot de passe qui protège votre coffre.",
+    "sheetTitle": "Modifier le mot de passe du coffre",
+    "currentPasswordHint": "Mot de passe actuel...",
+    "newPasswordHint": "Nouveau mot de passe...",
+    "confirmPasswordHint": "Confirmez le nouveau mot de passe...",
+    "success": "Mot de passe modifié avec succès."
   }
 }

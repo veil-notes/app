@@ -93,6 +93,7 @@ class _TranslationsSettingsJa extends TranslationsSettingsEn {
 	@override late final _TranslationsSettingsLanguageJa language = _TranslationsSettingsLanguageJa._(_root);
 	@override late final _TranslationsSettingsLockJa lock = _TranslationsSettingsLockJa._(_root);
 	@override late final _TranslationsSettingsConfirmPasswordJa confirmPassword = _TranslationsSettingsConfirmPasswordJa._(_root);
+	@override late final _TranslationsSettingsChangePasswordJa changePassword = _TranslationsSettingsChangePasswordJa._(_root);
 }
 
 // Path: veil
@@ -230,6 +231,22 @@ class _TranslationsSettingsConfirmPasswordJa extends TranslationsSettingsConfirm
 	@override String get hint => 'パスワードを入力...';
 }
 
+// Path: settings.changePassword
+class _TranslationsSettingsChangePasswordJa extends TranslationsSettingsChangePasswordEn {
+	_TranslationsSettingsChangePasswordJa._(TranslationsJa root) : this._root = root, super.internal(root);
+
+	final TranslationsJa _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'パスワードを変更';
+	@override String get subtitle => '保管庫を保護するパスワードを変更します。';
+	@override String get sheetTitle => '保管庫のパスワードを変更';
+	@override String get currentPasswordHint => '現在のパスワード...';
+	@override String get newPasswordHint => '新しいパスワード...';
+	@override String get confirmPasswordHint => '新しいパスワードを確認...';
+	@override String get success => 'パスワードを変更しました。';
+}
+
 // Path: veil.setup
 class _TranslationsVeilSetupJa extends TranslationsVeilSetupEn {
 	_TranslationsVeilSetupJa._(TranslationsJa root) : this._root = root, super.internal(root);
@@ -295,6 +312,7 @@ class _TranslationsVeilErrorsJa extends TranslationsVeilErrorsEn {
 	@override String get passwordMissingUppercase => 'パスワードには少なくとも1文字の英大文字が必要です。';
 	@override String get passwordMissingLowercase => 'パスワードには少なくとも1文字の英小文字が必要です。';
 	@override String get passwordMissingSpecialChar => 'パスワードには少なくとも1文字の記号が必要です。';
+	@override String get passwordChangeFailed => 'パスワードを変更できませんでした。保管庫は変更されていません。';
 }
 
 // Path: settings.autoLock.options
@@ -356,6 +374,13 @@ extension on TranslationsJa {
 			'settings.lock.subtitle' => '現在のセッションを消去します。再度ロック解除が必要です。',
 			'settings.confirmPassword.title' => 'パスワードを確認',
 			'settings.confirmPassword.hint' => 'パスワードを入力...',
+			'settings.changePassword.title' => 'パスワードを変更',
+			'settings.changePassword.subtitle' => '保管庫を保護するパスワードを変更します。',
+			'settings.changePassword.sheetTitle' => '保管庫のパスワードを変更',
+			'settings.changePassword.currentPasswordHint' => '現在のパスワード...',
+			'settings.changePassword.newPasswordHint' => '新しいパスワード...',
+			'settings.changePassword.confirmPasswordHint' => '新しいパスワードを確認...',
+			'settings.changePassword.success' => 'パスワードを変更しました。',
 			'veil.setup.passwordHint' => '開始するにはパスワードを入力してください...',
 			'veil.setup.cta' => '始めましょう！',
 			'veil.setup.biometricsOptInTitle' => '生体認証を有効にする',
@@ -387,6 +412,7 @@ extension on TranslationsJa {
 			'veil.errors.passwordMissingUppercase' => 'パスワードには少なくとも1文字の英大文字が必要です。',
 			'veil.errors.passwordMissingLowercase' => 'パスワードには少なくとも1文字の英小文字が必要です。',
 			'veil.errors.passwordMissingSpecialChar' => 'パスワードには少なくとも1文字の記号が必要です。',
+			'veil.errors.passwordChangeFailed' => 'パスワードを変更できませんでした。保管庫は変更されていません。',
 			_ => null,
 		};
 	}

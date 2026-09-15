@@ -93,6 +93,7 @@ class _TranslationsSettingsKo extends TranslationsSettingsEn {
 	@override late final _TranslationsSettingsLanguageKo language = _TranslationsSettingsLanguageKo._(_root);
 	@override late final _TranslationsSettingsLockKo lock = _TranslationsSettingsLockKo._(_root);
 	@override late final _TranslationsSettingsConfirmPasswordKo confirmPassword = _TranslationsSettingsConfirmPasswordKo._(_root);
+	@override late final _TranslationsSettingsChangePasswordKo changePassword = _TranslationsSettingsChangePasswordKo._(_root);
 }
 
 // Path: veil
@@ -230,6 +231,22 @@ class _TranslationsSettingsConfirmPasswordKo extends TranslationsSettingsConfirm
 	@override String get hint => '비밀번호를 입력하세요...';
 }
 
+// Path: settings.changePassword
+class _TranslationsSettingsChangePasswordKo extends TranslationsSettingsChangePasswordEn {
+	_TranslationsSettingsChangePasswordKo._(TranslationsKo root) : this._root = root, super.internal(root);
+
+	final TranslationsKo _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '비밀번호 변경';
+	@override String get subtitle => '볼트를 보호하는 비밀번호를 변경합니다.';
+	@override String get sheetTitle => '볼트 비밀번호 변경';
+	@override String get currentPasswordHint => '현재 비밀번호...';
+	@override String get newPasswordHint => '새 비밀번호...';
+	@override String get confirmPasswordHint => '새 비밀번호 확인...';
+	@override String get success => '비밀번호가 변경되었습니다.';
+}
+
 // Path: veil.setup
 class _TranslationsVeilSetupKo extends TranslationsVeilSetupEn {
 	_TranslationsVeilSetupKo._(TranslationsKo root) : this._root = root, super.internal(root);
@@ -295,6 +312,7 @@ class _TranslationsVeilErrorsKo extends TranslationsVeilErrorsEn {
 	@override String get passwordMissingUppercase => '비밀번호에 대문자가 하나 이상 포함되어야 합니다.';
 	@override String get passwordMissingLowercase => '비밀번호에 소문자가 하나 이상 포함되어야 합니다.';
 	@override String get passwordMissingSpecialChar => '비밀번호에 특수문자가 하나 이상 포함되어야 합니다.';
+	@override String get passwordChangeFailed => '비밀번호를 변경하지 못했습니다. 볼트는 변경되지 않았습니다.';
 }
 
 // Path: settings.autoLock.options
@@ -356,6 +374,13 @@ extension on TranslationsKo {
 			'settings.lock.subtitle' => '현재 세션을 지웁니다. 다시 잠금 해제해야 합니다.',
 			'settings.confirmPassword.title' => '비밀번호 확인',
 			'settings.confirmPassword.hint' => '비밀번호를 입력하세요...',
+			'settings.changePassword.title' => '비밀번호 변경',
+			'settings.changePassword.subtitle' => '볼트를 보호하는 비밀번호를 변경합니다.',
+			'settings.changePassword.sheetTitle' => '볼트 비밀번호 변경',
+			'settings.changePassword.currentPasswordHint' => '현재 비밀번호...',
+			'settings.changePassword.newPasswordHint' => '새 비밀번호...',
+			'settings.changePassword.confirmPasswordHint' => '새 비밀번호 확인...',
+			'settings.changePassword.success' => '비밀번호가 변경되었습니다.',
 			'veil.setup.passwordHint' => '시작하려면 비밀번호를 입력하세요...',
 			'veil.setup.cta' => '시작하기!',
 			'veil.setup.biometricsOptInTitle' => '생체인식 활성화',
@@ -387,6 +412,7 @@ extension on TranslationsKo {
 			'veil.errors.passwordMissingUppercase' => '비밀번호에 대문자가 하나 이상 포함되어야 합니다.',
 			'veil.errors.passwordMissingLowercase' => '비밀번호에 소문자가 하나 이상 포함되어야 합니다.',
 			'veil.errors.passwordMissingSpecialChar' => '비밀번호에 특수문자가 하나 이상 포함되어야 합니다.',
+			'veil.errors.passwordChangeFailed' => '비밀번호를 변경하지 못했습니다. 볼트는 변경되지 않았습니다.',
 			_ => null,
 		};
 	}

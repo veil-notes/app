@@ -36,6 +36,7 @@
     "passwordMinLength": "Le mot de passe doit contenir au moins 10 caractères.",
     "passwordMissingUppercase": "Le mot de passe doit contenir au moins une lettre majuscule.",
     "passwordMissingLowercase": "Le mot de passe doit contenir au moins une lettre minuscule.",
-    "passwordMissingSpecialChar": "Le mot de passe doit contenir au moins un caractère spécial."
+    "passwordMissingSpecialChar": "Le mot de passe doit contenir au moins un caractère spécial.",
+    "passwordChangeFailed": "Impossible de modifier le mot de passe. Votre coffre est inchangé."
   }
 }

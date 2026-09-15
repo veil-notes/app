@@ -36,6 +36,7 @@
     "passwordMinLength": "A senha deve ter pelo menos 10 caracteres.",
     "passwordMissingUppercase": "A senha deve conter ao menos uma letra maiúscula.",
     "passwordMissingLowercase": "A senha deve conter ao menos uma letra minúscula.",
-    "passwordMissingSpecialChar": "A senha deve conter ao menos um caractere especial."
+    "passwordMissingSpecialChar": "A senha deve conter ao menos um caractere especial.",
+    "passwordChangeFailed": "Não foi possível alterar a senha. Seu cofre não foi alterado."
   }
 }

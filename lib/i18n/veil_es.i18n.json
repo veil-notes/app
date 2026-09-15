@@ -36,6 +36,7 @@
     "passwordMinLength": "La contraseña debe tener al menos 10 caracteres.",
     "passwordMissingUppercase": "La contraseña debe contener al menos una letra mayúscula.",
     "passwordMissingLowercase": "La contraseña debe contener al menos una letra minúscula.",
-    "passwordMissingSpecialChar": "La contraseña debe contener al menos un carácter especial."
+    "passwordMissingSpecialChar": "La contraseña debe contener al menos un carácter especial.",
+    "passwordChangeFailed": "No se pudo cambiar la contraseña. Tu bóveda no ha cambiado."
   }
 }

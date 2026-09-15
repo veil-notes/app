@@ -93,6 +93,7 @@ class _TranslationsSettingsRu extends TranslationsSettingsEn {
 	@override late final _TranslationsSettingsLanguageRu language = _TranslationsSettingsLanguageRu._(_root);
 	@override late final _TranslationsSettingsLockRu lock = _TranslationsSettingsLockRu._(_root);
 	@override late final _TranslationsSettingsConfirmPasswordRu confirmPassword = _TranslationsSettingsConfirmPasswordRu._(_root);
+	@override late final _TranslationsSettingsChangePasswordRu changePassword = _TranslationsSettingsChangePasswordRu._(_root);
 }
 
 // Path: veil
@@ -230,6 +231,22 @@ class _TranslationsSettingsConfirmPasswordRu extends TranslationsSettingsConfirm
 	@override String get hint => 'Введите пароль...';
 }
 
+// Path: settings.changePassword
+class _TranslationsSettingsChangePasswordRu extends TranslationsSettingsChangePasswordEn {
+	_TranslationsSettingsChangePasswordRu._(TranslationsRu root) : this._root = root, super.internal(root);
+
+	final TranslationsRu _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Изменить пароль';
+	@override String get subtitle => 'Замените пароль, защищающий хранилище.';
+	@override String get sheetTitle => 'Изменить пароль хранилища';
+	@override String get currentPasswordHint => 'Текущий пароль...';
+	@override String get newPasswordHint => 'Новый пароль...';
+	@override String get confirmPasswordHint => 'Подтвердите новый пароль...';
+	@override String get success => 'Пароль успешно изменён.';
+}
+
 // Path: veil.setup
 class _TranslationsVeilSetupRu extends TranslationsVeilSetupEn {
 	_TranslationsVeilSetupRu._(TranslationsRu root) : this._root = root, super.internal(root);
@@ -295,6 +312,7 @@ class _TranslationsVeilErrorsRu extends TranslationsVeilErrorsEn {
 	@override String get passwordMissingUppercase => 'Пароль должен содержать хотя бы одну заглавную букву.';
 	@override String get passwordMissingLowercase => 'Пароль должен содержать хотя бы одну строчную букву.';
 	@override String get passwordMissingSpecialChar => 'Пароль должен содержать хотя бы один специальный символ.';
+	@override String get passwordChangeFailed => 'Не удалось изменить пароль. Хранилище не изменено.';
 }
 
 // Path: settings.autoLock.options
@@ -356,6 +374,13 @@ extension on TranslationsRu {
 			'settings.lock.subtitle' => 'Сбрасывает текущую сессию. Нужно будет разблокировать снова.',
 			'settings.confirmPassword.title' => 'Подтвердите пароль',
 			'settings.confirmPassword.hint' => 'Введите пароль...',
+			'settings.changePassword.title' => 'Изменить пароль',
+			'settings.changePassword.subtitle' => 'Замените пароль, защищающий хранилище.',
+			'settings.changePassword.sheetTitle' => 'Изменить пароль хранилища',
+			'settings.changePassword.currentPasswordHint' => 'Текущий пароль...',
+			'settings.changePassword.newPasswordHint' => 'Новый пароль...',
+			'settings.changePassword.confirmPasswordHint' => 'Подтвердите новый пароль...',
+			'settings.changePassword.success' => 'Пароль успешно изменён.',
 			'veil.setup.passwordHint' => 'Введите пароль, чтобы начать...',
 			'veil.setup.cta' => 'Начать!',
 			'veil.setup.biometricsOptInTitle' => 'Включить биометрию',
@@ -387,6 +412,7 @@ extension on TranslationsRu {
 			'veil.errors.passwordMissingUppercase' => 'Пароль должен содержать хотя бы одну заглавную букву.',
 			'veil.errors.passwordMissingLowercase' => 'Пароль должен содержать хотя бы одну строчную букву.',
 			'veil.errors.passwordMissingSpecialChar' => 'Пароль должен содержать хотя бы один специальный символ.',
+			'veil.errors.passwordChangeFailed' => 'Не удалось изменить пароль. Хранилище не изменено.',
 			_ => null,
 		};
 	}

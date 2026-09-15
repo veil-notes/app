@@ -50,11 +50,11 @@ def main():
             current_beta = re.fullmatch(r"(.+-beta\.)(\d+)", app.CurrentVersion)
             if not current_beta:
                 raise ValueError("This update simulation expects a numbered beta recipe")
-            initial_base = app.CurrentVersionCode - 4000
+            initial_base = app.CurrentVersionCode // 10
             initial_count = len(app.Builds)
             for increment in (1, 2):
                 version = current_beta[1] + str(int(current_beta[2]) + increment)
-                next_base = initial_base + 3001 * increment
+                next_base = initial_base + increment
                 count = initial_count + 3 * increment
                 with patch.object(checkupdates, "check_tags", return_value=(
                     version, next_base, f"v{version}",
@@ -62,9 +62,9 @@ def main():
                     checkupdates.checkupdates_app(app, auto=True)
                 app = metadata.read_metadata()["app.veil.veil"]
                 assert len(app.Builds) == count
-                for build, offset, abi in zip(app.Builds[-3:], (1000, 2000, 4000),
+                for build, offset, abi in zip(app.Builds[-3:], (1, 2, 3),
                                               ("armeabi-v7a", "arm64-v8a", "x86_64")):
-                    assert build.versionCode == next_base + offset
+                    assert build.versionCode == next_base * 10 + offset
                     assert build.versionName == version
                     assert build.commit == f"v{version}"
                     url = build.binary.replace("%v", build.versionName).replace("%c", str(build.versionCode))

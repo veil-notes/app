@@ -11,7 +11,7 @@ from zipfile import ZipFile
 from build_openpgp import GO_VERSION, LIBRARY
 
 
-ABI_OFFSETS = {"armeabi-v7a": 1000, "arm64-v8a": 2000, "x86_64": 4000}
+ABI_CODES = {"armeabi-v7a": 1, "arm64-v8a": 2, "x86_64": 3}
 RELEASE_PATTERN = r"[0-9]+\.[0-9]+\.[0-9]+(?:-beta\.[0-9]+)?"
 SIGNING_CERTIFICATE = "600008c667784b0d2b7c224784da2b14f962b9ab8c5c869be476cee813b3f643"
 
@@ -28,7 +28,7 @@ def parse_version(text, tag):
     if not match or tag != f"v{match[1]}":
         raise ValueError("release tag must match the stable or beta version in pubspec.yaml")
     version, base = match[1], int(match[2])
-    if base + max(ABI_OFFSETS.values()) > 2100000000:
+    if base * 10 + max(ABI_CODES.values()) > 2100000000:
         raise ValueError("version code exceeds Android's maximum")
     return version, base
 
@@ -41,7 +41,7 @@ def check_history(base, tag):
         text = subprocess.check_output(["git", "show", f"{previous}:pubspec.yaml"], text=True)
         _, previous_base = parse_version(text, previous)
         # fdroidserver sorts builds by code and clones the last three.
-        minimum = previous_base + max(ABI_OFFSETS.values()) - min(ABI_OFFSETS.values()) + 1
+        minimum = previous_base + 1
         if base < minimum:
             raise ValueError(f"base must be at least {minimum} after {previous} "
                              "to keep all three F-Droid ABI recipes together")
@@ -116,10 +116,10 @@ def main():
     if args.assets:
         if not args.build_tools:
             parser.error("--assets requires --build-tools")
-        for abi, offset in ABI_OFFSETS.items():
+        for abi, offset in ABI_CODES.items():
             for prefix in ("app", "app-fdroid"):
                 verify_apk(args.assets / f"{prefix}-{abi}-release.apk",
-                           args.build_tools, version, base + offset, abi)
+                           args.build_tools, version, base * 10 + offset, abi)
     print(f"Release inputs verified: {version}+{base}")
 
 

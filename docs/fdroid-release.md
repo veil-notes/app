@@ -1,5 +1,25 @@
 # F-Droid releases
 
+## Current release procedure (beta.8 onward)
+
+Android APK codes are now `base * 10 + ABI`, with ABI 1 for armeabi-v7a,
+2 for arm64-v8a and 3 for x86_64. Beta.8 uses `7011`, producing
+`70111`, `70112`, `70113`. Increment the base by at least one thereafter.
+This replaces the old offset scheme and its 3001-step requirement below.
+Keep the application ID and signing key unchanged.
+
+1. Merge and validate the release changes before creating `v1.0.0-beta.8`.
+2. Run Android Release and verify its three signed numeric APK assets.
+3. The ignored `app.veil.veil.beta8-draft.yml` staging recipe is disabled.
+   Replace its placeholder commit with the full release commit SHA, remove
+   the three `disable` entries, and copy it to `metadata/app.veil.veil.yml`
+   in fdroiddata. Do not submit the placeholder or alter the beta.7 tag.
+4. Run readmeta, lint and all three builds, verifying reproducibility against
+   upstream APKs. Test an installed beta.7 update without clearing app data.
+5. Push the validated recipe to the existing F-Droid MR.
+
+The sections below document the previous releases and their old code scheme.
+
 ## GitLab submission checks for beta.7
 
 The three beta.7 builds passed locally and GitLab pipeline 2841366083 also

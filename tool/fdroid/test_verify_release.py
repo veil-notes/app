@@ -4,7 +4,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from verify_release import (
-    ABI_OFFSETS, SIGNING_CERTIFICATE, check_badging, check_certificate, check_history,
+    ABI_CODES, SIGNING_CERTIFICATE, check_badging, check_certificate, check_history,
     check_native_build_info, release_version,
 )
 from build_openpgp import GO_VERSION
@@ -21,22 +21,22 @@ class ReleaseChecksTest(unittest.TestCase):
                 check_native_build_info(wrong)
 
     def test_history_keeps_three_abi_recipes_together(self):
-        for base, valid in ((4010, False), (7009, False), (7010, True)):
+        for base, valid in ((7009, False), (7010, False), (7011, True)):
             with patch("verify_release.subprocess.check_output", side_effect=[
-                "v1.0.0-beta.6\nv1.0.0-beta.7\nv1.0.0-rc.1\n",
-                "version: 1.0.0-beta.6+4009\n",
+                "v1.0.0-beta.7\nv1.0.0-beta.8\nv1.0.0-rc.1\n",
+                "version: 1.0.0-beta.7+7010\n",
             ]):
                 if valid:
-                    check_history(base, "v1.0.0-beta.7")
+                    check_history(base, "v1.0.0-beta.8")
                 else:
                     with self.assertRaises(ValueError):
-                        check_history(base, "v1.0.0-beta.7")
+                        check_history(base, "v1.0.0-beta.8")
 
-    def test_beta6_is_smallest_compatible_base(self):
+    def test_migration_exceeds_all_published_beta7_codes(self):
         previous = {"armeabi-v7a": 2008, "arm64-v8a": 4008, "x86_64": 8008}
-        minimum = max(code - ABI_OFFSETS[abi] + 1 for abi, code in previous.items())
-        self.assertEqual(minimum, 4009)
-        self.assertEqual([minimum + offset for offset in ABI_OFFSETS.values()], [5009, 6009, 8009])
+        minimum = 7011
+        self.assertGreater(minimum * 10 + 1, 11010)
+        self.assertEqual([minimum * 10 + offset for offset in ABI_CODES.values()], [70111, 70112, 70113])
 
     def test_release_tags(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -56,10 +56,10 @@ class ReleaseChecksTest(unittest.TestCase):
                     release_version(pubspec, "v1.0.0")
 
     def test_beta5_offset_regression(self):
-        for (abi, offset), code in zip(ABI_OFFSETS.items(), (1008, 2008, 4008)):
+        for (abi, offset), code in zip(ABI_CODES.items(), (81, 82, 83)):
             badging = (f"package: name='app.veil.veil' versionCode='{code}' "
                        f"versionName='1.0.0-beta.5'\nnative-code: '{abi}'\n")
-            check_badging(badging, "1.0.0-beta.5", 8 + offset, abi)
+            check_badging(badging, "1.0.0-beta.5", 8 * 10 + offset, abi)
             with self.assertRaises(ValueError):
                 check_badging(badging.replace(f"'{code}'", f"'{code + offset}'"),
                               "1.0.0-beta.5", code, abi)

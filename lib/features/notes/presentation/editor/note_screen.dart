@@ -63,7 +63,7 @@ class _NoteScreenState extends ConsumerState<NoteScreen> {
     final bottomInset = MediaQuery.paddingOf(context).bottom + 84;
 
     return PopScope<void>(
-      canPop: !_hasPendingChanges,
+      canPop: false,
       onPopInvokedWithResult: (didPop, _) {
         if (didPop || _isHandlingBack) {
           return;
@@ -90,7 +90,9 @@ class _NoteScreenState extends ConsumerState<NoteScreen> {
               child: Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.08),
+                  ),
                 ),
                 child: BackButton(
                   color: Colors.white,

@@ -40,9 +40,9 @@ void main() {
     );
   }
 
-  GoRouter createTestRouter() {
+  GoRouter createTestRouter({String initialLocation = '/list'}) {
     return GoRouter(
-      initialLocation: '/list',
+      initialLocation: initialLocation,
       routes: [
         GoRoute(
           path: '/list',
@@ -77,10 +77,7 @@ void main() {
       await tester.pumpWidget(wrap(service: service, id: 'note-1'));
       await tester.pumpAndSettle();
 
-      expect(
-        find.text('Could not load the information.'),
-        findsOneWidget,
-      );
+      expect(find.text('Could not load the information.'), findsOneWidget);
     });
 
     testWidgets(
@@ -176,6 +173,62 @@ void main() {
       expect(find.byKey(const ValueKey('note-list')), findsOneWidget);
     });
 
+    testWidgets('system back from a directly opened note returns to the list', (
+      tester,
+    ) async {
+      final service = _FakeNotesService(
+        openHandler: (_) async => Note(
+          id: 'note-1',
+          content: 'Title',
+          createdAt: DateTime(2026, 4, 10, 9, 0),
+          updatedAt: DateTime(2026, 4, 10, 9, 0),
+        ),
+      );
+      final router = createTestRouter(initialLocation: '/note/note-1');
+      addTearDown(router.dispose);
+
+      await tester.pumpWidget(wrapRouter(service: service, router: router));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const ValueKey('note-list')), findsOneWidget);
+    });
+
+    testWidgets(
+      'system back from a directly opened note saves pending changes first',
+      (tester) async {
+        final service = _FakeNotesService(
+          openHandler: (_) async => Note(
+            id: 'note-1',
+            content: 'Title',
+            createdAt: DateTime(2026, 4, 10, 9, 0),
+            updatedAt: DateTime(2026, 4, 10, 9, 0),
+          ),
+        );
+        final router = createTestRouter(initialLocation: '/note/note-1');
+        addTearDown(router.dispose);
+
+        await tester.pumpWidget(wrapRouter(service: service, router: router));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 50));
+
+        await tester.tap(find.text('Title'));
+        await tester.pump();
+        await tester.enterText(find.byType(TextField), 'Changed');
+        await tester.pump();
+
+        await tester.pageBack();
+        await tester.pumpAndSettle();
+
+        expect(service.savedNotes, hasLength(1));
+        expect(service.savedNotes.single.content, 'Changed');
+        expect(find.byKey(const ValueKey('note-list')), findsOneWidget);
+      },
+    );
+
     testWidgets('saves the latest content when an earlier save is in flight', (
       tester,
     ) async {
@@ -218,7 +271,10 @@ void main() {
       releaseFirstSave.complete();
       await tester.pumpAndSettle();
 
-      expect(service.savedNotes.map((note) => note.content), ['First', 'Latest']);
+      expect(service.savedNotes.map((note) => note.content), [
+        'First',
+        'Latest',
+      ]);
       expect(find.byKey(const ValueKey('note-list')), findsOneWidget);
     });
 

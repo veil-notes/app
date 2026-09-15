@@ -166,7 +166,7 @@ jobs:
           VERSION_LINE="$(grep -E '^version:' pubspec.yaml | head -n 1 | awk '{print $2}')"
           BASE_BUILD_NUMBER="${VERSION_LINE##*+}"
           test "$BASE_BUILD_NUMBER" -gt 0
-          # Flutter adds the ABI offset; --build-number is always the base.
+          # Gradle computes base * 10 + ABI; --build-number is always the base.
           flutter build apk --release --build-number="$BASE_BUILD_NUMBER" --split-per-abi --target-platform=android-arm \
             --android-project-arg="filesystem-roots=$GITHUB_WORKSPACE" \
             --android-project-arg=filesystem-scheme=org-dartlang-root
@@ -197,9 +197,9 @@ jobs:
           RELEASE_DATE="$(date -u +%F)"
           VERSION_LINE="$(grep -E '^version:' pubspec.yaml | head -n 1 | awk '{print $2}')"
           BUILD_NUMBER="${VERSION_LINE##*+}"
-          FDROID_ARMV7_BUILD_NUMBER=$((BUILD_NUMBER + 1000))
-          FDROID_ARM64_BUILD_NUMBER=$((BUILD_NUMBER + 2000))
-          FDROID_X64_BUILD_NUMBER=$((BUILD_NUMBER + 4000))
+          FDROID_ARMV7_BUILD_NUMBER=$((BUILD_NUMBER * 10 + 1))
+          FDROID_ARM64_BUILD_NUMBER=$((BUILD_NUMBER * 10 + 2))
+          FDROID_X64_BUILD_NUMBER=$((BUILD_NUMBER * 10 + 3))
           PREVIOUS_TAG="$(git tag --list 'v*' --sort=-v:refname | grep -v "^${TAG_NAME}$" | head -n 1 || true)"
           ASSET_DIR="release-assets"
           ARM64_APK="app-arm64-v8a-release.apk"

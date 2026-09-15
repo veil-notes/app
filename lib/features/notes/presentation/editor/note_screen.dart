@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../i18n/translations.g.dart';
+import '../../application/notes_service.dart';
 import '../../domain/editor/markdown_block.dart';
 import '../../domain/editor/markdown_block_parser.dart';
 import '../../domain/editor/markdown_block_serializer.dart';
@@ -38,12 +39,20 @@ class _NoteScreenState extends ConsumerState<NoteScreen> {
   );
 
   Note? _currentNote;
+  NotesService? _noteService;
   Timer? _saveDebounce;
+  Future<void>? _saveOperation;
+  int _contentVersion = 0;
+  bool _hasPendingChanges = false;
+  bool _isHandlingBack = false;
   NoteSaveStatus _saveStatus = NoteSaveStatus.saved;
 
   @override
   void dispose() {
     _saveDebounce?.cancel();
+    if (_hasPendingChanges) {
+      unawaited(_saveSilently());
+    }
     super.dispose();
   }
 
@@ -53,108 +62,122 @@ class _NoteScreenState extends ConsumerState<NoteScreen> {
     final topInset = MediaQuery.paddingOf(context).top + kToolbarHeight + 8;
     final bottomInset = MediaQuery.paddingOf(context).bottom + 84;
 
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        shadowColor: Colors.transparent,
-        surfaceTintColor: Colors.transparent,
-        automaticallyImplyLeading: false,
-        leadingWidth: 72,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 12, top: 8, bottom: 8),
-          child: Material(
-            elevation: 0,
-            color: const Color(0xFF2A2448),
-            shape: const CircleBorder(),
-            child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+    return PopScope<void>(
+      canPop: !_hasPendingChanges,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop || _isHandlingBack) {
+          return;
+        }
+
+        unawaited(_handleBack());
+      },
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          scrolledUnderElevation: 0,
+          shadowColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
+          automaticallyImplyLeading: false,
+          leadingWidth: 72,
+          leading: Padding(
+            padding: const EdgeInsets.only(left: 12, top: 8, bottom: 8),
+            child: Material(
+              elevation: 0,
+              color: const Color(0xFF2A2448),
+              shape: const CircleBorder(),
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+                ),
+                child: BackButton(
+                  color: Colors.white,
+                  onPressed: _isHandlingBack ? null : _handleBack,
+                ),
               ),
-              child: BackButton(color: Colors.white, onPressed: _handleBack),
             ),
           ),
         ),
-      ),
-      body: noteAsync.when(
-        data: (note) {
-          _bindDocument(note);
+        body: noteAsync.when(
+          data: (note) {
+            _bindDocument(note);
 
-          final blocks = _effectiveBlocks;
+            final blocks = _effectiveBlocks;
 
-          return Stack(
-            children: [
-              Positioned.fill(
-                child: ListView.builder(
-                  padding: EdgeInsets.fromLTRB(8, topInset, 8, bottomInset),
-                  itemCount: blocks.length,
-                  itemBuilder: (context, index) {
-                    final block = blocks[index];
-                    final isEditing =
-                        _documentController.state.editingIndex == index;
+            return Stack(
+              children: [
+                Positioned.fill(
+                  child: ListView.builder(
+                    padding: EdgeInsets.fromLTRB(8, topInset, 8, bottomInset),
+                    itemCount: blocks.length,
+                    itemBuilder: (context, index) {
+                      final block = blocks[index];
+                      final isEditing =
+                          _documentController.state.editingIndex == index;
 
-                    if (isEditing) {
-                      return MarkdownBlockEditor(
-                        key: _editorKey,
-                        blockId: index,
-                        initialValue: block.raw,
-                        onChanged: (value) => _onBlockChanged(index, value),
-                        onDeleteEmptyBlock: () {
-                          _removeEmptyBlock(index);
+                      if (isEditing) {
+                        return MarkdownBlockEditor(
+                          key: _editorKey,
+                          blockId: index,
+                          initialValue: block.raw,
+                          onChanged: (value) => _onBlockChanged(index, value),
+                          onDeleteEmptyBlock: () {
+                            _removeEmptyBlock(index);
+                          },
+                          onSubmittedNewBlock: (selection) {
+                            _splitBlockAtSelection(index, selection);
+                          },
+                          onPasteRequested: _pasteFromClipboardIntoEditingBlock,
+                        );
+                      }
+
+                      return MarkdownBlockView(
+                        block: block,
+                        onOpenLink: _openLink,
+                        onTap: () {
+                          setState(() {
+                            _documentController.startEditing(index);
+                          });
                         },
-                        onSubmittedNewBlock: (selection) {
-                          _splitBlockAtSelection(index, selection);
-                        },
-                        onPasteRequested: _pasteFromClipboardIntoEditingBlock,
+                        onChecklistChanged: block is ChecklistItemBlock
+                            ? (checked) =>
+                                  _toggleChecklist(index, block, checked)
+                            : null,
                       );
-                    }
-
-                    return MarkdownBlockView(
-                      block: block,
-                      onOpenLink: _openLink,
-                      onTap: () {
-                        setState(() {
-                          _documentController.startEditing(index);
-                        });
-                      },
-                      onChecklistChanged: block is ChecklistItemBlock
-                          ? (checked) => _toggleChecklist(index, block, checked)
-                          : null,
-                    );
-                  },
-                ),
-              ),
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: NoteEditorToolbar(
-                    saveStatus: _saveStatus,
-                    onBold: _applyToEditingBlockBold,
-                    onItalic: _applyToEditingBlockItalic,
-                    onHeadingSelected: _toggleHeadingOnEditingBlock,
-                    currentHeadingLevel: _currentHeadingLevel,
-                    onBullet: _toggleBulletOnEditingBlock,
-                    onOrdered: _toggleOrderedOnEditingBlock,
-                    onChecklist: _toggleChecklistOnEditingBlock,
-
-                    isBulletActive: _isEditingBullet,
-                    isOrderedActive: _isEditingOrdered,
-                    isChecklistActive: _isEditingChecklist,
+                    },
                   ),
                 ),
-              ),
-            ],
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (_, _) =>
-            Center(child: Text(context.t.common.errors.loadFailed)),
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: NoteEditorToolbar(
+                      saveStatus: _saveStatus,
+                      onBold: _applyToEditingBlockBold,
+                      onItalic: _applyToEditingBlockItalic,
+                      onHeadingSelected: _toggleHeadingOnEditingBlock,
+                      currentHeadingLevel: _currentHeadingLevel,
+                      onBullet: _toggleBulletOnEditingBlock,
+                      onOrdered: _toggleOrderedOnEditingBlock,
+                      onChecklist: _toggleChecklistOnEditingBlock,
+
+                      isBulletActive: _isEditingBullet,
+                      isOrderedActive: _isEditingOrdered,
+                      isChecklistActive: _isEditingChecklist,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (_, _) =>
+              Center(child: Text(context.t.common.errors.loadFailed)),
+        ),
       ),
     );
   }
@@ -367,56 +390,147 @@ class _NoteScreenState extends ConsumerState<NoteScreen> {
       return;
     }
 
+    _noteService ??= ref.read(notesServiceProvider);
+    _contentVersion++;
+    _hasPendingChanges = true;
+
     setState(() {
       _saveStatus = NoteSaveStatus.saving;
     });
 
     _saveDebounce?.cancel();
-    _saveDebounce = Timer(const Duration(milliseconds: 600), _saveSilently);
+    _saveDebounce = Timer(const Duration(milliseconds: 600), () {
+      unawaited(_saveSilently());
+    });
   }
 
   Future<void> _saveSilently() async {
-    final note = _currentNote;
-    if (note == null) {
+    try {
+      await _savePendingChanges();
+    } catch (_) {
+      // The status is updated by _savePendingChanges. Debounced saves are
+      // intentionally silent; the editor keeps the dirty state for retry.
+    }
+  }
+
+  Future<void> _savePendingChanges() async {
+    _saveDebounce?.cancel();
+    _saveDebounce = null;
+
+    if (!_hasPendingChanges) {
       return;
     }
 
-    try {
-      final notesService = ref.read(notesServiceProvider);
+    var noteService = _noteService;
+    if (noteService == null) {
+      noteService = ref.read(notesServiceProvider);
+      _noteService = noteService;
+    }
+    final resolvedNoteService = noteService!;
 
+    while (_hasPendingChanges) {
+      final inFlightSave = _saveOperation;
+      if (inFlightSave != null) {
+        await inFlightSave;
+        continue;
+      }
+
+      final note = _currentNote;
+      if (note == null) {
+        _hasPendingChanges = false;
+        return;
+      }
+
+      final version = _contentVersion;
       final updatedNote = note.copyWith(
         content: _documentController.toMarkdown(),
         updatedAt: DateTime.now(),
       );
+      final saveOperation = _persistNote(
+        noteService: resolvedNoteService,
+        updatedNote: updatedNote,
+        version: version,
+      );
+      _saveOperation = saveOperation;
 
-      await notesService.save(updatedNote);
-      _currentNote = updatedNote;
-
-      ref.invalidate(notesListProvider);
-
-      if (widget.id != null) {
-        ref.invalidate(noteProvider(widget.id));
+      try {
+        await saveOperation;
+      } finally {
+        if (identical(_saveOperation, saveOperation)) {
+          _saveOperation = null;
+        }
       }
-
-      if (!mounted) {
-        return;
-      }
-
-      setState(() {
-        _saveStatus = NoteSaveStatus.saved;
-      });
-    } catch (_) {
-      if (!mounted) {
-        return;
-      }
-
-      setState(() {
-        _saveStatus = NoteSaveStatus.error;
-      });
     }
   }
 
-  void _handleBack() {
+  Future<void> _persistNote({
+    required NotesService noteService,
+    required Note updatedNote,
+    required int version,
+  }) async {
+    try {
+      await noteService.save(updatedNote);
+      _currentNote = updatedNote;
+
+      if (mounted) {
+        ref.invalidate(notesListProvider);
+
+        if (widget.id != null) {
+          ref.invalidate(noteProvider(widget.id));
+        }
+      }
+
+      final isLatestVersion = version == _contentVersion;
+      if (isLatestVersion) {
+        _hasPendingChanges = false;
+      }
+
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        if (isLatestVersion) {
+          _saveStatus = NoteSaveStatus.saved;
+        } else {
+          _saveStatus = NoteSaveStatus.saving;
+        }
+      });
+    } catch (_) {
+      if (mounted) {
+        setState(() {
+          _saveStatus = NoteSaveStatus.error;
+        });
+      }
+
+      rethrow;
+    }
+  }
+
+  Future<void> _handleBack() async {
+    if (_isHandlingBack) {
+      return;
+    }
+
+    _isHandlingBack = true;
+
+    try {
+      await _savePendingChanges();
+    } catch (_) {
+      if (mounted) {
+        setState(() {
+          _isHandlingBack = false;
+          _saveStatus = NoteSaveStatus.error;
+        });
+      }
+      return;
+    }
+
+    if (!mounted) {
+      return;
+    }
+
+    _isHandlingBack = false;
     final router = GoRouter.of(context);
     if (router.canPop()) {
       router.pop();

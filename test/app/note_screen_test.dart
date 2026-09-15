@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:veil/app/app_theme.dart';
 import 'package:veil/features/notes/application/notes_service.dart';
 import 'package:veil/features/notes/domain/note.dart';
@@ -23,6 +24,35 @@ void main() {
         theme: AppTheme.darkTheme,
         home: NoteScreen(id: id),
       ),
+    );
+  }
+
+  Widget wrapRouter({
+    required _FakeNotesService service,
+    required GoRouter router,
+  }) {
+    return ProviderScope(
+      overrides: [notesServiceProvider.overrideWithValue(service)],
+      child: buildLocalizedRouterApp(
+        theme: AppTheme.darkTheme,
+        routerConfig: router,
+      ),
+    );
+  }
+
+  GoRouter createTestRouter() {
+    return GoRouter(
+      initialLocation: '/list',
+      routes: [
+        GoRoute(
+          path: '/list',
+          builder: (_, _) => const SizedBox(key: ValueKey('note-list')),
+        ),
+        GoRoute(
+          path: '/note/:id',
+          builder: (_, state) => NoteScreen(id: state.pathParameters['id']),
+        ),
+      ],
     );
   }
 
@@ -79,6 +109,206 @@ void main() {
         expect(service.savedNotes.single.content, 'Draft');
       },
     );
+
+    testWidgets('saves pending changes before the app bar back navigates', (
+      tester,
+    ) async {
+      final service = _FakeNotesService(
+        openHandler: (_) async => Note(
+          id: 'note-1',
+          content: 'Title',
+          createdAt: DateTime(2026, 4, 10, 9, 0),
+          updatedAt: DateTime(2026, 4, 10, 9, 0),
+        ),
+      );
+      final router = createTestRouter();
+      addTearDown(router.dispose);
+
+      await tester.pumpWidget(wrapRouter(service: service, router: router));
+      router.push('/note/note-1');
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+
+      await tester.tap(find.text('Title'));
+      await tester.pump();
+      await tester.enterText(find.byType(TextField), 'Changed');
+      await tester.pump();
+
+      expect(service.savedNotes, isEmpty);
+
+      await tester.tap(find.byType(BackButton));
+      await tester.pumpAndSettle();
+
+      expect(service.savedNotes, hasLength(1));
+      expect(service.savedNotes.single.content, 'Changed');
+      expect(find.byKey(const ValueKey('note-list')), findsOneWidget);
+    });
+
+    testWidgets('saves pending changes before the system back navigates', (
+      tester,
+    ) async {
+      final service = _FakeNotesService(
+        openHandler: (_) async => Note(
+          id: 'note-1',
+          content: 'Title',
+          createdAt: DateTime(2026, 4, 10, 9, 0),
+          updatedAt: DateTime(2026, 4, 10, 9, 0),
+        ),
+      );
+      final router = createTestRouter();
+      addTearDown(router.dispose);
+
+      await tester.pumpWidget(wrapRouter(service: service, router: router));
+      router.push('/note/note-1');
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+
+      await tester.tap(find.text('Title'));
+      await tester.pump();
+      await tester.enterText(find.byType(TextField), 'Changed');
+      await tester.pump();
+
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+
+      expect(service.savedNotes, hasLength(1));
+      expect(service.savedNotes.single.content, 'Changed');
+      expect(find.byKey(const ValueKey('note-list')), findsOneWidget);
+    });
+
+    testWidgets('saves the latest content when an earlier save is in flight', (
+      tester,
+    ) async {
+      final firstSaveStarted = Completer<void>();
+      final releaseFirstSave = Completer<void>();
+      var saveCount = 0;
+      final service = _FakeNotesService(
+        openHandler: (_) async => Note(
+          id: 'note-1',
+          content: 'Title',
+          createdAt: DateTime(2026, 4, 10, 9, 0),
+          updatedAt: DateTime(2026, 4, 10, 9, 0),
+        ),
+        saveHandler: (_) async {
+          saveCount++;
+          if (saveCount == 1) {
+            firstSaveStarted.complete();
+            await releaseFirstSave.future;
+          }
+        },
+      );
+      final router = createTestRouter();
+      addTearDown(router.dispose);
+
+      await tester.pumpWidget(wrapRouter(service: service, router: router));
+      router.push('/note/note-1');
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+
+      await tester.tap(find.text('Title'));
+      await tester.pump();
+      await tester.enterText(find.byType(TextField), 'First');
+      await tester.pump(const Duration(milliseconds: 650));
+      await firstSaveStarted.future;
+
+      await tester.enterText(find.byType(TextField), 'Latest');
+      await tester.pump();
+      await tester.tap(find.byType(BackButton));
+
+      releaseFirstSave.complete();
+      await tester.pumpAndSettle();
+
+      expect(service.savedNotes.map((note) => note.content), ['First', 'Latest']);
+      expect(find.byKey(const ValueKey('note-list')), findsOneWidget);
+    });
+
+    testWidgets('does not save when leaving an unchanged note', (tester) async {
+      final service = _FakeNotesService(
+        openHandler: (_) async => Note(
+          id: 'note-1',
+          content: 'Title',
+          createdAt: DateTime(2026, 4, 10, 9, 0),
+          updatedAt: DateTime(2026, 4, 10, 9, 0),
+        ),
+      );
+      final router = createTestRouter();
+      addTearDown(router.dispose);
+
+      await tester.pumpWidget(wrapRouter(service: service, router: router));
+      router.push('/note/note-1');
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+
+      await tester.tap(find.byType(BackButton));
+      await tester.pumpAndSettle();
+
+      expect(service.savedNotes, isEmpty);
+      expect(find.byKey(const ValueKey('note-list')), findsOneWidget);
+    });
+
+    testWidgets('keeps the note open when saving before back fails', (
+      tester,
+    ) async {
+      final service = _FakeNotesService(
+        openHandler: (_) async => Note(
+          id: 'note-1',
+          content: 'Title',
+          createdAt: DateTime(2026, 4, 10, 9, 0),
+          updatedAt: DateTime(2026, 4, 10, 9, 0),
+        ),
+        saveException: Exception('save failed'),
+      );
+      final router = createTestRouter();
+      addTearDown(router.dispose);
+
+      await tester.pumpWidget(wrapRouter(service: service, router: router));
+      router.push('/note/note-1');
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+
+      await tester.tap(find.text('Title'));
+      await tester.pump();
+      await tester.enterText(find.byType(TextField), 'Changed');
+      await tester.pump();
+
+      await tester.tap(find.byType(BackButton));
+      await tester.pumpAndSettle();
+
+      final toolbar = tester.widget<NoteEditorToolbar>(
+        find.byType(NoteEditorToolbar),
+      );
+      expect(toolbar.saveStatus, NoteSaveStatus.error);
+      expect(find.byType(TextField), findsOneWidget);
+      expect(find.byKey(const ValueKey('note-list')), findsNothing);
+    });
+
+    testWidgets('flushes pending changes when the editor is disposed', (
+      tester,
+    ) async {
+      final service = _FakeNotesService(
+        openHandler: (_) async => Note(
+          id: 'note-1',
+          content: 'Title',
+          createdAt: DateTime(2026, 4, 10, 9, 0),
+          updatedAt: DateTime(2026, 4, 10, 9, 0),
+        ),
+      );
+
+      await tester.pumpWidget(wrap(service: service, id: 'note-1'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+
+      await tester.tap(find.text('Title'));
+      await tester.pump();
+      await tester.enterText(find.byType(TextField), 'Changed');
+      await tester.pump();
+
+      await tester.pumpWidget(const SizedBox());
+      await tester.pump();
+
+      expect(service.savedNotes, hasLength(1));
+      expect(service.savedNotes.single.content, 'Changed');
+    });
 
     testWidgets('enters edit mode on tap and splits blocks on next action', (
       tester,
@@ -617,12 +847,14 @@ class _FakeNotesService implements NotesService {
   final Future<Note> Function()? createEmptyHandler;
   final Future<Note> Function(String id)? openHandler;
   final Object? saveException;
+  final Future<void> Function(Note note)? saveHandler;
   final List<Note> savedNotes = [];
 
   _FakeNotesService({
     this.createEmptyHandler,
     this.openHandler,
     this.saveException,
+    this.saveHandler,
   });
 
   @override
@@ -665,5 +897,6 @@ class _FakeNotesService implements NotesService {
       throw saveException!;
     }
     savedNotes.add(note);
+    await saveHandler?.call(note);
   }
 }

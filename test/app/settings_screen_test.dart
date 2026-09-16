@@ -5,13 +5,17 @@ import 'package:veil/app/locale/app_locale_provider.dart';
 import 'package:veil/app/locale/app_locale_service.dart';
 import 'package:veil/app/app_theme.dart';
 import 'package:veil/core/storage/secure_storage_service.dart';
+import 'package:veil/features/notes/application/notes_file_service.dart';
+import 'package:veil/features/notes/application/notes_transfer_service.dart';
+import 'package:veil/features/notes/domain/notes_transfer_result.dart';
+import 'package:veil/features/notes/providers/notes_provider.dart';
 import 'package:veil/features/veil/application/veil_controller.dart';
 import 'package:veil/features/settings/presentation/screens/settings_screen.dart';
 import 'package:veil/features/veil/application/veil_service.dart';
 import 'package:veil/features/veil/application/veil_session_controller.dart';
 import 'package:veil/features/veil/domain/biometrics/biometric_auth_exception.dart';
 import 'package:veil/features/veil/domain/session/auto_lock_option.dart';
-import 'package:veil/features/veil/domain/states/locked_state.dart';
+import 'package:veil/features/veil/domain/states/unlocked_state.dart';
 import 'package:veil/features/veil/domain/veil_exception.dart';
 import 'package:veil/features/veil/providers/veil_provider.dart';
 import 'package:veil/i18n/translations.g.dart';
@@ -28,6 +32,8 @@ void main() {
     _FakeVeilController? controller,
     AppLocale initialLocale = AppLocale.en,
     AppLocaleService? localeService,
+    NotesTransferService? notesTransferService,
+    NotesFileService? notesFileService,
   }) {
     return ProviderScope(
       overrides: [
@@ -61,6 +67,10 @@ void main() {
         veilControllerProvider.overrideWith(
           () => controller ?? _FakeVeilController(service),
         ),
+        if (notesTransferService != null)
+          notesTransferServiceProvider.overrideWithValue(notesTransferService),
+        if (notesFileService != null)
+          notesFileServiceProvider.overrideWithValue(notesFileService),
       ],
       child: buildLocalizedApp(
         theme: AppTheme.darkTheme,
@@ -104,6 +114,285 @@ void main() {
       expect(find.text('Change password'), findsOneWidget);
       expect(
         find.text('Replace the password used to protect your vault.'),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('exports notes with a separate password', (tester) async {
+      final service = _FakeVeilService(
+        biometricEnabled: false,
+        canUseBiometrics: false,
+        autoLockOption: AutoLockOption.fiveMinutes,
+      );
+      final transferService = _FakeNotesTransferService(
+        exportResult: const NotesExport(
+          encryptedPayload: 'pgp-payload',
+          noteCount: 2,
+        ),
+      );
+      final fileService = _FakeNotesFileService();
+
+      await tester.pumpWidget(
+        wrap(
+          service: service,
+          notesTransferService: transferService,
+          notesFileService: fileService,
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+      await tester.tap(find.text('Export notes'));
+      await tester.pumpAndSettle();
+
+      final fields = find.byType(TextField);
+      await tester.enterText(fields.at(0), 'ExportPass1!');
+      await tester.enterText(fields.at(1), 'ExportPass1!');
+      await tester.tap(find.text('Confirm').last);
+      await tester.pumpAndSettle();
+
+      expect(transferService.exportPassword, 'ExportPass1!');
+      expect(fileService.savedPayload, 'pgp-payload');
+      expect(find.text('Exported 2 notes.'), findsOneWidget);
+    });
+
+    testWidgets('shows export password validation inline', (tester) async {
+      final service = _FakeVeilService(
+        biometricEnabled: false,
+        canUseBiometrics: false,
+        autoLockOption: AutoLockOption.fiveMinutes,
+      );
+
+      await tester.pumpWidget(wrap(service: service));
+      await tester.pump();
+      await tester.pump();
+      await tester.tap(find.text('Export notes'));
+      await tester.pumpAndSettle();
+
+      final fields = find.byType(TextField);
+      await tester.enterText(fields.at(0), 'weak');
+      await tester.enterText(fields.at(1), 'weak');
+      await tester.tap(find.text('Confirm').last);
+      await tester.pump();
+
+      expect(
+        find.text('Password must have at least 10 characters.'),
+        findsOneWidget,
+      );
+      expect(find.text('Export notes'), findsWidgets);
+    });
+
+    testWidgets('does not show success when export saving is cancelled', (
+      tester,
+    ) async {
+      final service = _FakeVeilService(
+        biometricEnabled: false,
+        canUseBiometrics: false,
+        autoLockOption: AutoLockOption.fiveMinutes,
+      );
+      final transferService = _FakeNotesTransferService(
+        exportResult: const NotesExport(
+          encryptedPayload: 'pgp-payload',
+          noteCount: 1,
+        ),
+      );
+      final fileService = _FakeNotesFileService(saveResult: false);
+
+      await tester.pumpWidget(
+        wrap(
+          service: service,
+          notesTransferService: transferService,
+          notesFileService: fileService,
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+      await tester.tap(find.text('Export notes'));
+      await tester.pumpAndSettle();
+
+      final fields = find.byType(TextField);
+      await tester.enterText(fields.at(0), 'ExportPass1!');
+      await tester.enterText(fields.at(1), 'ExportPass1!');
+      await tester.tap(find.text('Confirm').last);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(SnackBar), findsNothing);
+    });
+
+    testWidgets('imports notes and shows only the imported count', (
+      tester,
+    ) async {
+      final service = _FakeVeilService(
+        biometricEnabled: false,
+        canUseBiometrics: false,
+        autoLockOption: AutoLockOption.fiveMinutes,
+      );
+      final transferService = _FakeNotesTransferService(
+        importResult: const NotesImportResult(
+          importedCount: 3,
+          conflictCount: 1,
+        ),
+      );
+      final fileService = _FakeNotesFileService(importPayload: 'pgp-payload');
+
+      await tester.pumpWidget(
+        wrap(
+          service: service,
+          notesTransferService: transferService,
+          notesFileService: fileService,
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+      await tester.tap(find.text('Import notes'));
+      await tester.pumpAndSettle();
+
+      await tester.enterText(find.byType(TextField), 'FilePass1!');
+      await tester.tap(find.text('Confirm').last);
+      await tester.pumpAndSettle();
+
+      expect(transferService.importPayload, 'pgp-payload');
+      expect(transferService.importPassword, 'FilePass1!');
+      expect(find.byType(SnackBar), findsOneWidget);
+      expect(find.text('3 notes imported.'), findsOneWidget);
+      expect(find.text('1 existing IDs received new IDs.'), findsNothing);
+      expect(find.byType(AlertDialog), findsNothing);
+    });
+
+    testWidgets(
+      'shows zero in the import success toast when no notes are imported',
+      (tester) async {
+        final service = _FakeVeilService(
+          biometricEnabled: false,
+          canUseBiometrics: false,
+          autoLockOption: AutoLockOption.fiveMinutes,
+        );
+        final transferService = _FakeNotesTransferService(
+          importResult: const NotesImportResult(
+            importedCount: 0,
+            conflictCount: 0,
+          ),
+        );
+        final fileService = _FakeNotesFileService(importPayload: 'pgp-payload');
+
+        await tester.pumpWidget(
+          wrap(
+            service: service,
+            notesTransferService: transferService,
+            notesFileService: fileService,
+          ),
+        );
+        await tester.pump();
+        await tester.pump();
+        await tester.tap(find.text('Import notes'));
+        await tester.pumpAndSettle();
+
+        await tester.enterText(find.byType(TextField), 'FilePass1!');
+        await tester.tap(find.text('Confirm').last);
+        await tester.pumpAndSettle();
+
+        expect(find.byType(SnackBar), findsOneWidget);
+        expect(find.text('0 notes imported.'), findsOneWidget);
+        expect(find.byType(AlertDialog), findsNothing);
+      },
+    );
+
+    testWidgets('does nothing when importing is cancelled at file selection', (
+      tester,
+    ) async {
+      final service = _FakeVeilService(
+        biometricEnabled: false,
+        canUseBiometrics: false,
+        autoLockOption: AutoLockOption.fiveMinutes,
+      );
+      final transferService = _FakeNotesTransferService();
+      final fileService = _FakeNotesFileService();
+
+      await tester.pumpWidget(
+        wrap(
+          service: service,
+          notesTransferService: transferService,
+          notesFileService: fileService,
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+      await tester.tap(find.text('Import notes'));
+      await tester.pumpAndSettle();
+
+      expect(transferService.importPassword, isNull);
+      expect(find.byType(TextField), findsNothing);
+    });
+
+    testWidgets('does not continue importing after the veil auto-locks', (
+      tester,
+    ) async {
+      final service = _FakeVeilService(
+        biometricEnabled: false,
+        canUseBiometrics: false,
+        autoLockOption: AutoLockOption.fiveMinutes,
+      );
+      final controller = _FakeVeilController(service);
+      final transferService = _FakeNotesTransferService(
+        importResult: const NotesImportResult(
+          importedCount: 1,
+          conflictCount: 0,
+        ),
+      );
+      final fileService = _FakeNotesFileService(
+        importPayload: 'pgp-payload',
+        onPickImportFile: controller.lock,
+      );
+
+      await tester.pumpWidget(
+        wrap(
+          service: service,
+          controller: controller,
+          notesTransferService: transferService,
+          notesFileService: fileService,
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+      await tester.tap(find.text('Import notes'));
+      await tester.pumpAndSettle();
+
+      expect(controller.lockCalls, 1);
+      expect(transferService.importPayload, isNull);
+      expect(find.byType(TextField), findsNothing);
+    });
+
+    testWidgets('shows an error when importing an invalid file', (
+      tester,
+    ) async {
+      final service = _FakeVeilService(
+        biometricEnabled: false,
+        canUseBiometrics: false,
+        autoLockOption: AutoLockOption.fiveMinutes,
+      );
+      final transferService = _FakeNotesTransferService(
+        importException: const NotesTransferException(
+          NotesTransferExceptionCode.invalidFileOrPassword,
+        ),
+      );
+      final fileService = _FakeNotesFileService(importPayload: 'bad-file');
+
+      await tester.pumpWidget(
+        wrap(
+          service: service,
+          notesTransferService: transferService,
+          notesFileService: fileService,
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+      await tester.tap(find.text('Import notes'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), 'FilePass1!');
+      await tester.tap(find.text('Confirm').last);
+      await tester.pumpAndSettle();
+
+      expect(
+        find.text('The file is invalid or the password is incorrect.'),
         findsOneWidget,
       );
     });
@@ -536,6 +825,67 @@ void main() {
   });
 }
 
+class _FakeNotesTransferService implements NotesTransferService {
+  final NotesExport? exportResult;
+  final NotesImportResult? importResult;
+  final Object? importException;
+
+  String? exportPassword;
+  String? importPayload;
+  String? importPassword;
+
+  _FakeNotesTransferService({
+    this.exportResult,
+    this.importResult,
+    this.importException,
+  });
+
+  @override
+  Future<NotesExport> exportNotes(String password) async {
+    exportPassword = password;
+    return exportResult!;
+  }
+
+  @override
+  Future<NotesImportResult> importNotes({
+    required String encryptedPayload,
+    required String password,
+  }) async {
+    importPayload = encryptedPayload;
+    importPassword = password;
+    if (importException != null) {
+      throw importException!;
+    }
+    return importResult!;
+  }
+}
+
+class _FakeNotesFileService implements NotesFileService {
+  final String? importPayload;
+  final bool saveResult;
+  final void Function()? onPickImportFile;
+
+  String? savedPayload;
+
+  _FakeNotesFileService({
+    this.importPayload,
+    this.saveResult = true,
+    this.onPickImportFile,
+  });
+
+  @override
+  Future<String?> pickImportFile() async {
+    onPickImportFile?.call();
+    return importPayload;
+  }
+
+  @override
+  Future<bool> saveExportFile(String encryptedPayload) async {
+    savedPayload = encryptedPayload;
+    return saveResult;
+  }
+}
+
 class _FakeVeilService implements VeilService {
   bool biometricEnabled;
   bool canUseBiometrics;
@@ -627,9 +977,15 @@ class _FakeVeilService implements VeilService {
 
 class _FakeVeilSessionController extends VeilSessionController {
   Duration? lastTimeout;
+  int refreshCalls = 0;
 
   _FakeVeilSessionController({required super.timeout})
     : super(onTimeout: () {});
+
+  @override
+  void refresh() {
+    refreshCalls++;
+  }
 
   @override
   void updateTimeout(Duration timeout) {
@@ -644,11 +1000,12 @@ class _FakeVeilController extends VeilController {
   _FakeVeilController(this.service);
 
   @override
-  LockedState build() => LockedState(service);
+  UnlockedState build() => UnlockedState(service);
 
   @override
   void lock() {
     lockCalls++;
+    state = state.onTimeout();
   }
 }
 

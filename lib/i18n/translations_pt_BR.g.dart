@@ -94,6 +94,7 @@ class _TranslationsSettingsPtBr extends TranslationsSettingsEn {
 	@override late final _TranslationsSettingsLockPtBr lock = _TranslationsSettingsLockPtBr._(_root);
 	@override late final _TranslationsSettingsConfirmPasswordPtBr confirmPassword = _TranslationsSettingsConfirmPasswordPtBr._(_root);
 	@override late final _TranslationsSettingsChangePasswordPtBr changePassword = _TranslationsSettingsChangePasswordPtBr._(_root);
+	@override late final _TranslationsSettingsNotesTransferPtBr notesTransfer = _TranslationsSettingsNotesTransferPtBr._(_root);
 }
 
 // Path: veil
@@ -247,6 +248,24 @@ class _TranslationsSettingsChangePasswordPtBr extends TranslationsSettingsChange
 	@override String get success => 'Senha alterada com sucesso.';
 }
 
+// Path: settings.notesTransfer
+class _TranslationsSettingsNotesTransferPtBr extends TranslationsSettingsNotesTransferEn {
+	_TranslationsSettingsNotesTransferPtBr._(TranslationsPtBr root) : this._root = root, super.internal(root);
+
+	final TranslationsPtBr _root; // ignore: unused_field
+
+	// Translations
+	@override String get exportTitle => 'Exportar notas';
+	@override String get exportSubtitle => 'Salvar uma cópia criptografada protegida por uma senha separada.';
+	@override String get importTitle => 'Importar notas';
+	@override String get importSubtitle => 'Restaurar notas de um arquivo PGP criptografado.';
+	@override late final _TranslationsSettingsNotesTransferExportPasswordPtBr exportPassword = _TranslationsSettingsNotesTransferExportPasswordPtBr._(_root);
+	@override late final _TranslationsSettingsNotesTransferImportPasswordPtBr importPassword = _TranslationsSettingsNotesTransferImportPasswordPtBr._(_root);
+	@override String importSuccess({required Object count}) => '${count} notas importadas.';
+	@override String exportSuccess({required Object count}) => '${count} notas exportadas.';
+	@override late final _TranslationsSettingsNotesTransferErrorsPtBr errors = _TranslationsSettingsNotesTransferErrorsPtBr._(_root);
+}
+
 // Path: veil.setup
 class _TranslationsVeilSetupPtBr extends TranslationsVeilSetupEn {
 	_TranslationsVeilSetupPtBr._(TranslationsPtBr root) : this._root = root, super.internal(root);
@@ -328,6 +347,42 @@ class _TranslationsSettingsAutoLockOptionsPtBr extends TranslationsSettingsAutoL
 	@override String get thirtyMinutes => '30 minutos';
 }
 
+// Path: settings.notesTransfer.exportPassword
+class _TranslationsSettingsNotesTransferExportPasswordPtBr extends TranslationsSettingsNotesTransferExportPasswordEn {
+	_TranslationsSettingsNotesTransferExportPasswordPtBr._(TranslationsPtBr root) : this._root = root, super.internal(root);
+
+	final TranslationsPtBr _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Exportar notas';
+	@override String get passwordHint => 'Senha da exportação...';
+	@override String get confirmPasswordHint => 'Confirme a senha da exportação...';
+}
+
+// Path: settings.notesTransfer.importPassword
+class _TranslationsSettingsNotesTransferImportPasswordPtBr extends TranslationsSettingsNotesTransferImportPasswordEn {
+	_TranslationsSettingsNotesTransferImportPasswordPtBr._(TranslationsPtBr root) : this._root = root, super.internal(root);
+
+	final TranslationsPtBr _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Importar notas';
+	@override String get hint => 'Digite a senha do arquivo...';
+}
+
+// Path: settings.notesTransfer.errors
+class _TranslationsSettingsNotesTransferErrorsPtBr extends TranslationsSettingsNotesTransferErrorsEn {
+	_TranslationsSettingsNotesTransferErrorsPtBr._(TranslationsPtBr root) : this._root = root, super.internal(root);
+
+	final TranslationsPtBr _root; // ignore: unused_field
+
+	// Translations
+	@override String get invalidFileOrPassword => 'O arquivo é inválido ou a senha está incorreta.';
+	@override String get unsupportedFormatVersion => 'Esta versão do formato de exportação não é suportada.';
+	@override String get invalidPayload => 'O arquivo de exportação contém notas inválidas.';
+	@override String get fileOperationFailed => 'Não foi possível acessar o arquivo.';
+}
+
 /// The flat map containing all translations for locale <pt-BR>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -381,6 +436,21 @@ extension on TranslationsPtBr {
 			'settings.changePassword.newPasswordHint' => 'Nova senha...',
 			'settings.changePassword.confirmPasswordHint' => 'Confirme a nova senha...',
 			'settings.changePassword.success' => 'Senha alterada com sucesso.',
+			'settings.notesTransfer.exportTitle' => 'Exportar notas',
+			'settings.notesTransfer.exportSubtitle' => 'Salvar uma cópia criptografada protegida por uma senha separada.',
+			'settings.notesTransfer.importTitle' => 'Importar notas',
+			'settings.notesTransfer.importSubtitle' => 'Restaurar notas de um arquivo PGP criptografado.',
+			'settings.notesTransfer.exportPassword.title' => 'Exportar notas',
+			'settings.notesTransfer.exportPassword.passwordHint' => 'Senha da exportação...',
+			'settings.notesTransfer.exportPassword.confirmPasswordHint' => 'Confirme a senha da exportação...',
+			'settings.notesTransfer.importPassword.title' => 'Importar notas',
+			'settings.notesTransfer.importPassword.hint' => 'Digite a senha do arquivo...',
+			'settings.notesTransfer.importSuccess' => ({required Object count}) => '${count} notas importadas.',
+			'settings.notesTransfer.exportSuccess' => ({required Object count}) => '${count} notas exportadas.',
+			'settings.notesTransfer.errors.invalidFileOrPassword' => 'O arquivo é inválido ou a senha está incorreta.',
+			'settings.notesTransfer.errors.unsupportedFormatVersion' => 'Esta versão do formato de exportação não é suportada.',
+			'settings.notesTransfer.errors.invalidPayload' => 'O arquivo de exportação contém notas inválidas.',
+			'settings.notesTransfer.errors.fileOperationFailed' => 'Não foi possível acessar o arquivo.',
 			'veil.setup.passwordHint' => 'Digite uma senha para começar...',
 			'veil.setup.cta' => 'Vamos começar!',
 			'veil.setup.biometricsOptInTitle' => 'Ativar biometria',

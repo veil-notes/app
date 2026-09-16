@@ -37,5 +37,28 @@
     "newPasswordHint": "Nova senha...",
     "confirmPasswordHint": "Confirme a nova senha...",
     "success": "Senha alterada com sucesso."
+  },
+  "notesTransfer": {
+    "exportTitle": "Exportar notas",
+    "exportSubtitle": "Salvar uma cópia criptografada protegida por uma senha separada.",
+    "importTitle": "Importar notas",
+    "importSubtitle": "Restaurar notas de um arquivo PGP criptografado.",
+    "exportPassword": {
+      "title": "Exportar notas",
+      "passwordHint": "Senha da exportação...",
+      "confirmPasswordHint": "Confirme a senha da exportação..."
+    },
+    "importPassword": {
+      "title": "Importar notas",
+      "hint": "Digite a senha do arquivo..."
+    },
+    "importSuccess": "{{count}} notas importadas.",
+    "exportSuccess": "{{count}} notas exportadas.",
+    "errors": {
+      "invalidFileOrPassword": "O arquivo é inválido ou a senha está incorreta.",
+      "unsupportedFormatVersion": "Esta versão do formato de exportação não é suportada.",
+      "invalidPayload": "O arquivo de exportação contém notas inválidas.",
+      "fileOperationFailed": "Não foi possível acessar o arquivo."
+    }
   }
 }

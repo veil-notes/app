@@ -94,6 +94,7 @@ class _TranslationsSettingsRu extends TranslationsSettingsEn {
 	@override late final _TranslationsSettingsLockRu lock = _TranslationsSettingsLockRu._(_root);
 	@override late final _TranslationsSettingsConfirmPasswordRu confirmPassword = _TranslationsSettingsConfirmPasswordRu._(_root);
 	@override late final _TranslationsSettingsChangePasswordRu changePassword = _TranslationsSettingsChangePasswordRu._(_root);
+	@override late final _TranslationsSettingsNotesTransferRu notesTransfer = _TranslationsSettingsNotesTransferRu._(_root);
 }
 
 // Path: veil
@@ -247,6 +248,24 @@ class _TranslationsSettingsChangePasswordRu extends TranslationsSettingsChangePa
 	@override String get success => 'Пароль успешно изменён.';
 }
 
+// Path: settings.notesTransfer
+class _TranslationsSettingsNotesTransferRu extends TranslationsSettingsNotesTransferEn {
+	_TranslationsSettingsNotesTransferRu._(TranslationsRu root) : this._root = root, super.internal(root);
+
+	final TranslationsRu _root; // ignore: unused_field
+
+	// Translations
+	@override String get exportTitle => 'Экспорт заметок';
+	@override String get exportSubtitle => 'Сохраните зашифрованную копию с отдельным паролем.';
+	@override String get importTitle => 'Импорт заметок';
+	@override String get importSubtitle => 'Восстановите заметки из зашифрованного файла PGP.';
+	@override late final _TranslationsSettingsNotesTransferExportPasswordRu exportPassword = _TranslationsSettingsNotesTransferExportPasswordRu._(_root);
+	@override late final _TranslationsSettingsNotesTransferImportPasswordRu importPassword = _TranslationsSettingsNotesTransferImportPasswordRu._(_root);
+	@override String importSuccess({required Object count}) => 'Импортировано заметок: ${count}.';
+	@override String exportSuccess({required Object count}) => 'Экспортировано заметок: ${count}.';
+	@override late final _TranslationsSettingsNotesTransferErrorsRu errors = _TranslationsSettingsNotesTransferErrorsRu._(_root);
+}
+
 // Path: veil.setup
 class _TranslationsVeilSetupRu extends TranslationsVeilSetupEn {
 	_TranslationsVeilSetupRu._(TranslationsRu root) : this._root = root, super.internal(root);
@@ -328,6 +347,42 @@ class _TranslationsSettingsAutoLockOptionsRu extends TranslationsSettingsAutoLoc
 	@override String get thirtyMinutes => '30 минут';
 }
 
+// Path: settings.notesTransfer.exportPassword
+class _TranslationsSettingsNotesTransferExportPasswordRu extends TranslationsSettingsNotesTransferExportPasswordEn {
+	_TranslationsSettingsNotesTransferExportPasswordRu._(TranslationsRu root) : this._root = root, super.internal(root);
+
+	final TranslationsRu _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Экспорт заметок';
+	@override String get passwordHint => 'Пароль экспорта...';
+	@override String get confirmPasswordHint => 'Подтвердите пароль экспорта...';
+}
+
+// Path: settings.notesTransfer.importPassword
+class _TranslationsSettingsNotesTransferImportPasswordRu extends TranslationsSettingsNotesTransferImportPasswordEn {
+	_TranslationsSettingsNotesTransferImportPasswordRu._(TranslationsRu root) : this._root = root, super.internal(root);
+
+	final TranslationsRu _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Импорт заметок';
+	@override String get hint => 'Введите пароль файла...';
+}
+
+// Path: settings.notesTransfer.errors
+class _TranslationsSettingsNotesTransferErrorsRu extends TranslationsSettingsNotesTransferErrorsEn {
+	_TranslationsSettingsNotesTransferErrorsRu._(TranslationsRu root) : this._root = root, super.internal(root);
+
+	final TranslationsRu _root; // ignore: unused_field
+
+	// Translations
+	@override String get invalidFileOrPassword => 'Файл недействителен или пароль неверен.';
+	@override String get unsupportedFormatVersion => 'Эта версия формата экспорта не поддерживается.';
+	@override String get invalidPayload => 'Файл экспорта содержит недействительные заметки.';
+	@override String get fileOperationFailed => 'Не удалось получить доступ к файлу.';
+}
+
 /// The flat map containing all translations for locale <ru>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -381,6 +436,21 @@ extension on TranslationsRu {
 			'settings.changePassword.newPasswordHint' => 'Новый пароль...',
 			'settings.changePassword.confirmPasswordHint' => 'Подтвердите новый пароль...',
 			'settings.changePassword.success' => 'Пароль успешно изменён.',
+			'settings.notesTransfer.exportTitle' => 'Экспорт заметок',
+			'settings.notesTransfer.exportSubtitle' => 'Сохраните зашифрованную копию с отдельным паролем.',
+			'settings.notesTransfer.importTitle' => 'Импорт заметок',
+			'settings.notesTransfer.importSubtitle' => 'Восстановите заметки из зашифрованного файла PGP.',
+			'settings.notesTransfer.exportPassword.title' => 'Экспорт заметок',
+			'settings.notesTransfer.exportPassword.passwordHint' => 'Пароль экспорта...',
+			'settings.notesTransfer.exportPassword.confirmPasswordHint' => 'Подтвердите пароль экспорта...',
+			'settings.notesTransfer.importPassword.title' => 'Импорт заметок',
+			'settings.notesTransfer.importPassword.hint' => 'Введите пароль файла...',
+			'settings.notesTransfer.importSuccess' => ({required Object count}) => 'Импортировано заметок: ${count}.',
+			'settings.notesTransfer.exportSuccess' => ({required Object count}) => 'Экспортировано заметок: ${count}.',
+			'settings.notesTransfer.errors.invalidFileOrPassword' => 'Файл недействителен или пароль неверен.',
+			'settings.notesTransfer.errors.unsupportedFormatVersion' => 'Эта версия формата экспорта не поддерживается.',
+			'settings.notesTransfer.errors.invalidPayload' => 'Файл экспорта содержит недействительные заметки.',
+			'settings.notesTransfer.errors.fileOperationFailed' => 'Не удалось получить доступ к файлу.',
 			'veil.setup.passwordHint' => 'Введите пароль, чтобы начать...',
 			'veil.setup.cta' => 'Начать!',
 			'veil.setup.biometricsOptInTitle' => 'Включить биометрию',

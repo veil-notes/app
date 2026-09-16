@@ -37,5 +37,28 @@
     "newPasswordHint": "新密码...",
     "confirmPasswordHint": "确认新密码...",
     "success": "密码更改成功。"
+  },
+  "notesTransfer": {
+    "exportTitle": "导出笔记",
+    "exportSubtitle": "保存由独立密码保护的加密副本。",
+    "importTitle": "导入笔记",
+    "importSubtitle": "从加密的 PGP 文件恢复笔记。",
+    "exportPassword": {
+      "title": "导出笔记",
+      "passwordHint": "导出密码……",
+      "confirmPasswordHint": "确认导出密码……"
+    },
+    "importPassword": {
+      "title": "导入笔记",
+      "hint": "输入文件密码……"
+    },
+    "importSuccess": "已导入 {{count}} 条笔记。",
+    "exportSuccess": "已导出 {{count}} 条笔记。",
+    "errors": {
+      "invalidFileOrPassword": "文件无效或密码不正确。",
+      "unsupportedFormatVersion": "不支持此导出格式版本。",
+      "invalidPayload": "导出文件包含无效笔记。",
+      "fileOperationFailed": "无法访问文件。"
+    }
   }
 }

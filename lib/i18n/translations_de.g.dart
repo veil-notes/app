@@ -94,6 +94,7 @@ class _TranslationsSettingsDe extends TranslationsSettingsEn {
 	@override late final _TranslationsSettingsLockDe lock = _TranslationsSettingsLockDe._(_root);
 	@override late final _TranslationsSettingsConfirmPasswordDe confirmPassword = _TranslationsSettingsConfirmPasswordDe._(_root);
 	@override late final _TranslationsSettingsChangePasswordDe changePassword = _TranslationsSettingsChangePasswordDe._(_root);
+	@override late final _TranslationsSettingsNotesTransferDe notesTransfer = _TranslationsSettingsNotesTransferDe._(_root);
 }
 
 // Path: veil
@@ -247,6 +248,24 @@ class _TranslationsSettingsChangePasswordDe extends TranslationsSettingsChangePa
 	@override String get success => 'Passwort erfolgreich geändert.';
 }
 
+// Path: settings.notesTransfer
+class _TranslationsSettingsNotesTransferDe extends TranslationsSettingsNotesTransferEn {
+	_TranslationsSettingsNotesTransferDe._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get exportTitle => 'Notizen exportieren';
+	@override String get exportSubtitle => 'Eine verschlüsselte Kopie mit einem separaten Passwort speichern.';
+	@override String get importTitle => 'Notizen importieren';
+	@override String get importSubtitle => 'Notizen aus einer verschlüsselten PGP-Datei wiederherstellen.';
+	@override late final _TranslationsSettingsNotesTransferExportPasswordDe exportPassword = _TranslationsSettingsNotesTransferExportPasswordDe._(_root);
+	@override late final _TranslationsSettingsNotesTransferImportPasswordDe importPassword = _TranslationsSettingsNotesTransferImportPasswordDe._(_root);
+	@override String importSuccess({required Object count}) => '${count} Notizen importiert.';
+	@override String exportSuccess({required Object count}) => '${count} Notizen exportiert.';
+	@override late final _TranslationsSettingsNotesTransferErrorsDe errors = _TranslationsSettingsNotesTransferErrorsDe._(_root);
+}
+
 // Path: veil.setup
 class _TranslationsVeilSetupDe extends TranslationsVeilSetupEn {
 	_TranslationsVeilSetupDe._(TranslationsDe root) : this._root = root, super.internal(root);
@@ -328,6 +347,42 @@ class _TranslationsSettingsAutoLockOptionsDe extends TranslationsSettingsAutoLoc
 	@override String get thirtyMinutes => '30 Minuten';
 }
 
+// Path: settings.notesTransfer.exportPassword
+class _TranslationsSettingsNotesTransferExportPasswordDe extends TranslationsSettingsNotesTransferExportPasswordEn {
+	_TranslationsSettingsNotesTransferExportPasswordDe._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Notizen exportieren';
+	@override String get passwordHint => 'Export-Passwort...';
+	@override String get confirmPasswordHint => 'Export-Passwort bestätigen...';
+}
+
+// Path: settings.notesTransfer.importPassword
+class _TranslationsSettingsNotesTransferImportPasswordDe extends TranslationsSettingsNotesTransferImportPasswordEn {
+	_TranslationsSettingsNotesTransferImportPasswordDe._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Notizen importieren';
+	@override String get hint => 'Datei-Passwort eingeben...';
+}
+
+// Path: settings.notesTransfer.errors
+class _TranslationsSettingsNotesTransferErrorsDe extends TranslationsSettingsNotesTransferErrorsEn {
+	_TranslationsSettingsNotesTransferErrorsDe._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get invalidFileOrPassword => 'Die Datei ist ungültig oder das Passwort ist falsch.';
+	@override String get unsupportedFormatVersion => 'Diese Exportformat-Version wird nicht unterstützt.';
+	@override String get invalidPayload => 'Die Exportdatei enthält ungültige Notizen.';
+	@override String get fileOperationFailed => 'Auf die Datei konnte nicht zugegriffen werden.';
+}
+
 /// The flat map containing all translations for locale <de>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -381,6 +436,21 @@ extension on TranslationsDe {
 			'settings.changePassword.newPasswordHint' => 'Neues Passwort...',
 			'settings.changePassword.confirmPasswordHint' => 'Neues Passwort bestätigen...',
 			'settings.changePassword.success' => 'Passwort erfolgreich geändert.',
+			'settings.notesTransfer.exportTitle' => 'Notizen exportieren',
+			'settings.notesTransfer.exportSubtitle' => 'Eine verschlüsselte Kopie mit einem separaten Passwort speichern.',
+			'settings.notesTransfer.importTitle' => 'Notizen importieren',
+			'settings.notesTransfer.importSubtitle' => 'Notizen aus einer verschlüsselten PGP-Datei wiederherstellen.',
+			'settings.notesTransfer.exportPassword.title' => 'Notizen exportieren',
+			'settings.notesTransfer.exportPassword.passwordHint' => 'Export-Passwort...',
+			'settings.notesTransfer.exportPassword.confirmPasswordHint' => 'Export-Passwort bestätigen...',
+			'settings.notesTransfer.importPassword.title' => 'Notizen importieren',
+			'settings.notesTransfer.importPassword.hint' => 'Datei-Passwort eingeben...',
+			'settings.notesTransfer.importSuccess' => ({required Object count}) => '${count} Notizen importiert.',
+			'settings.notesTransfer.exportSuccess' => ({required Object count}) => '${count} Notizen exportiert.',
+			'settings.notesTransfer.errors.invalidFileOrPassword' => 'Die Datei ist ungültig oder das Passwort ist falsch.',
+			'settings.notesTransfer.errors.unsupportedFormatVersion' => 'Diese Exportformat-Version wird nicht unterstützt.',
+			'settings.notesTransfer.errors.invalidPayload' => 'Die Exportdatei enthält ungültige Notizen.',
+			'settings.notesTransfer.errors.fileOperationFailed' => 'Auf die Datei konnte nicht zugegriffen werden.',
 			'veil.setup.passwordHint' => 'Gib ein Passwort ein, um zu starten...',
 			'veil.setup.cta' => 'Los geht\'s!',
 			'veil.setup.biometricsOptInTitle' => 'Biometrie aktivieren',

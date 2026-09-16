@@ -37,5 +37,28 @@
     "newPasswordHint": "Новый пароль...",
     "confirmPasswordHint": "Подтвердите новый пароль...",
     "success": "Пароль успешно изменён."
+  },
+  "notesTransfer": {
+    "exportTitle": "Экспорт заметок",
+    "exportSubtitle": "Сохраните зашифрованную копию с отдельным паролем.",
+    "importTitle": "Импорт заметок",
+    "importSubtitle": "Восстановите заметки из зашифрованного файла PGP.",
+    "exportPassword": {
+      "title": "Экспорт заметок",
+      "passwordHint": "Пароль экспорта...",
+      "confirmPasswordHint": "Подтвердите пароль экспорта..."
+    },
+    "importPassword": {
+      "title": "Импорт заметок",
+      "hint": "Введите пароль файла..."
+    },
+    "importSuccess": "Импортировано заметок: {{count}}.",
+    "exportSuccess": "Экспортировано заметок: {{count}}.",
+    "errors": {
+      "invalidFileOrPassword": "Файл недействителен или пароль неверен.",
+      "unsupportedFormatVersion": "Эта версия формата экспорта не поддерживается.",
+      "invalidPayload": "Файл экспорта содержит недействительные заметки.",
+      "fileOperationFailed": "Не удалось получить доступ к файлу."
+    }
   }
 }

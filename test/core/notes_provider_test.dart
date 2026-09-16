@@ -3,13 +3,16 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:veil/core/crypto/crypto_service.dart';
 import 'package:veil/core/crypto/domain/crypto_key_pair.dart';
 import 'package:veil/core/crypto/domain/encrypted_data.dart';
+import 'package:veil/core/app_lifecycle_lock_guard.dart';
 import 'package:veil/core/storage/local_file_storage_service.dart';
 import 'package:veil/features/notes/application/notes_service.dart';
 import 'package:veil/features/notes/domain/note.dart';
 import 'package:veil/features/notes/domain/note_file.dart';
 import 'package:veil/features/notes/domain/notes_repository.dart';
 import 'package:veil/features/notes/infra/file_notes_repository.dart';
+import 'package:veil/features/notes/infra/file_picker_notes_file_service.dart';
 import 'package:veil/features/notes/infra/pgp_notes_service.dart';
+import 'package:veil/features/notes/infra/pgp_notes_transfer_service.dart';
 import 'package:veil/features/notes/providers/notes_provider.dart';
 import 'package:veil/features/veil/domain/vault_key_provider.dart';
 import 'package:veil/features/veil/providers/veil_provider.dart';
@@ -53,6 +56,37 @@ void main() {
       final service = container.read(notesServiceProvider);
 
       expect(service, isA<PgpNotesService>());
+    });
+
+    test('notesTransferServiceProvider builds a PgpNotesTransferService', () {
+      final container = ProviderContainer(
+        overrides: [
+          notesServiceProvider.overrideWithValue(_FakeNotesService()),
+          notesRepositoryProvider.overrideWithValue(_FakeNotesRepository()),
+          cryptoServiceProvider.overrideWithValue(_FakeCryptoService()),
+          vaultKeyProviderProvider.overrideWithValue(_FakeVaultKeyProvider()),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      final service = container.read(notesTransferServiceProvider);
+
+      expect(service, isA<PgpNotesTransferService>());
+    });
+
+    test('notesFileServiceProvider builds a FilePickerNotesFileService', () {
+      final container = ProviderContainer(
+        overrides: [
+          appLifecycleLockGuardProvider.overrideWithValue(
+            DefaultAppLifecycleLockGuard(),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      final service = container.read(notesFileServiceProvider);
+
+      expect(service, isA<FilePickerNotesFileService>());
     });
 
     test('noteProvider creates an empty note when id is null', () async {

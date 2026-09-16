@@ -103,6 +103,7 @@ class TranslationsSettingsEn {
 	late final TranslationsSettingsLockEn lock = TranslationsSettingsLockEn.internal(_root);
 	late final TranslationsSettingsConfirmPasswordEn confirmPassword = TranslationsSettingsConfirmPasswordEn.internal(_root);
 	late final TranslationsSettingsChangePasswordEn changePassword = TranslationsSettingsChangePasswordEn.internal(_root);
+	late final TranslationsSettingsNotesTransferEn notesTransfer = TranslationsSettingsNotesTransferEn.internal(_root);
 }
 
 // Path: veil
@@ -333,6 +334,38 @@ class TranslationsSettingsChangePasswordEn {
 	String get success => 'Password changed successfully.';
 }
 
+// Path: settings.notesTransfer
+class TranslationsSettingsNotesTransferEn {
+	TranslationsSettingsNotesTransferEn.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Export notes'
+	String get exportTitle => 'Export notes';
+
+	/// en: 'Save an encrypted copy protected by a separate password.'
+	String get exportSubtitle => 'Save an encrypted copy protected by a separate password.';
+
+	/// en: 'Import notes'
+	String get importTitle => 'Import notes';
+
+	/// en: 'Restore notes from an encrypted PGP file.'
+	String get importSubtitle => 'Restore notes from an encrypted PGP file.';
+
+	late final TranslationsSettingsNotesTransferExportPasswordEn exportPassword = TranslationsSettingsNotesTransferExportPasswordEn.internal(_root);
+	late final TranslationsSettingsNotesTransferImportPasswordEn importPassword = TranslationsSettingsNotesTransferImportPasswordEn.internal(_root);
+
+	/// en: '{{count}} notes imported.'
+	String importSuccess({required Object count}) => '${count} notes imported.';
+
+	/// en: 'Exported {{count}} notes.'
+	String exportSuccess({required Object count}) => 'Exported ${count} notes.';
+
+	late final TranslationsSettingsNotesTransferErrorsEn errors = TranslationsSettingsNotesTransferErrorsEn.internal(_root);
+}
+
 // Path: veil.setup
 class TranslationsVeilSetupEn {
 	TranslationsVeilSetupEn.internal(this._root);
@@ -419,8 +452,8 @@ class TranslationsVeilErrorsEn {
 	/// en: 'Password is required.'
 	String get passwordRequired => 'Password is required.';
 
-	/// en: 'Password must have at least 8 characters.'
-	String get passwordMinLength => 'Password must have at least 8 characters.';
+	/// en: 'Password must have at least 10 characters.'
+	String get passwordMinLength => 'Password must have at least 10 characters.';
 
 	/// en: 'Password must contain at least one letter.'
 	String get passwordMissingLetter => 'Password must contain at least one letter.';
@@ -486,6 +519,60 @@ class TranslationsSettingsAutoLockOptionsEn {
 	String get thirtyMinutes => '30 minutes';
 }
 
+// Path: settings.notesTransfer.exportPassword
+class TranslationsSettingsNotesTransferExportPasswordEn {
+	TranslationsSettingsNotesTransferExportPasswordEn.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Export notes'
+	String get title => 'Export notes';
+
+	/// en: 'Export password...'
+	String get passwordHint => 'Export password...';
+
+	/// en: 'Confirm export password...'
+	String get confirmPasswordHint => 'Confirm export password...';
+}
+
+// Path: settings.notesTransfer.importPassword
+class TranslationsSettingsNotesTransferImportPasswordEn {
+	TranslationsSettingsNotesTransferImportPasswordEn.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Import notes'
+	String get title => 'Import notes';
+
+	/// en: 'Type the file password...'
+	String get hint => 'Type the file password...';
+}
+
+// Path: settings.notesTransfer.errors
+class TranslationsSettingsNotesTransferErrorsEn {
+	TranslationsSettingsNotesTransferErrorsEn.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'The file is invalid or the password is incorrect.'
+	String get invalidFileOrPassword => 'The file is invalid or the password is incorrect.';
+
+	/// en: 'This export format is not supported.'
+	String get unsupportedFormatVersion => 'This export format is not supported.';
+
+	/// en: 'The export file contains invalid notes.'
+	String get invalidPayload => 'The export file contains invalid notes.';
+
+	/// en: 'The file could not be accessed.'
+	String get fileOperationFailed => 'The file could not be accessed.';
+}
+
 /// The flat map containing all translations for locale <en>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -539,6 +626,21 @@ extension on Translations {
 			'settings.changePassword.newPasswordHint' => 'New password...',
 			'settings.changePassword.confirmPasswordHint' => 'Confirm new password...',
 			'settings.changePassword.success' => 'Password changed successfully.',
+			'settings.notesTransfer.exportTitle' => 'Export notes',
+			'settings.notesTransfer.exportSubtitle' => 'Save an encrypted copy protected by a separate password.',
+			'settings.notesTransfer.importTitle' => 'Import notes',
+			'settings.notesTransfer.importSubtitle' => 'Restore notes from an encrypted PGP file.',
+			'settings.notesTransfer.exportPassword.title' => 'Export notes',
+			'settings.notesTransfer.exportPassword.passwordHint' => 'Export password...',
+			'settings.notesTransfer.exportPassword.confirmPasswordHint' => 'Confirm export password...',
+			'settings.notesTransfer.importPassword.title' => 'Import notes',
+			'settings.notesTransfer.importPassword.hint' => 'Type the file password...',
+			'settings.notesTransfer.importSuccess' => ({required Object count}) => '${count} notes imported.',
+			'settings.notesTransfer.exportSuccess' => ({required Object count}) => 'Exported ${count} notes.',
+			'settings.notesTransfer.errors.invalidFileOrPassword' => 'The file is invalid or the password is incorrect.',
+			'settings.notesTransfer.errors.unsupportedFormatVersion' => 'This export format is not supported.',
+			'settings.notesTransfer.errors.invalidPayload' => 'The export file contains invalid notes.',
+			'settings.notesTransfer.errors.fileOperationFailed' => 'The file could not be accessed.',
 			'veil.setup.passwordHint' => 'Type a password to start...',
 			'veil.setup.cta' => 'Let\'s start!',
 			'veil.setup.biometricsOptInTitle' => 'Enable biometrics',
@@ -556,7 +658,7 @@ extension on Translations {
 			'veil.unlock.biometricTooltip' => 'Biometrics',
 			'veil.splash.loading' => 'Loading...',
 			'veil.errors.passwordRequired' => 'Password is required.',
-			'veil.errors.passwordMinLength' => 'Password must have at least 8 characters.',
+			'veil.errors.passwordMinLength' => 'Password must have at least 10 characters.',
 			'veil.errors.passwordMissingLetter' => 'Password must contain at least one letter.',
 			'veil.errors.passwordMissingNumber' => 'Password must contain at least one number.',
 			'veil.errors.invalidPassword' => 'Invalid password.',

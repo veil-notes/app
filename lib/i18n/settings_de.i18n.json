@@ -37,5 +37,28 @@
     "newPasswordHint": "Neues Passwort...",
     "confirmPasswordHint": "Neues Passwort bestätigen...",
     "success": "Passwort erfolgreich geändert."
+  },
+  "notesTransfer": {
+    "exportTitle": "Notizen exportieren",
+    "exportSubtitle": "Eine verschlüsselte Kopie mit einem separaten Passwort speichern.",
+    "importTitle": "Notizen importieren",
+    "importSubtitle": "Notizen aus einer verschlüsselten PGP-Datei wiederherstellen.",
+    "exportPassword": {
+      "title": "Notizen exportieren",
+      "passwordHint": "Export-Passwort...",
+      "confirmPasswordHint": "Export-Passwort bestätigen..."
+    },
+    "importPassword": {
+      "title": "Notizen importieren",
+      "hint": "Datei-Passwort eingeben..."
+    },
+    "importSuccess": "{{count}} Notizen importiert.",
+    "exportSuccess": "{{count}} Notizen exportiert.",
+    "errors": {
+      "invalidFileOrPassword": "Die Datei ist ungültig oder das Passwort ist falsch.",
+      "unsupportedFormatVersion": "Diese Exportformat-Version wird nicht unterstützt.",
+      "invalidPayload": "Die Exportdatei enthält ungültige Notizen.",
+      "fileOperationFailed": "Auf die Datei konnte nicht zugegriffen werden."
+    }
   }
 }

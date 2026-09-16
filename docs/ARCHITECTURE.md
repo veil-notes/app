@@ -17,7 +17,6 @@ Veil is currently an Android-first encrypted notes app with:
 Not implemented today:
 
 - cloud sync
-- in-app import/export flow
 - password recovery
 
 ## Stack
@@ -92,6 +91,7 @@ Key runtime responsibilities:
 - watches app lifecycle
 - locks the vault when the app is backgrounded
 - does not force-lock while a biometric prompt is in progress
+- does not force-lock while the native note file picker is active
 - refreshes the auto-lock timer on pointer interaction
 - wires `MaterialApp.router`
 
@@ -147,6 +147,7 @@ Important files:
 Main responsibility:
 
 - encrypted note CRUD
+- encrypted note export/import
 - markdown editor model
 - note list and note editor UI
 
@@ -289,6 +290,30 @@ Current note storage shape:
 
 On Android, notes are written inside the app-private documents directory, not shared storage. They are normally not visible in the default file manager.
 
+### Note Export and Import
+
+The notes transfer service exports all decrypted notes into a versioned JSON envelope:
+
+```json
+{
+  "formatVersion": 1,
+  "notes": [
+    {
+      "id": "<id>",
+      "content": "<markdown>",
+      "createdAt": "<iso-8601>",
+      "updatedAt": "<iso-8601>"
+    }
+  ]
+}
+```
+
+The envelope is encrypted with OpenPGP symmetric encryption using a password supplied for that export. The password is never stored by Veil. The encrypted ASCII-armored payload is saved as `veil-notes-export.pgp` through the native file picker.
+
+During import, the file password is supplied by the user, the complete envelope is validated before any note is written, and each imported note is re-encrypted with the current vault public key. Existing or repeated note IDs receive new UUIDs; local notes are never overwritten. Persistence failures roll back the files created by the import.
+
+The native picker runs in an external Android Activity and may temporarily report the Veil as paused or detached. `AppLifecycleLockGuard` suppresses only the lifecycle-triggered lock while `pickFile` or `saveFile` is awaiting its native result. The auto-lock timer is not suspended. The guard is released in all completion, cancellation, and error paths; if the Veil locks by timeout while the picker is open, the transfer does not continue with a locked vault.
+
 ## Secure Storage Keys
 
 Current sensitive keys written through secure storage:
@@ -427,7 +452,6 @@ Community and contribution policies are documented in:
 - Android is the only real target for now
 - note files are private to the app sandbox
 - there is no sync subsystem
-- there is no import/export workflow yet
 - cryptography has not been externally audited
 
 ## Recommended Onboarding Order

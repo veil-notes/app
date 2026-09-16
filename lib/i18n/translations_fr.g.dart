@@ -94,6 +94,7 @@ class _TranslationsSettingsFr extends TranslationsSettingsEn {
 	@override late final _TranslationsSettingsLockFr lock = _TranslationsSettingsLockFr._(_root);
 	@override late final _TranslationsSettingsConfirmPasswordFr confirmPassword = _TranslationsSettingsConfirmPasswordFr._(_root);
 	@override late final _TranslationsSettingsChangePasswordFr changePassword = _TranslationsSettingsChangePasswordFr._(_root);
+	@override late final _TranslationsSettingsNotesTransferFr notesTransfer = _TranslationsSettingsNotesTransferFr._(_root);
 }
 
 // Path: veil
@@ -247,6 +248,24 @@ class _TranslationsSettingsChangePasswordFr extends TranslationsSettingsChangePa
 	@override String get success => 'Mot de passe modifié avec succès.';
 }
 
+// Path: settings.notesTransfer
+class _TranslationsSettingsNotesTransferFr extends TranslationsSettingsNotesTransferEn {
+	_TranslationsSettingsNotesTransferFr._(TranslationsFr root) : this._root = root, super.internal(root);
+
+	final TranslationsFr _root; // ignore: unused_field
+
+	// Translations
+	@override String get exportTitle => 'Exporter les notes';
+	@override String get exportSubtitle => 'Enregistrez une copie chiffrée protégée par un mot de passe distinct.';
+	@override String get importTitle => 'Importer les notes';
+	@override String get importSubtitle => 'Restaurez les notes depuis un fichier PGP chiffré.';
+	@override late final _TranslationsSettingsNotesTransferExportPasswordFr exportPassword = _TranslationsSettingsNotesTransferExportPasswordFr._(_root);
+	@override late final _TranslationsSettingsNotesTransferImportPasswordFr importPassword = _TranslationsSettingsNotesTransferImportPasswordFr._(_root);
+	@override String importSuccess({required Object count}) => '${count} notes importées.';
+	@override String exportSuccess({required Object count}) => '${count} notes exportées.';
+	@override late final _TranslationsSettingsNotesTransferErrorsFr errors = _TranslationsSettingsNotesTransferErrorsFr._(_root);
+}
+
 // Path: veil.setup
 class _TranslationsVeilSetupFr extends TranslationsVeilSetupEn {
 	_TranslationsVeilSetupFr._(TranslationsFr root) : this._root = root, super.internal(root);
@@ -328,6 +347,42 @@ class _TranslationsSettingsAutoLockOptionsFr extends TranslationsSettingsAutoLoc
 	@override String get thirtyMinutes => '30 minutes';
 }
 
+// Path: settings.notesTransfer.exportPassword
+class _TranslationsSettingsNotesTransferExportPasswordFr extends TranslationsSettingsNotesTransferExportPasswordEn {
+	_TranslationsSettingsNotesTransferExportPasswordFr._(TranslationsFr root) : this._root = root, super.internal(root);
+
+	final TranslationsFr _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Exporter les notes';
+	@override String get passwordHint => 'Mot de passe d’exportation...';
+	@override String get confirmPasswordHint => 'Confirmez le mot de passe d’exportation...';
+}
+
+// Path: settings.notesTransfer.importPassword
+class _TranslationsSettingsNotesTransferImportPasswordFr extends TranslationsSettingsNotesTransferImportPasswordEn {
+	_TranslationsSettingsNotesTransferImportPasswordFr._(TranslationsFr root) : this._root = root, super.internal(root);
+
+	final TranslationsFr _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Importer les notes';
+	@override String get hint => 'Saisissez le mot de passe du fichier...';
+}
+
+// Path: settings.notesTransfer.errors
+class _TranslationsSettingsNotesTransferErrorsFr extends TranslationsSettingsNotesTransferErrorsEn {
+	_TranslationsSettingsNotesTransferErrorsFr._(TranslationsFr root) : this._root = root, super.internal(root);
+
+	final TranslationsFr _root; // ignore: unused_field
+
+	// Translations
+	@override String get invalidFileOrPassword => 'Le fichier est invalide ou le mot de passe est incorrect.';
+	@override String get unsupportedFormatVersion => 'Cette version du format d’exportation n’est pas prise en charge.';
+	@override String get invalidPayload => 'Le fichier d’exportation contient des notes invalides.';
+	@override String get fileOperationFailed => 'Impossible d’accéder au fichier.';
+}
+
 /// The flat map containing all translations for locale <fr>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -381,6 +436,21 @@ extension on TranslationsFr {
 			'settings.changePassword.newPasswordHint' => 'Nouveau mot de passe...',
 			'settings.changePassword.confirmPasswordHint' => 'Confirmez le nouveau mot de passe...',
 			'settings.changePassword.success' => 'Mot de passe modifié avec succès.',
+			'settings.notesTransfer.exportTitle' => 'Exporter les notes',
+			'settings.notesTransfer.exportSubtitle' => 'Enregistrez une copie chiffrée protégée par un mot de passe distinct.',
+			'settings.notesTransfer.importTitle' => 'Importer les notes',
+			'settings.notesTransfer.importSubtitle' => 'Restaurez les notes depuis un fichier PGP chiffré.',
+			'settings.notesTransfer.exportPassword.title' => 'Exporter les notes',
+			'settings.notesTransfer.exportPassword.passwordHint' => 'Mot de passe d’exportation...',
+			'settings.notesTransfer.exportPassword.confirmPasswordHint' => 'Confirmez le mot de passe d’exportation...',
+			'settings.notesTransfer.importPassword.title' => 'Importer les notes',
+			'settings.notesTransfer.importPassword.hint' => 'Saisissez le mot de passe du fichier...',
+			'settings.notesTransfer.importSuccess' => ({required Object count}) => '${count} notes importées.',
+			'settings.notesTransfer.exportSuccess' => ({required Object count}) => '${count} notes exportées.',
+			'settings.notesTransfer.errors.invalidFileOrPassword' => 'Le fichier est invalide ou le mot de passe est incorrect.',
+			'settings.notesTransfer.errors.unsupportedFormatVersion' => 'Cette version du format d’exportation n’est pas prise en charge.',
+			'settings.notesTransfer.errors.invalidPayload' => 'Le fichier d’exportation contient des notes invalides.',
+			'settings.notesTransfer.errors.fileOperationFailed' => 'Impossible d’accéder au fichier.',
 			'veil.setup.passwordHint' => 'Saisissez un mot de passe pour commencer...',
 			'veil.setup.cta' => 'C\'est parti !',
 			'veil.setup.biometricsOptInTitle' => 'Activer la biométrie',

@@ -4,9 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../app/app_error_mapper.dart';
 import '../../../../app/locale/app_locale_provider.dart';
 import '../../../../i18n/translations.g.dart';
+import '../../../notes/providers/notes_provider.dart';
 import '../../../veil/application/veil_service.dart';
 import '../../../veil/domain/biometrics/biometric_auth_exception.dart';
+import '../../../veil/domain/password/default_password_validator.dart';
 import '../../../veil/domain/session/auto_lock_option.dart';
+import '../../../veil/domain/states/unlocked_state.dart';
+import '../../../veil/domain/veil_exception.dart';
 import '../../../veil/providers/veil_provider.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
@@ -57,82 +61,101 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
         ),
       ),
-      body: Padding(
+      body: ListView(
         padding: EdgeInsets.fromLTRB(8, topInset, 8, 8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildBiometricTile(
-              context: context,
-              veilService: veilService,
-              biometricEnabledAsync: biometricEnabledAsync,
-              canUseBiometricsAsync: canUseBiometricsAsync,
+        children: [
+          _buildBiometricTile(
+            context: context,
+            veilService: veilService,
+            biometricEnabledAsync: biometricEnabledAsync,
+            canUseBiometricsAsync: canUseBiometricsAsync,
+          ),
+          ListTile(
+            title: Text(
+              t.settings.changePassword.title,
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            ListTile(
-              title: Text(
-                t.settings.changePassword.title,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              subtitle: Text(
-                t.settings.changePassword.subtitle,
-                style: const TextStyle(fontSize: 12),
-              ),
-              onTap: _isLoading ? null : _changePassword,
+            subtitle: Text(
+              t.settings.changePassword.subtitle,
+              style: const TextStyle(fontSize: 12),
             ),
-            autoLockOptionAsync.when(
-              data: (option) {
-                return ListTile(
-                  title: Text(
-                    t.settings.autoLock.title,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text(
-                    t.settings.autoLock.subtitle(
-                      duration: _autoLockLabel(t, option),
-                    ),
-                    style: const TextStyle(fontSize: 12),
-                  ),
-                  onTap: _isLoading ? null : _selectAutoLockOption,
-                );
-              },
-              loading: () => ListTile(
-                title: Text(t.settings.autoLock.title),
-                subtitle: Text(t.common.loading),
-              ),
-              error: (_, _) => ListTile(
-                leading: const Icon(Icons.timer_outlined),
-                title: Text(t.settings.autoLock.title),
-                subtitle: Text(t.common.errors.loadFailed),
-              ),
+            onTap: _isLoading ? null : _changePassword,
+          ),
+          ListTile(
+            title: Text(
+              t.settings.notesTransfer.exportTitle,
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            ListTile(
-              title: Text(
-                t.settings.language.title,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              subtitle: Text(
-                t.settings.language.subtitle(
-                  language: _languageLabel(t, currentLocale),
+            subtitle: Text(
+              t.settings.notesTransfer.exportSubtitle,
+              style: const TextStyle(fontSize: 12),
+            ),
+            onTap: _isLoading ? null : _exportNotes,
+          ),
+          ListTile(
+            title: Text(
+              t.settings.notesTransfer.importTitle,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            subtitle: Text(
+              t.settings.notesTransfer.importSubtitle,
+              style: const TextStyle(fontSize: 12),
+            ),
+            onTap: _isLoading ? null : _importNotes,
+          ),
+          autoLockOptionAsync.when(
+            data: (option) {
+              return ListTile(
+                title: Text(
+                  t.settings.autoLock.title,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
-                style: const TextStyle(fontSize: 12),
-              ),
-              onTap: _isLoading ? null : _selectLanguage,
+                subtitle: Text(
+                  t.settings.autoLock.subtitle(
+                    duration: _autoLockLabel(t, option),
+                  ),
+                  style: const TextStyle(fontSize: 12),
+                ),
+                onTap: _isLoading ? null : _selectAutoLockOption,
+              );
+            },
+            loading: () => ListTile(
+              title: Text(t.settings.autoLock.title),
+              subtitle: Text(t.common.loading),
             ),
-            ListTile(
-              title: Text(
-                t.settings.lock.title,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              subtitle: Text(
-                t.settings.lock.subtitle,
-                style: const TextStyle(fontSize: 12),
-              ),
-              onTap: () {
-                ref.read(veilControllerProvider.notifier).lock();
-              },
+            error: (_, _) => ListTile(
+              leading: const Icon(Icons.timer_outlined),
+              title: Text(t.settings.autoLock.title),
+              subtitle: Text(t.common.errors.loadFailed),
             ),
-          ],
-        ),
+          ),
+          ListTile(
+            title: Text(
+              t.settings.language.title,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            subtitle: Text(
+              t.settings.language.subtitle(
+                language: _languageLabel(t, currentLocale),
+              ),
+              style: const TextStyle(fontSize: 12),
+            ),
+            onTap: _isLoading ? null : _selectLanguage,
+          ),
+          ListTile(
+            title: Text(
+              t.settings.lock.title,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            subtitle: Text(
+              t.settings.lock.subtitle,
+              style: const TextStyle(fontSize: 12),
+            ),
+            onTap: () {
+              ref.read(veilControllerProvider.notifier).lock();
+            },
+          ),
+        ],
       ),
     );
   }
@@ -313,6 +336,99 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         setState(() => _isLoading = false);
       }
     }
+  }
+
+  Future<void> _exportNotes() async {
+    final password = await _showExportPasswordSheet();
+
+    if (password == null || !mounted) {
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      final transferService = ref.read(notesTransferServiceProvider);
+      final fileService = ref.read(notesFileServiceProvider);
+      final export = await transferService.exportNotes(password);
+      final saved = await fileService.saveExportFile(export.encryptedPayload);
+
+      if (!_refreshSessionAfterFilePicker()) {
+        return;
+      }
+
+      if (saved && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              context.t.settings.notesTransfer.exportSuccess(
+                count: export.noteCount,
+              ),
+            ),
+          ),
+        );
+      }
+    } catch (error) {
+      _showError(error);
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  Future<void> _importNotes() async {
+    setState(() => _isLoading = true);
+
+    try {
+      final fileService = ref.read(notesFileServiceProvider);
+      final encryptedPayload = await fileService.pickImportFile();
+
+      if (!mounted || !_refreshSessionAfterFilePicker()) {
+        return;
+      }
+
+      if (encryptedPayload == null) {
+        return;
+      }
+
+      final password = await _showImportPasswordSheet();
+      if (password == null || !mounted) {
+        return;
+      }
+
+      final result = await ref
+          .read(notesTransferServiceProvider)
+          .importNotes(encryptedPayload: encryptedPayload, password: password);
+      ref.invalidate(notesListProvider);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              context.t.settings.notesTransfer.importSuccess(
+                count: result.importedCount,
+              ),
+            ),
+          ),
+        );
+      }
+    } catch (error) {
+      _showError(error);
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  bool _refreshSessionAfterFilePicker() {
+    if (!mounted || ref.read(veilControllerProvider) is! UnlockedState) {
+      return false;
+    }
+
+    ref.read(veilSessionControllerProvider).refresh();
+    return true;
   }
 
   Future<void> _selectAutoLockOption() async {
@@ -496,6 +612,46 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
+  Future<String?> _showExportPasswordSheet() {
+    return showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: const Color(0xFF171336),
+      barrierColor: Colors.black.withValues(alpha: 0.45),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.viewInsetsOf(context).bottom,
+          ),
+          child: _ExportPasswordSheet(t: context.t),
+        );
+      },
+    );
+  }
+
+  Future<String?> _showImportPasswordSheet() {
+    return showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: const Color(0xFF171336),
+      barrierColor: Colors.black.withValues(alpha: 0.45),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.viewInsetsOf(context).bottom,
+          ),
+          child: _ImportPasswordSheet(t: context.t),
+        );
+      },
+    );
+  }
+
   Future<_ChangePasswordInput?> _showChangePasswordSheet() {
     return showModalBottomSheet<_ChangePasswordInput>(
       context: context,
@@ -668,8 +824,7 @@ class _ChangePasswordSheetState extends State<_ChangePasswordSheet> {
               controller: _confirmationController,
               obscureText: true,
               decoration: InputDecoration(
-                hintText:
-                    widget.t.settings.changePassword.confirmPasswordHint,
+                hintText: widget.t.settings.changePassword.confirmPasswordHint,
                 errorText: _validationMessage,
               ),
               onSubmitted: (_) => _submit(),
@@ -738,6 +893,267 @@ class _ConfirmPasswordSheet extends StatefulWidget {
   State<_ConfirmPasswordSheet> createState() => _ConfirmPasswordSheetState();
 }
 
+class _ExportPasswordSheet extends StatefulWidget {
+  final Translations t;
+
+  const _ExportPasswordSheet({required this.t});
+
+  @override
+  State<_ExportPasswordSheet> createState() => _ExportPasswordSheetState();
+}
+
+class _ExportPasswordSheetState extends State<_ExportPasswordSheet> {
+  static final _passwordValidator = DefaultPasswordValidator();
+
+  final _passwordController = TextEditingController();
+  final _confirmationController = TextEditingController();
+  String? _validationMessage;
+
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    _confirmationController.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    if (_passwordController.text != _confirmationController.text) {
+      setState(() {
+        _validationMessage = widget.t.veil.setup.passwordsDoNotMatch;
+      });
+      return;
+    }
+
+    final validation = _passwordValidator.validate(_passwordController.text);
+    final error = validation.error;
+    if (!validation.isValid && error != null) {
+      setState(() {
+        _validationMessage = AppErrorMapper().map(
+          widget.t,
+          VeilException.passwordValidation(error),
+        );
+      });
+      return;
+    }
+
+    Navigator.of(context).pop(_passwordController.text);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return SafeArea(
+      top: false,
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                width: 50,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: colorScheme.onPrimary,
+                  borderRadius: BorderRadius.circular(999),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Center(
+              child: Text(
+                widget.t.settings.notesTransfer.exportPassword.title,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: colorScheme.onSurface,
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _passwordController,
+              obscureText: true,
+              autofocus: true,
+              decoration: InputDecoration(
+                hintText:
+                    widget.t.settings.notesTransfer.exportPassword.passwordHint,
+                errorText: _validationMessage,
+              ),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _confirmationController,
+              obscureText: true,
+              decoration: InputDecoration(
+                hintText: widget
+                    .t
+                    .settings
+                    .notesTransfer
+                    .exportPassword
+                    .confirmPasswordHint,
+              ),
+              onSubmitted: (_) => _submit(),
+            ),
+            const SizedBox(height: 16),
+            _SheetActionButtons(
+              t: widget.t,
+              onConfirm: _submit,
+              onCancel: () => Navigator.of(context).pop(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ImportPasswordSheet extends StatefulWidget {
+  final Translations t;
+
+  const _ImportPasswordSheet({required this.t});
+
+  @override
+  State<_ImportPasswordSheet> createState() => _ImportPasswordSheetState();
+}
+
+class _ImportPasswordSheetState extends State<_ImportPasswordSheet> {
+  final _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return SafeArea(
+      top: false,
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                width: 50,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: colorScheme.onPrimary,
+                  borderRadius: BorderRadius.circular(999),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Center(
+              child: Text(
+                widget.t.settings.notesTransfer.importPassword.title,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: colorScheme.onSurface,
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _passwordController,
+              obscureText: true,
+              autofocus: true,
+              decoration: InputDecoration(
+                hintText: widget.t.settings.notesTransfer.importPassword.hint,
+              ),
+              onSubmitted: (_) =>
+                  Navigator.of(context).pop(_passwordController.text),
+            ),
+            const SizedBox(height: 16),
+            _SheetActionButtons(
+              t: widget.t,
+              onConfirm: () =>
+                  Navigator.of(context).pop(_passwordController.text),
+              onCancel: () => Navigator.of(context).pop(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SheetActionButtons extends StatelessWidget {
+  final Translations t;
+  final VoidCallback onConfirm;
+  final VoidCallback onCancel;
+
+  const _SheetActionButtons({
+    required this.t,
+    required this.onConfirm,
+    required this.onCancel,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Column(
+      children: [
+        Divider(
+          height: 1,
+          color: colorScheme.onSurface.withValues(alpha: 0.05),
+        ),
+        const SizedBox(height: 8),
+        SizedBox(
+          width: double.infinity,
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: onConfirm,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(
+                  t.common.actions.confirm,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyLarge?.copyWith(color: colorScheme.onSurface),
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Divider(
+          height: 1,
+          color: colorScheme.onSurface.withValues(alpha: 0.05),
+        ),
+        const SizedBox(height: 8),
+        SizedBox(
+          width: double.infinity,
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: onCancel,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(
+                  t.common.actions.cancel,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyLarge?.copyWith(color: colorScheme.onSurface),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class _ConfirmPasswordSheetState extends State<_ConfirmPasswordSheet> {
   final TextEditingController _passwordController = TextEditingController();
 
@@ -788,19 +1204,22 @@ class _ConfirmPasswordSheetState extends State<_ConfirmPasswordSheet> {
               decoration: InputDecoration(
                 hintText: widget.t.settings.confirmPassword.hint,
               ),
-              onSubmitted: (_) => Navigator.of(
-                context,
-              ).pop(_passwordController.text),
+              onSubmitted: (_) =>
+                  Navigator.of(context).pop(_passwordController.text),
             ),
             const SizedBox(height: 16),
-            Divider(height: 1, color: colorScheme.onSurface.withValues(alpha: 0.05)),
+            Divider(
+              height: 1,
+              color: colorScheme.onSurface.withValues(alpha: 0.05),
+            ),
             const SizedBox(height: 8),
             SizedBox(
               width: double.infinity,
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  onTap: () => Navigator.of(context).pop(_passwordController.text),
+                  onTap: () =>
+                      Navigator.of(context).pop(_passwordController.text),
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Text(
@@ -814,7 +1233,10 @@ class _ConfirmPasswordSheetState extends State<_ConfirmPasswordSheet> {
               ),
             ),
             const SizedBox(height: 8),
-            Divider(height: 1, color: colorScheme.onSurface.withValues(alpha: 0.05)),
+            Divider(
+              height: 1,
+              color: colorScheme.onSurface.withValues(alpha: 0.05),
+            ),
             const SizedBox(height: 8),
             SizedBox(
               width: double.infinity,

@@ -259,6 +259,7 @@ class _TranslationsSettingsNotesTransferPtBr extends TranslationsSettingsNotesTr
 	@override String get exportSubtitle => 'Salvar uma cópia criptografada protegida por uma senha separada.';
 	@override String get importTitle => 'Importar notas';
 	@override String get importSubtitle => 'Restaurar notas de um arquivo PGP criptografado.';
+	@override late final _TranslationsSettingsNotesTransferFilePickerPtBr filePicker = _TranslationsSettingsNotesTransferFilePickerPtBr._(_root);
 	@override late final _TranslationsSettingsNotesTransferExportPasswordPtBr exportPassword = _TranslationsSettingsNotesTransferExportPasswordPtBr._(_root);
 	@override late final _TranslationsSettingsNotesTransferImportPasswordPtBr importPassword = _TranslationsSettingsNotesTransferImportPasswordPtBr._(_root);
 	@override String importSuccess({required Object count}) => '${count} notas importadas.';
@@ -345,6 +346,18 @@ class _TranslationsSettingsAutoLockOptionsPtBr extends TranslationsSettingsAutoL
 	@override String get fiveMinutes => '5 minutos';
 	@override String get fifteenMinutes => '15 minutos';
 	@override String get thirtyMinutes => '30 minutos';
+}
+
+// Path: settings.notesTransfer.filePicker
+class _TranslationsSettingsNotesTransferFilePickerPtBr extends TranslationsSettingsNotesTransferFilePickerEn {
+	_TranslationsSettingsNotesTransferFilePickerPtBr._(TranslationsPtBr root) : this._root = root, super.internal(root);
+
+	final TranslationsPtBr _root; // ignore: unused_field
+
+	// Translations
+	@override String get selectTitle => 'Selecione um arquivo para importar';
+	@override String get selectSubtitle => 'Escolha um arquivo PGP criptografado para importar.';
+	@override String get changeSubtitle => 'Toque para selecionar outro arquivo.';
 }
 
 // Path: settings.notesTransfer.exportPassword
@@ -440,6 +453,9 @@ extension on TranslationsPtBr {
 			'settings.notesTransfer.exportSubtitle' => 'Salvar uma cópia criptografada protegida por uma senha separada.',
 			'settings.notesTransfer.importTitle' => 'Importar notas',
 			'settings.notesTransfer.importSubtitle' => 'Restaurar notas de um arquivo PGP criptografado.',
+			'settings.notesTransfer.filePicker.selectTitle' => 'Selecione um arquivo para importar',
+			'settings.notesTransfer.filePicker.selectSubtitle' => 'Escolha um arquivo PGP criptografado para importar.',
+			'settings.notesTransfer.filePicker.changeSubtitle' => 'Toque para selecionar outro arquivo.',
 			'settings.notesTransfer.exportPassword.title' => 'Exportar notas',
 			'settings.notesTransfer.exportPassword.passwordHint' => 'Senha da exportação...',
 			'settings.notesTransfer.exportPassword.confirmPasswordHint' => 'Confirme a senha da exportação...',

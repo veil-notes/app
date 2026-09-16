@@ -93,6 +93,35 @@ void main() {
       expect(harness.router.state.matchedLocation, '/settings');
     });
 
+    testWidgets('does not restore a settings feature after auto-lock', (
+      tester,
+    ) async {
+      final harness = _RouterHarness(
+        state: (service) => UnlockedState(service),
+      );
+      addTearDown(harness.dispose);
+
+      await tester.pumpWidget(harness.build());
+      await _pumpRouter(tester);
+
+      harness.router.go('/settings/change-password');
+      await _pumpRouter(tester);
+      expect(harness.router.state.matchedLocation, '/settings/change-password');
+
+      harness.controller.setVeilState(LockedState(harness.service));
+      await _pumpRouter(tester);
+      expect(harness.router.state.matchedLocation, '/unlock');
+      expect(
+        harness.router.state.uri.queryParameters['from'],
+        '/settings/change-password',
+      );
+
+      harness.controller.setVeilState(UnlockedState(harness.service));
+      await _pumpRouter(tester);
+
+      expect(harness.router.state.matchedLocation, '/settings');
+    });
+
     testWidgets('builds the note route with an id parameter', (tester) async {
       final harness = _RouterHarness(
         state: (service) => UnlockedState(service),
@@ -255,7 +284,10 @@ class _FakeVeilService implements VeilService {
   Future<void> create(String password) async {}
 
   @override
-  Future<void> changePassword(String currentPassword, String newPassword) async {}
+  Future<void> changePassword(
+    String currentPassword,
+    String newPassword,
+  ) async {}
 
   @override
   Future<void> disableBiometricUnlock() async {}

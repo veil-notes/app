@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:veil/app/locale/app_locale_provider.dart';
 import 'package:veil/app/locale/app_locale_service.dart';
 import 'package:veil/app/app_theme.dart';
 import 'package:veil/core/storage/secure_storage_service.dart';
 import 'package:veil/features/notes/application/notes_file_service.dart';
 import 'package:veil/features/notes/application/notes_transfer_service.dart';
+import 'package:veil/features/notes/domain/notes_import_file.dart';
 import 'package:veil/features/notes/domain/notes_transfer_result.dart';
 import 'package:veil/features/notes/providers/notes_provider.dart';
 import 'package:veil/features/veil/application/veil_controller.dart';
+import 'package:veil/features/settings/presentation/screens/change_password_screen.dart';
+import 'package:veil/features/settings/presentation/screens/export_notes_screen.dart';
+import 'package:veil/features/settings/presentation/screens/import_file_selector.dart';
+import 'package:veil/features/settings/presentation/screens/import_notes_screen.dart';
 import 'package:veil/features/settings/presentation/screens/settings_screen.dart';
+import 'package:veil/features/settings/presentation/screens/settings_feature_scaffold.dart';
 import 'package:veil/features/veil/application/veil_service.dart';
 import 'package:veil/features/veil/application/veil_session_controller.dart';
 import 'package:veil/features/veil/domain/biometrics/biometric_auth_exception.dart';
@@ -35,6 +42,25 @@ void main() {
     NotesTransferService? notesTransferService,
     NotesFileService? notesFileService,
   }) {
+    final router = GoRouter(
+      initialLocation: '/settings',
+      routes: [
+        GoRoute(path: '/settings', builder: (_, _) => const SettingsScreen()),
+        GoRoute(
+          path: '/settings/change-password',
+          builder: (_, _) => const ChangePasswordScreen(),
+        ),
+        GoRoute(
+          path: '/settings/export-notes',
+          builder: (_, _) => const ExportNotesScreen(),
+        ),
+        GoRoute(
+          path: '/settings/import-notes',
+          builder: (_, _) => const ImportNotesScreen(),
+        ),
+      ],
+    );
+
     return ProviderScope(
       overrides: [
         veilServiceProvider.overrideWithValue(service),
@@ -72,10 +98,10 @@ void main() {
         if (notesFileService != null)
           notesFileServiceProvider.overrideWithValue(notesFileService),
       ],
-      child: buildLocalizedApp(
+      child: buildLocalizedRouterApp(
         theme: AppTheme.darkTheme,
         locale: initialLocale,
-        home: const SettingsScreen(),
+        routerConfig: router,
       ),
     );
   }
@@ -118,6 +144,104 @@ void main() {
       );
     });
 
+    testWidgets(
+      'opens each feature as a dedicated screen with back navigation',
+      (tester) async {
+        final service = _FakeVeilService(
+          biometricEnabled: false,
+          canUseBiometrics: false,
+          autoLockOption: AutoLockOption.fiveMinutes,
+        );
+
+        await tester.pumpWidget(
+          wrap(
+            service: service,
+            notesFileService: _FakeNotesFileService(importPayload: 'payload'),
+          ),
+        );
+        await tester.pump();
+        await tester.pump();
+
+        await tester.tap(find.text('Change password'));
+        await tester.pumpAndSettle();
+        expect(find.byType(ChangePasswordScreen), findsOneWidget);
+        expect(find.byType(BottomSheet), findsNothing);
+        _expectFeatureTitleBelowBackButton(tester, 'Change vault password');
+
+        await tester.tap(find.byType(BackButton));
+        await tester.pumpAndSettle();
+        expect(find.byType(SettingsScreen), findsOneWidget);
+
+        await tester.tap(find.text('Export notes'));
+        await tester.pumpAndSettle();
+        expect(find.byType(ExportNotesScreen), findsOneWidget);
+        expect(find.byType(BottomSheet), findsNothing);
+        _expectFeatureTitleBelowBackButton(tester, 'Export notes');
+
+        await tester.tap(find.byType(BackButton));
+        await tester.pumpAndSettle();
+        expect(find.byType(SettingsScreen), findsOneWidget);
+
+        await tester.tap(find.text('Import notes'));
+        await tester.pumpAndSettle();
+        expect(find.byType(ImportNotesScreen), findsOneWidget);
+        expect(find.byType(ImportFileSelector), findsOneWidget);
+        expect(find.byType(BottomSheet), findsNothing);
+        _expectFeatureTitleBelowBackButton(tester, 'Import notes');
+
+        await tester.binding.handlePopRoute();
+        await tester.pumpAndSettle();
+        expect(find.byType(SettingsScreen), findsOneWidget);
+      },
+    );
+
+    testWidgets('keeps feature actions reachable in a reduced viewport', (
+      tester,
+    ) async {
+      final service = _FakeVeilService(
+        biometricEnabled: false,
+        canUseBiometrics: false,
+        autoLockOption: AutoLockOption.fiveMinutes,
+      );
+
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      await tester.pumpWidget(wrap(service: service));
+      await tester.pump();
+      await tester.pump();
+      await tester.tap(find.text('Change password'));
+      await tester.pumpAndSettle();
+
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(800, 400);
+      await tester.pump();
+
+      final lastField = find.byType(TextField).at(2);
+      await tester.ensureVisible(lastField);
+      await tester.tap(lastField);
+      await tester.pump();
+
+      final actions = find.byType(SettingsFeatureActionButtons);
+      final featureList = find.descendant(
+        of: find.byType(SettingsFeatureScaffold),
+        matching: find.byType(ListView),
+      );
+      final featureScrollable = find
+          .descendant(of: featureList, matching: find.byType(Scrollable))
+          .first;
+      expect(featureScrollable, findsOneWidget);
+      await tester.drag(featureList, const Offset(0, -260));
+      await tester.pump();
+
+      final screenHeight =
+          tester.view.physicalSize.height / tester.view.devicePixelRatio;
+      expect(tester.getRect(actions).bottom, lessThanOrEqualTo(screenHeight));
+      expect(tester.takeException(), isNull);
+    });
+
     testWidgets('exports notes with a separate password', (tester) async {
       final service = _FakeVeilService(
         biometricEnabled: false,
@@ -153,6 +277,8 @@ void main() {
       expect(transferService.exportPassword, 'ExportPass1!');
       expect(fileService.savedPayload, 'pgp-payload');
       expect(find.text('Exported 2 notes.'), findsOneWidget);
+      expect(find.byType(SettingsScreen), findsOneWidget);
+      expect(find.byType(ExportNotesScreen), findsNothing);
     });
 
     testWidgets('shows export password validation inline', (tester) async {
@@ -232,7 +358,10 @@ void main() {
           conflictCount: 1,
         ),
       );
-      final fileService = _FakeNotesFileService(importPayload: 'pgp-payload');
+      final fileService = _FakeNotesFileService(
+        importPayload: 'pgp-payload',
+        importFileName: 'notes.pgp',
+      );
 
       await tester.pumpWidget(
         wrap(
@@ -246,6 +375,9 @@ void main() {
       await tester.tap(find.text('Import notes'));
       await tester.pumpAndSettle();
 
+      await tester.tap(find.byType(ImportFileSelector));
+      await tester.pumpAndSettle();
+      expect(find.text('notes.pgp'), findsOneWidget);
       await tester.enterText(find.byType(TextField), 'FilePass1!');
       await tester.tap(find.text('Confirm').last);
       await tester.pumpAndSettle();
@@ -254,6 +386,8 @@ void main() {
       expect(transferService.importPassword, 'FilePass1!');
       expect(find.byType(SnackBar), findsOneWidget);
       expect(find.text('3 notes imported.'), findsOneWidget);
+      expect(find.byType(SettingsScreen), findsOneWidget);
+      expect(find.byType(ImportNotesScreen), findsNothing);
       expect(find.text('1 existing IDs received new IDs.'), findsNothing);
       expect(find.byType(AlertDialog), findsNothing);
     });
@@ -286,12 +420,16 @@ void main() {
         await tester.tap(find.text('Import notes'));
         await tester.pumpAndSettle();
 
+        await tester.tap(find.byType(ImportFileSelector));
+        await tester.pumpAndSettle();
         await tester.enterText(find.byType(TextField), 'FilePass1!');
         await tester.tap(find.text('Confirm').last);
         await tester.pumpAndSettle();
 
         expect(find.byType(SnackBar), findsOneWidget);
         expect(find.text('0 notes imported.'), findsOneWidget);
+        expect(find.byType(SettingsScreen), findsOneWidget);
+        expect(find.byType(ImportNotesScreen), findsNothing);
         expect(find.byType(AlertDialog), findsNothing);
       },
     );
@@ -319,8 +457,57 @@ void main() {
       await tester.tap(find.text('Import notes'));
       await tester.pumpAndSettle();
 
+      expect(fileService.pickImportFileCalls, 0);
+      expect(find.byType(ImportFileSelector), findsOneWidget);
       expect(transferService.importPassword, isNull);
       expect(find.byType(TextField), findsNothing);
+
+      await tester.tap(find.byType(ImportFileSelector));
+      await tester.pumpAndSettle();
+      expect(fileService.pickImportFileCalls, 1);
+      expect(find.byType(ImportNotesScreen), findsOneWidget);
+      expect(find.byType(TextField), findsNothing);
+    });
+
+    testWidgets('shows the selected filename and permits replacing the file', (
+      tester,
+    ) async {
+      final service = _FakeVeilService(
+        biometricEnabled: false,
+        canUseBiometrics: false,
+        autoLockOption: AutoLockOption.fiveMinutes,
+      );
+      final fileService = _FakeNotesFileService(
+        importFiles: [
+          const NotesImportFile(
+            encryptedPayload: 'first-payload',
+            fileName: 'first-backup.pgp',
+          ),
+          const NotesImportFile(
+            encryptedPayload: 'second-payload',
+            fileName: 'second-backup.pgp',
+          ),
+        ],
+      );
+
+      await tester.pumpWidget(
+        wrap(service: service, notesFileService: fileService),
+      );
+      await tester.pump();
+      await tester.pump();
+      await tester.tap(find.text('Import notes'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byType(ImportFileSelector));
+      await tester.pumpAndSettle();
+      expect(find.text('first-backup.pgp'), findsOneWidget);
+
+      await tester.enterText(find.byType(TextField), 'FilePass1!');
+      await tester.tap(find.byType(ImportFileSelector));
+      await tester.pumpAndSettle();
+
+      expect(find.text('second-backup.pgp'), findsOneWidget);
+      expect(find.text('FilePass1!'), findsNothing);
     });
 
     testWidgets('does not continue importing after the veil auto-locks', (
@@ -355,6 +542,8 @@ void main() {
       await tester.pump();
       await tester.tap(find.text('Import notes'));
       await tester.pumpAndSettle();
+      await tester.tap(find.byType(ImportFileSelector));
+      await tester.pumpAndSettle();
 
       expect(controller.lockCalls, 1);
       expect(transferService.importPayload, isNull);
@@ -386,6 +575,8 @@ void main() {
       await tester.pump();
       await tester.pump();
       await tester.tap(find.text('Import notes'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byType(ImportFileSelector));
       await tester.pumpAndSettle();
       await tester.enterText(find.byType(TextField), 'FilePass1!');
       await tester.tap(find.text('Confirm').last);
@@ -423,6 +614,8 @@ void main() {
       expect(service.currentPassword, 'CurrentPassword1!');
       expect(service.newPassword, 'NewPassword2@');
       expect(find.text('Password changed successfully.'), findsOneWidget);
+      expect(find.byType(SettingsScreen), findsOneWidget);
+      expect(find.byType(ChangePasswordScreen), findsNothing);
     });
 
     testWidgets('keeps settings available when changing password fails', (
@@ -451,7 +644,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Invalid password.'), findsOneWidget);
-      expect(find.text('Change password'), findsOneWidget);
+      expect(find.byType(ChangePasswordScreen), findsOneWidget);
     });
 
     testWidgets('does not submit when password confirmation differs', (
@@ -825,6 +1018,25 @@ void main() {
   });
 }
 
+void _expectFeatureTitleBelowBackButton(WidgetTester tester, String title) {
+  final featureScaffold = find.byType(SettingsFeatureScaffold);
+  final titleFinder = find.descendant(
+    of: featureScaffold,
+    matching: find.text(title),
+  );
+  final backButton = find.descendant(
+    of: featureScaffold,
+    matching: find.byType(BackButton),
+  );
+
+  expect(titleFinder, findsOneWidget);
+  expect(backButton, findsOneWidget);
+  expect(
+    tester.getTopLeft(titleFinder).dy,
+    greaterThan(tester.getBottomLeft(backButton).dy),
+  );
+}
+
 class _FakeNotesTransferService implements NotesTransferService {
   final NotesExport? exportResult;
   final NotesImportResult? importResult;
@@ -862,21 +1074,35 @@ class _FakeNotesTransferService implements NotesTransferService {
 
 class _FakeNotesFileService implements NotesFileService {
   final String? importPayload;
+  final String importFileName;
+  final List<NotesImportFile?>? importFiles;
   final bool saveResult;
   final void Function()? onPickImportFile;
 
   String? savedPayload;
+  int pickImportFileCalls = 0;
 
   _FakeNotesFileService({
     this.importPayload,
+    this.importFileName = 'notes-backup.pgp',
+    this.importFiles,
     this.saveResult = true,
     this.onPickImportFile,
   });
 
   @override
-  Future<String?> pickImportFile() async {
+  Future<NotesImportFile?> pickImportFile() async {
+    pickImportFileCalls++;
     onPickImportFile?.call();
-    return importPayload;
+    if (importFiles != null && importFiles!.isNotEmpty) {
+      return importFiles!.removeAt(0);
+    }
+    return importPayload == null
+        ? null
+        : NotesImportFile(
+            encryptedPayload: importPayload!,
+            fileName: importFileName,
+          );
   }
 
   @override

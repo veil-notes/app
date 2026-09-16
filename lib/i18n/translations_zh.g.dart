@@ -259,6 +259,7 @@ class _TranslationsSettingsNotesTransferZh extends TranslationsSettingsNotesTran
 	@override String get exportSubtitle => '保存由独立密码保护的加密副本。';
 	@override String get importTitle => '导入笔记';
 	@override String get importSubtitle => '从加密的 PGP 文件恢复笔记。';
+	@override late final _TranslationsSettingsNotesTransferFilePickerZh filePicker = _TranslationsSettingsNotesTransferFilePickerZh._(_root);
 	@override late final _TranslationsSettingsNotesTransferExportPasswordZh exportPassword = _TranslationsSettingsNotesTransferExportPasswordZh._(_root);
 	@override late final _TranslationsSettingsNotesTransferImportPasswordZh importPassword = _TranslationsSettingsNotesTransferImportPasswordZh._(_root);
 	@override String importSuccess({required Object count}) => '已导入 ${count} 条笔记。';
@@ -345,6 +346,18 @@ class _TranslationsSettingsAutoLockOptionsZh extends TranslationsSettingsAutoLoc
 	@override String get fiveMinutes => '5 分钟';
 	@override String get fifteenMinutes => '15 分钟';
 	@override String get thirtyMinutes => '30 分钟';
+}
+
+// Path: settings.notesTransfer.filePicker
+class _TranslationsSettingsNotesTransferFilePickerZh extends TranslationsSettingsNotesTransferFilePickerEn {
+	_TranslationsSettingsNotesTransferFilePickerZh._(TranslationsZh root) : this._root = root, super.internal(root);
+
+	final TranslationsZh _root; // ignore: unused_field
+
+	// Translations
+	@override String get selectTitle => '选择要导入的文件';
+	@override String get selectSubtitle => '选择要导入的加密 PGP 文件。';
+	@override String get changeSubtitle => '点击以选择其他文件。';
 }
 
 // Path: settings.notesTransfer.exportPassword
@@ -440,6 +453,9 @@ extension on TranslationsZh {
 			'settings.notesTransfer.exportSubtitle' => '保存由独立密码保护的加密副本。',
 			'settings.notesTransfer.importTitle' => '导入笔记',
 			'settings.notesTransfer.importSubtitle' => '从加密的 PGP 文件恢复笔记。',
+			'settings.notesTransfer.filePicker.selectTitle' => '选择要导入的文件',
+			'settings.notesTransfer.filePicker.selectSubtitle' => '选择要导入的加密 PGP 文件。',
+			'settings.notesTransfer.filePicker.changeSubtitle' => '点击以选择其他文件。',
 			'settings.notesTransfer.exportPassword.title' => '导出笔记',
 			'settings.notesTransfer.exportPassword.passwordHint' => '导出密码……',
 			'settings.notesTransfer.exportPassword.confirmPasswordHint' => '确认导出密码……',

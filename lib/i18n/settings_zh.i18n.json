@@ -43,6 +43,11 @@
     "exportSubtitle": "保存由独立密码保护的加密副本。",
     "importTitle": "导入笔记",
     "importSubtitle": "从加密的 PGP 文件恢复笔记。",
+    "filePicker": {
+      "selectTitle": "选择要导入的文件",
+      "selectSubtitle": "选择要导入的加密 PGP 文件。",
+      "changeSubtitle": "点击以选择其他文件。"
+    },
     "exportPassword": {
       "title": "导出笔记",
       "passwordHint": "导出密码……",

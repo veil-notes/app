@@ -259,6 +259,7 @@ class _TranslationsSettingsNotesTransferKo extends TranslationsSettingsNotesTran
 	@override String get exportSubtitle => '별도의 비밀번호로 보호되는 암호화된 사본을 저장합니다.';
 	@override String get importTitle => '메모 가져오기';
 	@override String get importSubtitle => '암호화된 PGP 파일에서 메모를 복원합니다.';
+	@override late final _TranslationsSettingsNotesTransferFilePickerKo filePicker = _TranslationsSettingsNotesTransferFilePickerKo._(_root);
 	@override late final _TranslationsSettingsNotesTransferExportPasswordKo exportPassword = _TranslationsSettingsNotesTransferExportPasswordKo._(_root);
 	@override late final _TranslationsSettingsNotesTransferImportPasswordKo importPassword = _TranslationsSettingsNotesTransferImportPasswordKo._(_root);
 	@override String importSuccess({required Object count}) => '메모 ${count}개를 가져왔습니다.';
@@ -345,6 +346,18 @@ class _TranslationsSettingsAutoLockOptionsKo extends TranslationsSettingsAutoLoc
 	@override String get fiveMinutes => '5분';
 	@override String get fifteenMinutes => '15분';
 	@override String get thirtyMinutes => '30분';
+}
+
+// Path: settings.notesTransfer.filePicker
+class _TranslationsSettingsNotesTransferFilePickerKo extends TranslationsSettingsNotesTransferFilePickerEn {
+	_TranslationsSettingsNotesTransferFilePickerKo._(TranslationsKo root) : this._root = root, super.internal(root);
+
+	final TranslationsKo _root; // ignore: unused_field
+
+	// Translations
+	@override String get selectTitle => '가져올 파일 선택';
+	@override String get selectSubtitle => '가져올 암호화된 PGP 파일을 선택하세요.';
+	@override String get changeSubtitle => '탭하여 다른 파일을 선택하세요.';
 }
 
 // Path: settings.notesTransfer.exportPassword
@@ -440,6 +453,9 @@ extension on TranslationsKo {
 			'settings.notesTransfer.exportSubtitle' => '별도의 비밀번호로 보호되는 암호화된 사본을 저장합니다.',
 			'settings.notesTransfer.importTitle' => '메모 가져오기',
 			'settings.notesTransfer.importSubtitle' => '암호화된 PGP 파일에서 메모를 복원합니다.',
+			'settings.notesTransfer.filePicker.selectTitle' => '가져올 파일 선택',
+			'settings.notesTransfer.filePicker.selectSubtitle' => '가져올 암호화된 PGP 파일을 선택하세요.',
+			'settings.notesTransfer.filePicker.changeSubtitle' => '탭하여 다른 파일을 선택하세요.',
 			'settings.notesTransfer.exportPassword.title' => '메모 내보내기',
 			'settings.notesTransfer.exportPassword.passwordHint' => '내보내기 비밀번호...',
 			'settings.notesTransfer.exportPassword.confirmPasswordHint' => '내보내기 비밀번호 확인...',

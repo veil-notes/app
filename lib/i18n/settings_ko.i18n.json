@@ -43,6 +43,11 @@
     "exportSubtitle": "별도의 비밀번호로 보호되는 암호화된 사본을 저장합니다.",
     "importTitle": "메모 가져오기",
     "importSubtitle": "암호화된 PGP 파일에서 메모를 복원합니다.",
+    "filePicker": {
+      "selectTitle": "가져올 파일 선택",
+      "selectSubtitle": "가져올 암호화된 PGP 파일을 선택하세요.",
+      "changeSubtitle": "탭하여 다른 파일을 선택하세요."
+    },
     "exportPassword": {
       "title": "메모 내보내기",
       "passwordHint": "내보내기 비밀번호...",

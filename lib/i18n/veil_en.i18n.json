@@ -23,7 +23,7 @@
   },
   "errors": {
     "passwordRequired": "Password is required.",
-    "passwordMinLength": "Password must have at least 8 characters.",
+    "passwordMinLength": "Password must have at least 10 characters.",
     "passwordMissingLetter": "Password must contain at least one letter.",
     "passwordMissingNumber": "Password must contain at least one number.",
     "invalidPassword": "Invalid password.",

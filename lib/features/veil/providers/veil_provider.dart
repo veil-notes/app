@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:local_auth/local_auth.dart';
 
+import '../../../core/app_lifecycle_lock_guard.dart';
 import '../../../core/crypto/crypto_service.dart';
 import '../../../core/crypto/infra/kdf/argon2_kdf_derivation_service.dart';
 import '../../../core/crypto/infra/pgp/pgp_crypto_service.dart';
@@ -91,6 +92,10 @@ final veilSessionControllerProvider = Provider<VeilSessionController>((ref) {
   ref.onDispose(controller.stop);
 
   return controller;
+});
+
+final appLifecycleLockGuardProvider = Provider<AppLifecycleLockGuard>((ref) {
+  return DefaultAppLifecycleLockGuard();
 });
 
 final biometricPromptInProgressProvider =

@@ -73,6 +73,12 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.detached) {
+      final appLifecycleLockGuard = ref.read(appLifecycleLockGuardProvider);
+
+      if (appLifecycleLockGuard.isActive) {
+        return;
+      }
+
       final biometricPromptInProgress = ref.read(
         biometricPromptInProgressProvider,
       );

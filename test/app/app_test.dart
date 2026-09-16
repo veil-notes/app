@@ -9,6 +9,7 @@ import 'package:veil/app/router.dart';
 import 'package:veil/app/shortcuts/app_shortcut_action.dart';
 import 'package:veil/app/shortcuts/shortcut_intent_service.dart';
 import 'package:veil/app/shortcuts/shortcut_provider.dart';
+import 'package:veil/core/app_lifecycle_lock_guard.dart';
 import 'package:veil/features/veil/application/veil_controller.dart';
 import 'package:veil/features/veil/application/veil_service.dart';
 import 'package:veil/features/veil/application/veil_session_controller.dart';
@@ -114,6 +115,34 @@ void main() {
     await tester.pump();
 
     expect(harness.controller.lockCalls, 0);
+  });
+
+  testWidgets('does not lock while the native file picker is active', (
+    WidgetTester tester,
+  ) async {
+    final harness = _AppHarness(
+      initialStateBuilder: (service) => UnlockedState(service),
+    );
+    addTearDown(harness.dispose);
+
+    await tester.pumpWidget(harness.build());
+    final operation = harness.lifecycleLockGuard.run(
+      () => harness.filePickerCompleter.future,
+    );
+
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.detached);
+    await tester.pump();
+
+    expect(harness.controller.lockCalls, 0);
+
+    harness.filePickerCompleter.complete();
+    await operation;
+
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+    await tester.pump();
+
+    expect(harness.controller.lockCalls, 1);
   });
 
   testWidgets(
@@ -236,6 +265,8 @@ class _AppHarness {
   late final _FakeShortcutIntentService shortcutService;
   late final _FakeVeilSessionController sessionController;
   late final _FakeVeilController controller;
+  late final DefaultAppLifecycleLockGuard lifecycleLockGuard;
+  final Completer<void> filePickerCompleter = Completer<void>();
   late final GoRouter router;
   late final ProviderContainer container;
 
@@ -246,6 +277,7 @@ class _AppHarness {
     sessionController = _FakeVeilSessionController(
       timeout: const Duration(minutes: 5),
     );
+    lifecycleLockGuard = DefaultAppLifecycleLockGuard();
     controller = _FakeVeilController(initialStateBuilder(service));
     shortcutService = _FakeShortcutIntentService();
     router = GoRouter(
@@ -276,6 +308,7 @@ class _AppHarness {
         biometricPromptInProgressProvider.overrideWith(
           () => _FakeBiometricPromptNotifier(biometricPromptInProgress),
         ),
+        appLifecycleLockGuardProvider.overrideWithValue(lifecycleLockGuard),
         veilControllerProvider.overrideWith(() => controller),
       ],
     );
@@ -360,7 +393,10 @@ class _FakeVeilService implements VeilService {
   Future<void> create(String password) async {}
 
   @override
-  Future<void> changePassword(String currentPassword, String newPassword) async {}
+  Future<void> changePassword(
+    String currentPassword,
+    String newPassword,
+  ) async {}
 
   @override
   Future<void> disableBiometricUnlock() async {}

@@ -94,6 +94,7 @@ class _TranslationsSettingsJa extends TranslationsSettingsEn {
 	@override late final _TranslationsSettingsLockJa lock = _TranslationsSettingsLockJa._(_root);
 	@override late final _TranslationsSettingsConfirmPasswordJa confirmPassword = _TranslationsSettingsConfirmPasswordJa._(_root);
 	@override late final _TranslationsSettingsChangePasswordJa changePassword = _TranslationsSettingsChangePasswordJa._(_root);
+	@override late final _TranslationsSettingsNotesTransferJa notesTransfer = _TranslationsSettingsNotesTransferJa._(_root);
 }
 
 // Path: veil
@@ -247,6 +248,24 @@ class _TranslationsSettingsChangePasswordJa extends TranslationsSettingsChangePa
 	@override String get success => 'パスワードを変更しました。';
 }
 
+// Path: settings.notesTransfer
+class _TranslationsSettingsNotesTransferJa extends TranslationsSettingsNotesTransferEn {
+	_TranslationsSettingsNotesTransferJa._(TranslationsJa root) : this._root = root, super.internal(root);
+
+	final TranslationsJa _root; // ignore: unused_field
+
+	// Translations
+	@override String get exportTitle => 'ノートをエクスポート';
+	@override String get exportSubtitle => '別のパスワードで保護された暗号化コピーを保存します。';
+	@override String get importTitle => 'ノートをインポート';
+	@override String get importSubtitle => '暗号化された PGP ファイルからノートを復元します。';
+	@override late final _TranslationsSettingsNotesTransferExportPasswordJa exportPassword = _TranslationsSettingsNotesTransferExportPasswordJa._(_root);
+	@override late final _TranslationsSettingsNotesTransferImportPasswordJa importPassword = _TranslationsSettingsNotesTransferImportPasswordJa._(_root);
+	@override String importSuccess({required Object count}) => '${count} 件のノートをインポートしました。';
+	@override String exportSuccess({required Object count}) => '${count} 件のノートをエクスポートしました。';
+	@override late final _TranslationsSettingsNotesTransferErrorsJa errors = _TranslationsSettingsNotesTransferErrorsJa._(_root);
+}
+
 // Path: veil.setup
 class _TranslationsVeilSetupJa extends TranslationsVeilSetupEn {
 	_TranslationsVeilSetupJa._(TranslationsJa root) : this._root = root, super.internal(root);
@@ -328,6 +347,42 @@ class _TranslationsSettingsAutoLockOptionsJa extends TranslationsSettingsAutoLoc
 	@override String get thirtyMinutes => '30分';
 }
 
+// Path: settings.notesTransfer.exportPassword
+class _TranslationsSettingsNotesTransferExportPasswordJa extends TranslationsSettingsNotesTransferExportPasswordEn {
+	_TranslationsSettingsNotesTransferExportPasswordJa._(TranslationsJa root) : this._root = root, super.internal(root);
+
+	final TranslationsJa _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'ノートをエクスポート';
+	@override String get passwordHint => 'エクスポートのパスワード...';
+	@override String get confirmPasswordHint => 'エクスポートのパスワードを確認...';
+}
+
+// Path: settings.notesTransfer.importPassword
+class _TranslationsSettingsNotesTransferImportPasswordJa extends TranslationsSettingsNotesTransferImportPasswordEn {
+	_TranslationsSettingsNotesTransferImportPasswordJa._(TranslationsJa root) : this._root = root, super.internal(root);
+
+	final TranslationsJa _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'ノートをインポート';
+	@override String get hint => 'ファイルのパスワードを入力...';
+}
+
+// Path: settings.notesTransfer.errors
+class _TranslationsSettingsNotesTransferErrorsJa extends TranslationsSettingsNotesTransferErrorsEn {
+	_TranslationsSettingsNotesTransferErrorsJa._(TranslationsJa root) : this._root = root, super.internal(root);
+
+	final TranslationsJa _root; // ignore: unused_field
+
+	// Translations
+	@override String get invalidFileOrPassword => 'ファイルが無効か、パスワードが正しくありません。';
+	@override String get unsupportedFormatVersion => 'このエクスポート形式のバージョンはサポートされていません。';
+	@override String get invalidPayload => 'エクスポートファイルに無効なノートがあります。';
+	@override String get fileOperationFailed => 'ファイルにアクセスできませんでした。';
+}
+
 /// The flat map containing all translations for locale <ja>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -381,6 +436,21 @@ extension on TranslationsJa {
 			'settings.changePassword.newPasswordHint' => '新しいパスワード...',
 			'settings.changePassword.confirmPasswordHint' => '新しいパスワードを確認...',
 			'settings.changePassword.success' => 'パスワードを変更しました。',
+			'settings.notesTransfer.exportTitle' => 'ノートをエクスポート',
+			'settings.notesTransfer.exportSubtitle' => '別のパスワードで保護された暗号化コピーを保存します。',
+			'settings.notesTransfer.importTitle' => 'ノートをインポート',
+			'settings.notesTransfer.importSubtitle' => '暗号化された PGP ファイルからノートを復元します。',
+			'settings.notesTransfer.exportPassword.title' => 'ノートをエクスポート',
+			'settings.notesTransfer.exportPassword.passwordHint' => 'エクスポートのパスワード...',
+			'settings.notesTransfer.exportPassword.confirmPasswordHint' => 'エクスポートのパスワードを確認...',
+			'settings.notesTransfer.importPassword.title' => 'ノートをインポート',
+			'settings.notesTransfer.importPassword.hint' => 'ファイルのパスワードを入力...',
+			'settings.notesTransfer.importSuccess' => ({required Object count}) => '${count} 件のノートをインポートしました。',
+			'settings.notesTransfer.exportSuccess' => ({required Object count}) => '${count} 件のノートをエクスポートしました。',
+			'settings.notesTransfer.errors.invalidFileOrPassword' => 'ファイルが無効か、パスワードが正しくありません。',
+			'settings.notesTransfer.errors.unsupportedFormatVersion' => 'このエクスポート形式のバージョンはサポートされていません。',
+			'settings.notesTransfer.errors.invalidPayload' => 'エクスポートファイルに無効なノートがあります。',
+			'settings.notesTransfer.errors.fileOperationFailed' => 'ファイルにアクセスできませんでした。',
 			'veil.setup.passwordHint' => '開始するにはパスワードを入力してください...',
 			'veil.setup.cta' => '始めましょう！',
 			'veil.setup.biometricsOptInTitle' => '生体認証を有効にする',

@@ -94,6 +94,7 @@ class _TranslationsSettingsZh extends TranslationsSettingsEn {
 	@override late final _TranslationsSettingsLockZh lock = _TranslationsSettingsLockZh._(_root);
 	@override late final _TranslationsSettingsConfirmPasswordZh confirmPassword = _TranslationsSettingsConfirmPasswordZh._(_root);
 	@override late final _TranslationsSettingsChangePasswordZh changePassword = _TranslationsSettingsChangePasswordZh._(_root);
+	@override late final _TranslationsSettingsNotesTransferZh notesTransfer = _TranslationsSettingsNotesTransferZh._(_root);
 }
 
 // Path: veil
@@ -247,6 +248,24 @@ class _TranslationsSettingsChangePasswordZh extends TranslationsSettingsChangePa
 	@override String get success => '密码更改成功。';
 }
 
+// Path: settings.notesTransfer
+class _TranslationsSettingsNotesTransferZh extends TranslationsSettingsNotesTransferEn {
+	_TranslationsSettingsNotesTransferZh._(TranslationsZh root) : this._root = root, super.internal(root);
+
+	final TranslationsZh _root; // ignore: unused_field
+
+	// Translations
+	@override String get exportTitle => '导出笔记';
+	@override String get exportSubtitle => '保存由独立密码保护的加密副本。';
+	@override String get importTitle => '导入笔记';
+	@override String get importSubtitle => '从加密的 PGP 文件恢复笔记。';
+	@override late final _TranslationsSettingsNotesTransferExportPasswordZh exportPassword = _TranslationsSettingsNotesTransferExportPasswordZh._(_root);
+	@override late final _TranslationsSettingsNotesTransferImportPasswordZh importPassword = _TranslationsSettingsNotesTransferImportPasswordZh._(_root);
+	@override String importSuccess({required Object count}) => '已导入 ${count} 条笔记。';
+	@override String exportSuccess({required Object count}) => '已导出 ${count} 条笔记。';
+	@override late final _TranslationsSettingsNotesTransferErrorsZh errors = _TranslationsSettingsNotesTransferErrorsZh._(_root);
+}
+
 // Path: veil.setup
 class _TranslationsVeilSetupZh extends TranslationsVeilSetupEn {
 	_TranslationsVeilSetupZh._(TranslationsZh root) : this._root = root, super.internal(root);
@@ -328,6 +347,42 @@ class _TranslationsSettingsAutoLockOptionsZh extends TranslationsSettingsAutoLoc
 	@override String get thirtyMinutes => '30 分钟';
 }
 
+// Path: settings.notesTransfer.exportPassword
+class _TranslationsSettingsNotesTransferExportPasswordZh extends TranslationsSettingsNotesTransferExportPasswordEn {
+	_TranslationsSettingsNotesTransferExportPasswordZh._(TranslationsZh root) : this._root = root, super.internal(root);
+
+	final TranslationsZh _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '导出笔记';
+	@override String get passwordHint => '导出密码……';
+	@override String get confirmPasswordHint => '确认导出密码……';
+}
+
+// Path: settings.notesTransfer.importPassword
+class _TranslationsSettingsNotesTransferImportPasswordZh extends TranslationsSettingsNotesTransferImportPasswordEn {
+	_TranslationsSettingsNotesTransferImportPasswordZh._(TranslationsZh root) : this._root = root, super.internal(root);
+
+	final TranslationsZh _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '导入笔记';
+	@override String get hint => '输入文件密码……';
+}
+
+// Path: settings.notesTransfer.errors
+class _TranslationsSettingsNotesTransferErrorsZh extends TranslationsSettingsNotesTransferErrorsEn {
+	_TranslationsSettingsNotesTransferErrorsZh._(TranslationsZh root) : this._root = root, super.internal(root);
+
+	final TranslationsZh _root; // ignore: unused_field
+
+	// Translations
+	@override String get invalidFileOrPassword => '文件无效或密码不正确。';
+	@override String get unsupportedFormatVersion => '不支持此导出格式版本。';
+	@override String get invalidPayload => '导出文件包含无效笔记。';
+	@override String get fileOperationFailed => '无法访问文件。';
+}
+
 /// The flat map containing all translations for locale <zh>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -381,6 +436,21 @@ extension on TranslationsZh {
 			'settings.changePassword.newPasswordHint' => '新密码...',
 			'settings.changePassword.confirmPasswordHint' => '确认新密码...',
 			'settings.changePassword.success' => '密码更改成功。',
+			'settings.notesTransfer.exportTitle' => '导出笔记',
+			'settings.notesTransfer.exportSubtitle' => '保存由独立密码保护的加密副本。',
+			'settings.notesTransfer.importTitle' => '导入笔记',
+			'settings.notesTransfer.importSubtitle' => '从加密的 PGP 文件恢复笔记。',
+			'settings.notesTransfer.exportPassword.title' => '导出笔记',
+			'settings.notesTransfer.exportPassword.passwordHint' => '导出密码……',
+			'settings.notesTransfer.exportPassword.confirmPasswordHint' => '确认导出密码……',
+			'settings.notesTransfer.importPassword.title' => '导入笔记',
+			'settings.notesTransfer.importPassword.hint' => '输入文件密码……',
+			'settings.notesTransfer.importSuccess' => ({required Object count}) => '已导入 ${count} 条笔记。',
+			'settings.notesTransfer.exportSuccess' => ({required Object count}) => '已导出 ${count} 条笔记。',
+			'settings.notesTransfer.errors.invalidFileOrPassword' => '文件无效或密码不正确。',
+			'settings.notesTransfer.errors.unsupportedFormatVersion' => '不支持此导出格式版本。',
+			'settings.notesTransfer.errors.invalidPayload' => '导出文件包含无效笔记。',
+			'settings.notesTransfer.errors.fileOperationFailed' => '无法访问文件。',
 			'veil.setup.passwordHint' => '输入密码以开始...',
 			'veil.setup.cta' => '开始吧！',
 			'veil.setup.biometricsOptInTitle' => '启用生物识别技术',

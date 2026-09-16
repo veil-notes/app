@@ -37,5 +37,28 @@
     "newPasswordHint": "New password...",
     "confirmPasswordHint": "Confirm new password...",
     "success": "Password changed successfully."
+  },
+  "notesTransfer": {
+    "exportTitle": "Export notes",
+    "exportSubtitle": "Save an encrypted copy protected by a separate password.",
+    "importTitle": "Import notes",
+    "importSubtitle": "Restore notes from an encrypted PGP file.",
+    "exportPassword": {
+      "title": "Export notes",
+      "passwordHint": "Export password...",
+      "confirmPasswordHint": "Confirm export password..."
+    },
+    "importPassword": {
+      "title": "Import notes",
+      "hint": "Type the file password..."
+    },
+    "importSuccess": "{{count}} notes imported.",
+    "exportSuccess": "Exported {{count}} notes.",
+    "errors": {
+      "invalidFileOrPassword": "The file is invalid or the password is incorrect.",
+      "unsupportedFormatVersion": "This export format is not supported.",
+      "invalidPayload": "The export file contains invalid notes.",
+      "fileOperationFailed": "The file could not be accessed."
+    }
   }
 }

@@ -1,6 +1,7 @@
 import '../features/veil/domain/biometrics/biometric_auth_exception.dart';
 import '../features/veil/domain/password/password_validation_result.dart';
 import '../features/veil/domain/veil_exception.dart';
+import '../features/notes/domain/notes_transfer_result.dart';
 import '../i18n/translations.g.dart';
 
 class AppErrorMapper {
@@ -16,6 +17,8 @@ class AppErrorMapper {
         return t.veil.errors.biometricLockedOut;
       case BiometricFailedException():
         return t.veil.errors.biometricFailed;
+      case NotesTransferException():
+        return _mapNotesTransferError(t, error);
       default:
         return t.common.errors.unexpected;
     }
@@ -61,6 +64,19 @@ class AppErrorMapper {
         return t.veil.errors.passwordMissingSpecialChar;
       case null:
         return t.common.errors.unexpected;
+    }
+  }
+
+  String _mapNotesTransferError(Translations t, NotesTransferException error) {
+    switch (error.code) {
+      case NotesTransferExceptionCode.invalidFileOrPassword:
+        return t.settings.notesTransfer.errors.invalidFileOrPassword;
+      case NotesTransferExceptionCode.unsupportedFormatVersion:
+        return t.settings.notesTransfer.errors.unsupportedFormatVersion;
+      case NotesTransferExceptionCode.invalidPayload:
+        return t.settings.notesTransfer.errors.invalidPayload;
+      case NotesTransferExceptionCode.fileOperationFailed:
+        return t.settings.notesTransfer.errors.fileOperationFailed;
     }
   }
 }

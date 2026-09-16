@@ -94,6 +94,7 @@ class _TranslationsSettingsKo extends TranslationsSettingsEn {
 	@override late final _TranslationsSettingsLockKo lock = _TranslationsSettingsLockKo._(_root);
 	@override late final _TranslationsSettingsConfirmPasswordKo confirmPassword = _TranslationsSettingsConfirmPasswordKo._(_root);
 	@override late final _TranslationsSettingsChangePasswordKo changePassword = _TranslationsSettingsChangePasswordKo._(_root);
+	@override late final _TranslationsSettingsNotesTransferKo notesTransfer = _TranslationsSettingsNotesTransferKo._(_root);
 }
 
 // Path: veil
@@ -247,6 +248,24 @@ class _TranslationsSettingsChangePasswordKo extends TranslationsSettingsChangePa
 	@override String get success => '비밀번호가 변경되었습니다.';
 }
 
+// Path: settings.notesTransfer
+class _TranslationsSettingsNotesTransferKo extends TranslationsSettingsNotesTransferEn {
+	_TranslationsSettingsNotesTransferKo._(TranslationsKo root) : this._root = root, super.internal(root);
+
+	final TranslationsKo _root; // ignore: unused_field
+
+	// Translations
+	@override String get exportTitle => '메모 내보내기';
+	@override String get exportSubtitle => '별도의 비밀번호로 보호되는 암호화된 사본을 저장합니다.';
+	@override String get importTitle => '메모 가져오기';
+	@override String get importSubtitle => '암호화된 PGP 파일에서 메모를 복원합니다.';
+	@override late final _TranslationsSettingsNotesTransferExportPasswordKo exportPassword = _TranslationsSettingsNotesTransferExportPasswordKo._(_root);
+	@override late final _TranslationsSettingsNotesTransferImportPasswordKo importPassword = _TranslationsSettingsNotesTransferImportPasswordKo._(_root);
+	@override String importSuccess({required Object count}) => '메모 ${count}개를 가져왔습니다.';
+	@override String exportSuccess({required Object count}) => '메모 ${count}개를 내보냈습니다.';
+	@override late final _TranslationsSettingsNotesTransferErrorsKo errors = _TranslationsSettingsNotesTransferErrorsKo._(_root);
+}
+
 // Path: veil.setup
 class _TranslationsVeilSetupKo extends TranslationsVeilSetupEn {
 	_TranslationsVeilSetupKo._(TranslationsKo root) : this._root = root, super.internal(root);
@@ -328,6 +347,42 @@ class _TranslationsSettingsAutoLockOptionsKo extends TranslationsSettingsAutoLoc
 	@override String get thirtyMinutes => '30분';
 }
 
+// Path: settings.notesTransfer.exportPassword
+class _TranslationsSettingsNotesTransferExportPasswordKo extends TranslationsSettingsNotesTransferExportPasswordEn {
+	_TranslationsSettingsNotesTransferExportPasswordKo._(TranslationsKo root) : this._root = root, super.internal(root);
+
+	final TranslationsKo _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '메모 내보내기';
+	@override String get passwordHint => '내보내기 비밀번호...';
+	@override String get confirmPasswordHint => '내보내기 비밀번호 확인...';
+}
+
+// Path: settings.notesTransfer.importPassword
+class _TranslationsSettingsNotesTransferImportPasswordKo extends TranslationsSettingsNotesTransferImportPasswordEn {
+	_TranslationsSettingsNotesTransferImportPasswordKo._(TranslationsKo root) : this._root = root, super.internal(root);
+
+	final TranslationsKo _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '메모 가져오기';
+	@override String get hint => '파일 비밀번호를 입력하세요...';
+}
+
+// Path: settings.notesTransfer.errors
+class _TranslationsSettingsNotesTransferErrorsKo extends TranslationsSettingsNotesTransferErrorsEn {
+	_TranslationsSettingsNotesTransferErrorsKo._(TranslationsKo root) : this._root = root, super.internal(root);
+
+	final TranslationsKo _root; // ignore: unused_field
+
+	// Translations
+	@override String get invalidFileOrPassword => '파일이 잘못되었거나 비밀번호가 올바르지 않습니다.';
+	@override String get unsupportedFormatVersion => '이 내보내기 형식 버전은 지원되지 않습니다.';
+	@override String get invalidPayload => '내보낸 파일에 잘못된 메모가 있습니다.';
+	@override String get fileOperationFailed => '파일에 접근할 수 없습니다.';
+}
+
 /// The flat map containing all translations for locale <ko>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -381,6 +436,21 @@ extension on TranslationsKo {
 			'settings.changePassword.newPasswordHint' => '새 비밀번호...',
 			'settings.changePassword.confirmPasswordHint' => '새 비밀번호 확인...',
 			'settings.changePassword.success' => '비밀번호가 변경되었습니다.',
+			'settings.notesTransfer.exportTitle' => '메모 내보내기',
+			'settings.notesTransfer.exportSubtitle' => '별도의 비밀번호로 보호되는 암호화된 사본을 저장합니다.',
+			'settings.notesTransfer.importTitle' => '메모 가져오기',
+			'settings.notesTransfer.importSubtitle' => '암호화된 PGP 파일에서 메모를 복원합니다.',
+			'settings.notesTransfer.exportPassword.title' => '메모 내보내기',
+			'settings.notesTransfer.exportPassword.passwordHint' => '내보내기 비밀번호...',
+			'settings.notesTransfer.exportPassword.confirmPasswordHint' => '내보내기 비밀번호 확인...',
+			'settings.notesTransfer.importPassword.title' => '메모 가져오기',
+			'settings.notesTransfer.importPassword.hint' => '파일 비밀번호를 입력하세요...',
+			'settings.notesTransfer.importSuccess' => ({required Object count}) => '메모 ${count}개를 가져왔습니다.',
+			'settings.notesTransfer.exportSuccess' => ({required Object count}) => '메모 ${count}개를 내보냈습니다.',
+			'settings.notesTransfer.errors.invalidFileOrPassword' => '파일이 잘못되었거나 비밀번호가 올바르지 않습니다.',
+			'settings.notesTransfer.errors.unsupportedFormatVersion' => '이 내보내기 형식 버전은 지원되지 않습니다.',
+			'settings.notesTransfer.errors.invalidPayload' => '내보낸 파일에 잘못된 메모가 있습니다.',
+			'settings.notesTransfer.errors.fileOperationFailed' => '파일에 접근할 수 없습니다.',
 			'veil.setup.passwordHint' => '시작하려면 비밀번호를 입력하세요...',
 			'veil.setup.cta' => '시작하기!',
 			'veil.setup.biometricsOptInTitle' => '생체인식 활성화',

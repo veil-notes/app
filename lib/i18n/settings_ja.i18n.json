@@ -37,5 +37,28 @@
     "newPasswordHint": "新しいパスワード...",
     "confirmPasswordHint": "新しいパスワードを確認...",
     "success": "パスワードを変更しました。"
+  },
+  "notesTransfer": {
+    "exportTitle": "ノートをエクスポート",
+    "exportSubtitle": "別のパスワードで保護された暗号化コピーを保存します。",
+    "importTitle": "ノートをインポート",
+    "importSubtitle": "暗号化された PGP ファイルからノートを復元します。",
+    "exportPassword": {
+      "title": "ノートをエクスポート",
+      "passwordHint": "エクスポートのパスワード...",
+      "confirmPasswordHint": "エクスポートのパスワードを確認..."
+    },
+    "importPassword": {
+      "title": "ノートをインポート",
+      "hint": "ファイルのパスワードを入力..."
+    },
+    "importSuccess": "{{count}} 件のノートをインポートしました。",
+    "exportSuccess": "{{count}} 件のノートをエクスポートしました。",
+    "errors": {
+      "invalidFileOrPassword": "ファイルが無効か、パスワードが正しくありません。",
+      "unsupportedFormatVersion": "このエクスポート形式のバージョンはサポートされていません。",
+      "invalidPayload": "エクスポートファイルに無効なノートがあります。",
+      "fileOperationFailed": "ファイルにアクセスできませんでした。"
+    }
   }
 }

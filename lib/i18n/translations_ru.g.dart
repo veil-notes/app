@@ -95,6 +95,7 @@ class _TranslationsSettingsRu extends TranslationsSettingsEn {
 	@override late final _TranslationsSettingsConfirmPasswordRu confirmPassword = _TranslationsSettingsConfirmPasswordRu._(_root);
 	@override late final _TranslationsSettingsChangePasswordRu changePassword = _TranslationsSettingsChangePasswordRu._(_root);
 	@override late final _TranslationsSettingsNotesTransferRu notesTransfer = _TranslationsSettingsNotesTransferRu._(_root);
+	@override late final _TranslationsSettingsAboutRu about = _TranslationsSettingsAboutRu._(_root);
 }
 
 // Path: veil
@@ -265,6 +266,30 @@ class _TranslationsSettingsNotesTransferRu extends TranslationsSettingsNotesTran
 	@override String importSuccess({required Object count}) => 'Импортировано заметок: ${count}.';
 	@override String exportSuccess({required Object count}) => 'Экспортировано заметок: ${count}.';
 	@override late final _TranslationsSettingsNotesTransferErrorsRu errors = _TranslationsSettingsNotesTransferErrorsRu._(_root);
+}
+
+// Path: settings.about
+class _TranslationsSettingsAboutRu extends TranslationsSettingsAboutEn {
+	_TranslationsSettingsAboutRu._(TranslationsRu root) : this._root = root, super.internal(root);
+
+	final TranslationsRu _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'О приложении';
+	@override String get subtitle => 'Информация о приложении и лицензии открытого кода.';
+	@override String version({required Object version}) => 'Версия ${version}';
+	@override String get versionLoading => 'Загрузка версии...';
+	@override String get versionUnavailable => 'Версия недоступна';
+	@override String get repositoryTitle => 'Исходный код';
+	@override String get repositorySubtitle => 'Открыть исходный код Veil на GitHub.';
+	@override String get repositoryError => 'Не удалось открыть репозиторий.';
+	@override String get licensesTitle => 'Лицензии открытого кода';
+	@override String get licensesSubtitle => 'Лицензии Veil и его зависимостей.';
+	@override String get licensesHeading => 'Лицензии открытого кода';
+	@override String get licensesIntro => 'Veil распространяется по лицензии GNU General Public License v3.0.\n\nЭто приложение включает стороннее программное обеспечение и ресурсы с открытым исходным кодом. Их лицензии и сведения об атрибуции перечислены ниже.';
+	@override String get fullLicenseText => 'Полный текст лицензии';
+	@override String get licensesLoading => 'Загрузка лицензий...';
+	@override String get licensesError => 'Не удалось загрузить лицензии.';
 }
 
 // Path: veil.setup
@@ -467,6 +492,21 @@ extension on TranslationsRu {
 			'settings.notesTransfer.errors.unsupportedFormatVersion' => 'Эта версия формата экспорта не поддерживается.',
 			'settings.notesTransfer.errors.invalidPayload' => 'Файл экспорта содержит недействительные заметки.',
 			'settings.notesTransfer.errors.fileOperationFailed' => 'Не удалось получить доступ к файлу.',
+			'settings.about.title' => 'О приложении',
+			'settings.about.subtitle' => 'Информация о приложении и лицензии открытого кода.',
+			'settings.about.version' => ({required Object version}) => 'Версия ${version}',
+			'settings.about.versionLoading' => 'Загрузка версии...',
+			'settings.about.versionUnavailable' => 'Версия недоступна',
+			'settings.about.repositoryTitle' => 'Исходный код',
+			'settings.about.repositorySubtitle' => 'Открыть исходный код Veil на GitHub.',
+			'settings.about.repositoryError' => 'Не удалось открыть репозиторий.',
+			'settings.about.licensesTitle' => 'Лицензии открытого кода',
+			'settings.about.licensesSubtitle' => 'Лицензии Veil и его зависимостей.',
+			'settings.about.licensesHeading' => 'Лицензии открытого кода',
+			'settings.about.licensesIntro' => 'Veil распространяется по лицензии GNU General Public License v3.0.\n\nЭто приложение включает стороннее программное обеспечение и ресурсы с открытым исходным кодом. Их лицензии и сведения об атрибуции перечислены ниже.',
+			'settings.about.fullLicenseText' => 'Полный текст лицензии',
+			'settings.about.licensesLoading' => 'Загрузка лицензий...',
+			'settings.about.licensesError' => 'Не удалось загрузить лицензии.',
 			'veil.setup.passwordHint' => 'Введите пароль, чтобы начать...',
 			'veil.setup.cta' => 'Начать!',
 			'veil.setup.biometricsOptInTitle' => 'Включить биометрию',

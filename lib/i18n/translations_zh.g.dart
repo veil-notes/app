@@ -95,6 +95,7 @@ class _TranslationsSettingsZh extends TranslationsSettingsEn {
 	@override late final _TranslationsSettingsConfirmPasswordZh confirmPassword = _TranslationsSettingsConfirmPasswordZh._(_root);
 	@override late final _TranslationsSettingsChangePasswordZh changePassword = _TranslationsSettingsChangePasswordZh._(_root);
 	@override late final _TranslationsSettingsNotesTransferZh notesTransfer = _TranslationsSettingsNotesTransferZh._(_root);
+	@override late final _TranslationsSettingsAboutZh about = _TranslationsSettingsAboutZh._(_root);
 }
 
 // Path: veil
@@ -265,6 +266,30 @@ class _TranslationsSettingsNotesTransferZh extends TranslationsSettingsNotesTran
 	@override String importSuccess({required Object count}) => '已导入 ${count} 条笔记。';
 	@override String exportSuccess({required Object count}) => '已导出 ${count} 条笔记。';
 	@override late final _TranslationsSettingsNotesTransferErrorsZh errors = _TranslationsSettingsNotesTransferErrorsZh._(_root);
+}
+
+// Path: settings.about
+class _TranslationsSettingsAboutZh extends TranslationsSettingsAboutEn {
+	_TranslationsSettingsAboutZh._(TranslationsZh root) : this._root = root, super.internal(root);
+
+	final TranslationsZh _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '关于 Veil';
+	@override String get subtitle => '应用信息和开源许可证。';
+	@override String version({required Object version}) => '版本 ${version}';
+	@override String get versionLoading => '正在加载版本…';
+	@override String get versionUnavailable => '版本不可用';
+	@override String get repositoryTitle => '源代码';
+	@override String get repositorySubtitle => '在 GitHub 上查看 Veil 源代码。';
+	@override String get repositoryError => '无法打开代码仓库。';
+	@override String get licensesTitle => '开源许可证';
+	@override String get licensesSubtitle => '查看 Veil 及其依赖项的许可证。';
+	@override String get licensesHeading => '开源许可证';
+	@override String get licensesIntro => 'Veil 根据 GNU General Public License v3.0 授权。\n\n此应用包含第三方开源软件和资源。下面列出了相关许可证和归属信息。';
+	@override String get fullLicenseText => '完整许可证文本';
+	@override String get licensesLoading => '正在加载许可证…';
+	@override String get licensesError => '无法加载许可证。';
 }
 
 // Path: veil.setup
@@ -467,6 +492,21 @@ extension on TranslationsZh {
 			'settings.notesTransfer.errors.unsupportedFormatVersion' => '不支持此导出格式版本。',
 			'settings.notesTransfer.errors.invalidPayload' => '导出文件包含无效笔记。',
 			'settings.notesTransfer.errors.fileOperationFailed' => '无法访问文件。',
+			'settings.about.title' => '关于 Veil',
+			'settings.about.subtitle' => '应用信息和开源许可证。',
+			'settings.about.version' => ({required Object version}) => '版本 ${version}',
+			'settings.about.versionLoading' => '正在加载版本…',
+			'settings.about.versionUnavailable' => '版本不可用',
+			'settings.about.repositoryTitle' => '源代码',
+			'settings.about.repositorySubtitle' => '在 GitHub 上查看 Veil 源代码。',
+			'settings.about.repositoryError' => '无法打开代码仓库。',
+			'settings.about.licensesTitle' => '开源许可证',
+			'settings.about.licensesSubtitle' => '查看 Veil 及其依赖项的许可证。',
+			'settings.about.licensesHeading' => '开源许可证',
+			'settings.about.licensesIntro' => 'Veil 根据 GNU General Public License v3.0 授权。\n\n此应用包含第三方开源软件和资源。下面列出了相关许可证和归属信息。',
+			'settings.about.fullLicenseText' => '完整许可证文本',
+			'settings.about.licensesLoading' => '正在加载许可证…',
+			'settings.about.licensesError' => '无法加载许可证。',
 			'veil.setup.passwordHint' => '输入密码以开始...',
 			'veil.setup.cta' => '开始吧！',
 			'veil.setup.biometricsOptInTitle' => '启用生物识别技术',

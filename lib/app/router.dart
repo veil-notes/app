@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:veil/features/settings/presentation/screens/change_password_screen.dart';
 import 'package:veil/features/settings/presentation/screens/export_notes_screen.dart';
 import 'package:veil/features/settings/presentation/screens/import_notes_screen.dart';
+import 'package:veil/features/settings/presentation/screens/about_screen.dart';
+import 'package:veil/features/settings/presentation/screens/open_source_licenses_screen.dart';
 import 'package:veil/features/settings/presentation/screens/settings_screen.dart';
 import 'package:veil/features/veil/domain/states/bootstrapping_state.dart';
 import 'package:veil/features/veil/presentation/screens/setup_screen.dart';
@@ -84,6 +86,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/unlock', builder: (_, _) => const UnlockScreen()),
       GoRoute(path: '/list', builder: (_, _) => const NoteListScreen()),
       GoRoute(path: '/settings', builder: (_, _) => const SettingsScreen()),
+      GoRoute(path: '/settings/about', builder: (_, _) => const AboutScreen()),
+      GoRoute(
+        path: '/settings/about/licenses',
+        builder: (_, _) => const OpenSourceLicensesScreen(),
+      ),
       GoRoute(
         path: '/settings/change-password',
         builder: (_, _) => const ChangePasswordScreen(),

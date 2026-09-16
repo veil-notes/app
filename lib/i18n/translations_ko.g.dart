@@ -95,6 +95,7 @@ class _TranslationsSettingsKo extends TranslationsSettingsEn {
 	@override late final _TranslationsSettingsConfirmPasswordKo confirmPassword = _TranslationsSettingsConfirmPasswordKo._(_root);
 	@override late final _TranslationsSettingsChangePasswordKo changePassword = _TranslationsSettingsChangePasswordKo._(_root);
 	@override late final _TranslationsSettingsNotesTransferKo notesTransfer = _TranslationsSettingsNotesTransferKo._(_root);
+	@override late final _TranslationsSettingsAboutKo about = _TranslationsSettingsAboutKo._(_root);
 }
 
 // Path: veil
@@ -265,6 +266,30 @@ class _TranslationsSettingsNotesTransferKo extends TranslationsSettingsNotesTran
 	@override String importSuccess({required Object count}) => '메모 ${count}개를 가져왔습니다.';
 	@override String exportSuccess({required Object count}) => '메모 ${count}개를 내보냈습니다.';
 	@override late final _TranslationsSettingsNotesTransferErrorsKo errors = _TranslationsSettingsNotesTransferErrorsKo._(_root);
+}
+
+// Path: settings.about
+class _TranslationsSettingsAboutKo extends TranslationsSettingsAboutEn {
+	_TranslationsSettingsAboutKo._(TranslationsKo root) : this._root = root, super.internal(root);
+
+	final TranslationsKo _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Veil 정보';
+	@override String get subtitle => '앱 정보 및 오픈 소스 라이선스입니다.';
+	@override String version({required Object version}) => '버전 ${version}';
+	@override String get versionLoading => '버전을 불러오는 중...';
+	@override String get versionUnavailable => '버전을 사용할 수 없습니다';
+	@override String get repositoryTitle => '소스 코드';
+	@override String get repositorySubtitle => 'GitHub에서 Veil 소스 코드를 확인하세요.';
+	@override String get repositoryError => '저장소를 열 수 없습니다.';
+	@override String get licensesTitle => '오픈 소스 라이선스';
+	@override String get licensesSubtitle => 'Veil 및 종속 항목의 라이선스를 확인하세요.';
+	@override String get licensesHeading => '오픈 소스 라이선스';
+	@override String get licensesIntro => 'Veil은 GNU General Public License v3.0에 따라 라이선스가 부여됩니다.\n\n이 앱에는 타사 오픈 소스 소프트웨어와 에셋이 포함되어 있습니다. 해당 라이선스와 저작자 표시는 아래에 나열되어 있습니다.';
+	@override String get fullLicenseText => '전체 라이선스 텍스트';
+	@override String get licensesLoading => '라이선스를 불러오는 중...';
+	@override String get licensesError => '라이선스를 불러올 수 없습니다.';
 }
 
 // Path: veil.setup
@@ -467,6 +492,21 @@ extension on TranslationsKo {
 			'settings.notesTransfer.errors.unsupportedFormatVersion' => '이 내보내기 형식 버전은 지원되지 않습니다.',
 			'settings.notesTransfer.errors.invalidPayload' => '내보낸 파일에 잘못된 메모가 있습니다.',
 			'settings.notesTransfer.errors.fileOperationFailed' => '파일에 접근할 수 없습니다.',
+			'settings.about.title' => 'Veil 정보',
+			'settings.about.subtitle' => '앱 정보 및 오픈 소스 라이선스입니다.',
+			'settings.about.version' => ({required Object version}) => '버전 ${version}',
+			'settings.about.versionLoading' => '버전을 불러오는 중...',
+			'settings.about.versionUnavailable' => '버전을 사용할 수 없습니다',
+			'settings.about.repositoryTitle' => '소스 코드',
+			'settings.about.repositorySubtitle' => 'GitHub에서 Veil 소스 코드를 확인하세요.',
+			'settings.about.repositoryError' => '저장소를 열 수 없습니다.',
+			'settings.about.licensesTitle' => '오픈 소스 라이선스',
+			'settings.about.licensesSubtitle' => 'Veil 및 종속 항목의 라이선스를 확인하세요.',
+			'settings.about.licensesHeading' => '오픈 소스 라이선스',
+			'settings.about.licensesIntro' => 'Veil은 GNU General Public License v3.0에 따라 라이선스가 부여됩니다.\n\n이 앱에는 타사 오픈 소스 소프트웨어와 에셋이 포함되어 있습니다. 해당 라이선스와 저작자 표시는 아래에 나열되어 있습니다.',
+			'settings.about.fullLicenseText' => '전체 라이선스 텍스트',
+			'settings.about.licensesLoading' => '라이선스를 불러오는 중...',
+			'settings.about.licensesError' => '라이선스를 불러올 수 없습니다.',
 			'veil.setup.passwordHint' => '시작하려면 비밀번호를 입력하세요...',
 			'veil.setup.cta' => '시작하기!',
 			'veil.setup.biometricsOptInTitle' => '생체인식 활성화',

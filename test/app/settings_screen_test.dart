@@ -144,6 +144,24 @@ void main() {
       );
     });
 
+    testWidgets('shows the about option', (tester) async {
+      final service = _FakeVeilService(
+        biometricEnabled: false,
+        canUseBiometrics: false,
+        autoLockOption: AutoLockOption.fiveMinutes,
+      );
+
+      await tester.pumpWidget(wrap(service: service));
+      await tester.pump();
+      await tester.pump();
+
+      expect(find.text('About'), findsOneWidget);
+      expect(
+        find.text('App information and open-source licenses.'),
+        findsOneWidget,
+      );
+    });
+
     testWidgets(
       'opens each feature as a dedicated screen with back navigation',
       (tester) async {

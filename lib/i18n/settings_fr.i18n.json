@@ -65,5 +65,22 @@
       "invalidPayload": "Le fichier d’exportation contient des notes invalides.",
       "fileOperationFailed": "Impossible d’accéder au fichier."
     }
+  },
+  "about": {
+    "title": "À propos",
+    "subtitle": "Informations sur l’application et licences open source.",
+    "version": "Version {{version}}",
+    "versionLoading": "Chargement de la version...",
+    "versionUnavailable": "Version indisponible",
+    "repositoryTitle": "Code source",
+    "repositorySubtitle": "Consultez le code source de Veil sur GitHub.",
+    "repositoryError": "Impossible d’ouvrir le dépôt.",
+    "licensesTitle": "Licences open source",
+    "licensesSubtitle": "Consultez les licences de Veil et de ses dépendances.",
+    "licensesHeading": "Licences open source",
+    "licensesIntro": "Veil est distribué sous la GNU General Public License v3.0.\n\nCette application inclut des logiciels et des ressources open source de tiers. Leurs licences et attributions sont listées ci-dessous.",
+    "fullLicenseText": "Texte complet de la licence",
+    "licensesLoading": "Chargement des licences...",
+    "licensesError": "Impossible de charger les licences."
   }
 }

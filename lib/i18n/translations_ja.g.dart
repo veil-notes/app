@@ -95,6 +95,7 @@ class _TranslationsSettingsJa extends TranslationsSettingsEn {
 	@override late final _TranslationsSettingsConfirmPasswordJa confirmPassword = _TranslationsSettingsConfirmPasswordJa._(_root);
 	@override late final _TranslationsSettingsChangePasswordJa changePassword = _TranslationsSettingsChangePasswordJa._(_root);
 	@override late final _TranslationsSettingsNotesTransferJa notesTransfer = _TranslationsSettingsNotesTransferJa._(_root);
+	@override late final _TranslationsSettingsAboutJa about = _TranslationsSettingsAboutJa._(_root);
 }
 
 // Path: veil
@@ -265,6 +266,30 @@ class _TranslationsSettingsNotesTransferJa extends TranslationsSettingsNotesTran
 	@override String importSuccess({required Object count}) => '${count} 件のノートをインポートしました。';
 	@override String exportSuccess({required Object count}) => '${count} 件のノートをエクスポートしました。';
 	@override late final _TranslationsSettingsNotesTransferErrorsJa errors = _TranslationsSettingsNotesTransferErrorsJa._(_root);
+}
+
+// Path: settings.about
+class _TranslationsSettingsAboutJa extends TranslationsSettingsAboutEn {
+	_TranslationsSettingsAboutJa._(TranslationsJa root) : this._root = root, super.internal(root);
+
+	final TranslationsJa _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Veilについて';
+	@override String get subtitle => 'アプリ情報とオープンソースライセンス。';
+	@override String version({required Object version}) => 'バージョン ${version}';
+	@override String get versionLoading => 'バージョンを読み込み中…';
+	@override String get versionUnavailable => 'バージョンを利用できません';
+	@override String get repositoryTitle => 'ソースコード';
+	@override String get repositorySubtitle => 'GitHubでVeilのソースコードを見る。';
+	@override String get repositoryError => 'リポジトリを開けませんでした。';
+	@override String get licensesTitle => 'オープンソースライセンス';
+	@override String get licensesSubtitle => 'Veilと依存関係のライセンスを表示します。';
+	@override String get licensesHeading => 'オープンソースライセンス';
+	@override String get licensesIntro => 'VeilはGNU General Public License v3.0のもとでライセンスされています。\n\nこのアプリには第三者のオープンソースソフトウェアとアセットが含まれています。ライセンスと帰属表示は以下のとおりです。';
+	@override String get fullLicenseText => 'ライセンス全文';
+	@override String get licensesLoading => 'ライセンスを読み込み中…';
+	@override String get licensesError => 'ライセンスを読み込めませんでした。';
 }
 
 // Path: veil.setup
@@ -467,6 +492,21 @@ extension on TranslationsJa {
 			'settings.notesTransfer.errors.unsupportedFormatVersion' => 'このエクスポート形式のバージョンはサポートされていません。',
 			'settings.notesTransfer.errors.invalidPayload' => 'エクスポートファイルに無効なノートがあります。',
 			'settings.notesTransfer.errors.fileOperationFailed' => 'ファイルにアクセスできませんでした。',
+			'settings.about.title' => 'Veilについて',
+			'settings.about.subtitle' => 'アプリ情報とオープンソースライセンス。',
+			'settings.about.version' => ({required Object version}) => 'バージョン ${version}',
+			'settings.about.versionLoading' => 'バージョンを読み込み中…',
+			'settings.about.versionUnavailable' => 'バージョンを利用できません',
+			'settings.about.repositoryTitle' => 'ソースコード',
+			'settings.about.repositorySubtitle' => 'GitHubでVeilのソースコードを見る。',
+			'settings.about.repositoryError' => 'リポジトリを開けませんでした。',
+			'settings.about.licensesTitle' => 'オープンソースライセンス',
+			'settings.about.licensesSubtitle' => 'Veilと依存関係のライセンスを表示します。',
+			'settings.about.licensesHeading' => 'オープンソースライセンス',
+			'settings.about.licensesIntro' => 'VeilはGNU General Public License v3.0のもとでライセンスされています。\n\nこのアプリには第三者のオープンソースソフトウェアとアセットが含まれています。ライセンスと帰属表示は以下のとおりです。',
+			'settings.about.fullLicenseText' => 'ライセンス全文',
+			'settings.about.licensesLoading' => 'ライセンスを読み込み中…',
+			'settings.about.licensesError' => 'ライセンスを読み込めませんでした。',
 			'veil.setup.passwordHint' => '開始するにはパスワードを入力してください...',
 			'veil.setup.cta' => '始めましょう！',
 			'veil.setup.biometricsOptInTitle' => '生体認証を有効にする',

@@ -259,6 +259,7 @@ class _TranslationsSettingsNotesTransferJa extends TranslationsSettingsNotesTran
 	@override String get exportSubtitle => '別のパスワードで保護された暗号化コピーを保存します。';
 	@override String get importTitle => 'ノートをインポート';
 	@override String get importSubtitle => '暗号化された PGP ファイルからノートを復元します。';
+	@override late final _TranslationsSettingsNotesTransferFilePickerJa filePicker = _TranslationsSettingsNotesTransferFilePickerJa._(_root);
 	@override late final _TranslationsSettingsNotesTransferExportPasswordJa exportPassword = _TranslationsSettingsNotesTransferExportPasswordJa._(_root);
 	@override late final _TranslationsSettingsNotesTransferImportPasswordJa importPassword = _TranslationsSettingsNotesTransferImportPasswordJa._(_root);
 	@override String importSuccess({required Object count}) => '${count} 件のノートをインポートしました。';
@@ -345,6 +346,18 @@ class _TranslationsSettingsAutoLockOptionsJa extends TranslationsSettingsAutoLoc
 	@override String get fiveMinutes => '5分';
 	@override String get fifteenMinutes => '15分';
 	@override String get thirtyMinutes => '30分';
+}
+
+// Path: settings.notesTransfer.filePicker
+class _TranslationsSettingsNotesTransferFilePickerJa extends TranslationsSettingsNotesTransferFilePickerEn {
+	_TranslationsSettingsNotesTransferFilePickerJa._(TranslationsJa root) : this._root = root, super.internal(root);
+
+	final TranslationsJa _root; // ignore: unused_field
+
+	// Translations
+	@override String get selectTitle => 'インポートするファイルを選択';
+	@override String get selectSubtitle => 'インポートする暗号化 PGP ファイルを選択してください。';
+	@override String get changeSubtitle => 'タップして別のファイルを選択します。';
 }
 
 // Path: settings.notesTransfer.exportPassword
@@ -440,6 +453,9 @@ extension on TranslationsJa {
 			'settings.notesTransfer.exportSubtitle' => '別のパスワードで保護された暗号化コピーを保存します。',
 			'settings.notesTransfer.importTitle' => 'ノートをインポート',
 			'settings.notesTransfer.importSubtitle' => '暗号化された PGP ファイルからノートを復元します。',
+			'settings.notesTransfer.filePicker.selectTitle' => 'インポートするファイルを選択',
+			'settings.notesTransfer.filePicker.selectSubtitle' => 'インポートする暗号化 PGP ファイルを選択してください。',
+			'settings.notesTransfer.filePicker.changeSubtitle' => 'タップして別のファイルを選択します。',
 			'settings.notesTransfer.exportPassword.title' => 'ノートをエクスポート',
 			'settings.notesTransfer.exportPassword.passwordHint' => 'エクスポートのパスワード...',
 			'settings.notesTransfer.exportPassword.confirmPasswordHint' => 'エクスポートのパスワードを確認...',

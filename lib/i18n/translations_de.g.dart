@@ -259,6 +259,7 @@ class _TranslationsSettingsNotesTransferDe extends TranslationsSettingsNotesTran
 	@override String get exportSubtitle => 'Eine verschlüsselte Kopie mit einem separaten Passwort speichern.';
 	@override String get importTitle => 'Notizen importieren';
 	@override String get importSubtitle => 'Notizen aus einer verschlüsselten PGP-Datei wiederherstellen.';
+	@override late final _TranslationsSettingsNotesTransferFilePickerDe filePicker = _TranslationsSettingsNotesTransferFilePickerDe._(_root);
 	@override late final _TranslationsSettingsNotesTransferExportPasswordDe exportPassword = _TranslationsSettingsNotesTransferExportPasswordDe._(_root);
 	@override late final _TranslationsSettingsNotesTransferImportPasswordDe importPassword = _TranslationsSettingsNotesTransferImportPasswordDe._(_root);
 	@override String importSuccess({required Object count}) => '${count} Notizen importiert.';
@@ -345,6 +346,18 @@ class _TranslationsSettingsAutoLockOptionsDe extends TranslationsSettingsAutoLoc
 	@override String get fiveMinutes => '5 Minuten';
 	@override String get fifteenMinutes => '15 Minuten';
 	@override String get thirtyMinutes => '30 Minuten';
+}
+
+// Path: settings.notesTransfer.filePicker
+class _TranslationsSettingsNotesTransferFilePickerDe extends TranslationsSettingsNotesTransferFilePickerEn {
+	_TranslationsSettingsNotesTransferFilePickerDe._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get selectTitle => 'Importdatei auswählen';
+	@override String get selectSubtitle => 'Wählen Sie eine verschlüsselte PGP-Datei zum Importieren.';
+	@override String get changeSubtitle => 'Tippen Sie, um eine andere Datei auszuwählen.';
 }
 
 // Path: settings.notesTransfer.exportPassword
@@ -440,6 +453,9 @@ extension on TranslationsDe {
 			'settings.notesTransfer.exportSubtitle' => 'Eine verschlüsselte Kopie mit einem separaten Passwort speichern.',
 			'settings.notesTransfer.importTitle' => 'Notizen importieren',
 			'settings.notesTransfer.importSubtitle' => 'Notizen aus einer verschlüsselten PGP-Datei wiederherstellen.',
+			'settings.notesTransfer.filePicker.selectTitle' => 'Importdatei auswählen',
+			'settings.notesTransfer.filePicker.selectSubtitle' => 'Wählen Sie eine verschlüsselte PGP-Datei zum Importieren.',
+			'settings.notesTransfer.filePicker.changeSubtitle' => 'Tippen Sie, um eine andere Datei auszuwählen.',
 			'settings.notesTransfer.exportPassword.title' => 'Notizen exportieren',
 			'settings.notesTransfer.exportPassword.passwordHint' => 'Export-Passwort...',
 			'settings.notesTransfer.exportPassword.confirmPasswordHint' => 'Export-Passwort bestätigen...',

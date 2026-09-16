@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:veil/core/app_lifecycle_lock_guard.dart';
 import 'package:veil/features/notes/application/notes_file_picker_client.dart';
+import 'package:veil/features/notes/domain/notes_import_file.dart';
 import 'package:veil/features/notes/domain/notes_transfer_result.dart';
 import 'package:veil/features/notes/infra/file_picker_notes_file_service.dart';
 
@@ -21,9 +22,21 @@ void main() {
       final operation = service.pickImportFile();
 
       expect(guard.isActive, isTrue);
-      picker.pickCompleter.complete(Uint8List.fromList('payload'.codeUnits));
+      picker.pickCompleter.complete(
+        NotesPickedFile(
+          bytes: Uint8List.fromList('payload'.codeUnits),
+          fileName: 'backup.pgp',
+        ),
+      );
 
-      await expectLater(operation, completion('payload'));
+      await expectLater(
+        operation,
+        completion(
+          isA<NotesImportFile>()
+              .having((file) => file.encryptedPayload, 'payload', 'payload')
+              .having((file) => file.fileName, 'fileName', 'backup.pgp'),
+        ),
+      );
       expect(guard.isActive, isFalse);
     },
   );
@@ -105,12 +118,12 @@ void main() {
 }
 
 class _FakeNotesFilePickerClient implements NotesFilePickerClient {
-  final pickCompleter = Completer<Uint8List?>();
+  final pickCompleter = Completer<NotesPickedFile?>();
   final saveCompleter = Completer<bool>();
   String? savedPayload;
 
   @override
-  Future<Uint8List?> pickPgpFile() => pickCompleter.future;
+  Future<NotesPickedFile?> pickPgpFile() => pickCompleter.future;
 
   @override
   Future<bool> savePgpFile({

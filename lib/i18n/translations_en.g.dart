@@ -354,6 +354,7 @@ class TranslationsSettingsNotesTransferEn {
 	/// en: 'Restore notes from an encrypted PGP file.'
 	String get importSubtitle => 'Restore notes from an encrypted PGP file.';
 
+	late final TranslationsSettingsNotesTransferFilePickerEn filePicker = TranslationsSettingsNotesTransferFilePickerEn.internal(_root);
 	late final TranslationsSettingsNotesTransferExportPasswordEn exportPassword = TranslationsSettingsNotesTransferExportPasswordEn.internal(_root);
 	late final TranslationsSettingsNotesTransferImportPasswordEn importPassword = TranslationsSettingsNotesTransferImportPasswordEn.internal(_root);
 
@@ -519,6 +520,24 @@ class TranslationsSettingsAutoLockOptionsEn {
 	String get thirtyMinutes => '30 minutes';
 }
 
+// Path: settings.notesTransfer.filePicker
+class TranslationsSettingsNotesTransferFilePickerEn {
+	TranslationsSettingsNotesTransferFilePickerEn.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Select an import file'
+	String get selectTitle => 'Select an import file';
+
+	/// en: 'Choose an encrypted PGP file to import.'
+	String get selectSubtitle => 'Choose an encrypted PGP file to import.';
+
+	/// en: 'Tap to select a different file.'
+	String get changeSubtitle => 'Tap to select a different file.';
+}
+
 // Path: settings.notesTransfer.exportPassword
 class TranslationsSettingsNotesTransferExportPasswordEn {
 	TranslationsSettingsNotesTransferExportPasswordEn.internal(this._root);
@@ -630,6 +649,9 @@ extension on Translations {
 			'settings.notesTransfer.exportSubtitle' => 'Save an encrypted copy protected by a separate password.',
 			'settings.notesTransfer.importTitle' => 'Import notes',
 			'settings.notesTransfer.importSubtitle' => 'Restore notes from an encrypted PGP file.',
+			'settings.notesTransfer.filePicker.selectTitle' => 'Select an import file',
+			'settings.notesTransfer.filePicker.selectSubtitle' => 'Choose an encrypted PGP file to import.',
+			'settings.notesTransfer.filePicker.changeSubtitle' => 'Tap to select a different file.',
 			'settings.notesTransfer.exportPassword.title' => 'Export notes',
 			'settings.notesTransfer.exportPassword.passwordHint' => 'Export password...',
 			'settings.notesTransfer.exportPassword.confirmPasswordHint' => 'Confirm export password...',

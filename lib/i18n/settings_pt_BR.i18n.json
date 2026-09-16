@@ -43,6 +43,11 @@
     "exportSubtitle": "Salvar uma cópia criptografada protegida por uma senha separada.",
     "importTitle": "Importar notas",
     "importSubtitle": "Restaurar notas de um arquivo PGP criptografado.",
+    "filePicker": {
+      "selectTitle": "Selecione um arquivo para importar",
+      "selectSubtitle": "Escolha um arquivo PGP criptografado para importar.",
+      "changeSubtitle": "Toque para selecionar outro arquivo."
+    },
     "exportPassword": {
       "title": "Exportar notas",
       "passwordHint": "Senha da exportação...",

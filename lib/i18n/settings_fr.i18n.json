@@ -43,6 +43,11 @@
     "exportSubtitle": "Enregistrez une copie chiffrée protégée par un mot de passe distinct.",
     "importTitle": "Importer les notes",
     "importSubtitle": "Restaurez les notes depuis un fichier PGP chiffré.",
+    "filePicker": {
+      "selectTitle": "Sélectionner un fichier à importer",
+      "selectSubtitle": "Choisissez un fichier PGP chiffré à importer.",
+      "changeSubtitle": "Touchez pour sélectionner un autre fichier."
+    },
     "exportPassword": {
       "title": "Exporter les notes",
       "passwordHint": "Mot de passe d’exportation...",

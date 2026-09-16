@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import '../../../core/app_lifecycle_lock_guard.dart';
 import '../application/notes_file_service.dart';
 import '../application/notes_file_picker_client.dart';
+import '../domain/notes_import_file.dart';
 import '../domain/notes_transfer_result.dart';
 import 'file_picker_notes_file_picker_client.dart';
 
@@ -21,11 +22,18 @@ class FilePickerNotesFileService implements NotesFileService {
            lifecycleLockGuard ?? DefaultAppLifecycleLockGuard();
 
   @override
-  Future<String?> pickImportFile() async {
+  Future<NotesImportFile?> pickImportFile() async {
     try {
-      final bytes = await _lifecycleLockGuard.run(_pickerClient.pickPgpFile);
+      final pickedFile = await _lifecycleLockGuard.run(
+        _pickerClient.pickPgpFile,
+      );
 
-      return bytes == null ? null : utf8.decode(bytes);
+      return pickedFile == null
+          ? null
+          : NotesImportFile(
+              encryptedPayload: utf8.decode(pickedFile.bytes),
+              fileName: pickedFile.fileName,
+            );
     } catch (_) {
       throw const NotesTransferException(
         NotesTransferExceptionCode.fileOperationFailed,

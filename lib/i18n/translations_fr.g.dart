@@ -259,6 +259,7 @@ class _TranslationsSettingsNotesTransferFr extends TranslationsSettingsNotesTran
 	@override String get exportSubtitle => 'Enregistrez une copie chiffrée protégée par un mot de passe distinct.';
 	@override String get importTitle => 'Importer les notes';
 	@override String get importSubtitle => 'Restaurez les notes depuis un fichier PGP chiffré.';
+	@override late final _TranslationsSettingsNotesTransferFilePickerFr filePicker = _TranslationsSettingsNotesTransferFilePickerFr._(_root);
 	@override late final _TranslationsSettingsNotesTransferExportPasswordFr exportPassword = _TranslationsSettingsNotesTransferExportPasswordFr._(_root);
 	@override late final _TranslationsSettingsNotesTransferImportPasswordFr importPassword = _TranslationsSettingsNotesTransferImportPasswordFr._(_root);
 	@override String importSuccess({required Object count}) => '${count} notes importées.';
@@ -345,6 +346,18 @@ class _TranslationsSettingsAutoLockOptionsFr extends TranslationsSettingsAutoLoc
 	@override String get fiveMinutes => '5 minutes';
 	@override String get fifteenMinutes => '15 minutes';
 	@override String get thirtyMinutes => '30 minutes';
+}
+
+// Path: settings.notesTransfer.filePicker
+class _TranslationsSettingsNotesTransferFilePickerFr extends TranslationsSettingsNotesTransferFilePickerEn {
+	_TranslationsSettingsNotesTransferFilePickerFr._(TranslationsFr root) : this._root = root, super.internal(root);
+
+	final TranslationsFr _root; // ignore: unused_field
+
+	// Translations
+	@override String get selectTitle => 'Sélectionner un fichier à importer';
+	@override String get selectSubtitle => 'Choisissez un fichier PGP chiffré à importer.';
+	@override String get changeSubtitle => 'Touchez pour sélectionner un autre fichier.';
 }
 
 // Path: settings.notesTransfer.exportPassword
@@ -440,6 +453,9 @@ extension on TranslationsFr {
 			'settings.notesTransfer.exportSubtitle' => 'Enregistrez une copie chiffrée protégée par un mot de passe distinct.',
 			'settings.notesTransfer.importTitle' => 'Importer les notes',
 			'settings.notesTransfer.importSubtitle' => 'Restaurez les notes depuis un fichier PGP chiffré.',
+			'settings.notesTransfer.filePicker.selectTitle' => 'Sélectionner un fichier à importer',
+			'settings.notesTransfer.filePicker.selectSubtitle' => 'Choisissez un fichier PGP chiffré à importer.',
+			'settings.notesTransfer.filePicker.changeSubtitle' => 'Touchez pour sélectionner un autre fichier.',
 			'settings.notesTransfer.exportPassword.title' => 'Exporter les notes',
 			'settings.notesTransfer.exportPassword.passwordHint' => 'Mot de passe d’exportation...',
 			'settings.notesTransfer.exportPassword.confirmPasswordHint' => 'Confirmez le mot de passe d’exportation...',

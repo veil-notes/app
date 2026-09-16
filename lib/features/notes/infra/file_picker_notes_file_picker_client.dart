@@ -6,7 +6,7 @@ import '../application/notes_file_picker_client.dart';
 
 class FilePickerNotesFilePickerClient implements NotesFilePickerClient {
   @override
-  Future<Uint8List?> pickPgpFile() async {
+  Future<NotesPickedFile?> pickPgpFile() async {
     final file = await FilePicker.pickFile(
       type: FileType.custom,
       allowedExtensions: ['pgp'],
@@ -16,7 +16,10 @@ class FilePickerNotesFilePickerClient implements NotesFilePickerClient {
       return null;
     }
 
-    return file.readAsBytes();
+    return NotesPickedFile(
+      bytes: await file.readAsBytes(),
+      fileName: file.name,
+    );
   }
 
   @override

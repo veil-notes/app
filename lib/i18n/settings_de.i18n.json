@@ -43,6 +43,11 @@
     "exportSubtitle": "Eine verschlüsselte Kopie mit einem separaten Passwort speichern.",
     "importTitle": "Notizen importieren",
     "importSubtitle": "Notizen aus einer verschlüsselten PGP-Datei wiederherstellen.",
+    "filePicker": {
+      "selectTitle": "Importdatei auswählen",
+      "selectSubtitle": "Wählen Sie eine verschlüsselte PGP-Datei zum Importieren.",
+      "changeSubtitle": "Tippen Sie, um eine andere Datei auszuwählen."
+    },
     "exportPassword": {
       "title": "Notizen exportieren",
       "passwordHint": "Export-Passwort...",

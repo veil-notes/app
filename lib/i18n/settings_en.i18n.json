@@ -43,6 +43,11 @@
     "exportSubtitle": "Save an encrypted copy protected by a separate password.",
     "importTitle": "Import notes",
     "importSubtitle": "Restore notes from an encrypted PGP file.",
+    "filePicker": {
+      "selectTitle": "Select an import file",
+      "selectSubtitle": "Choose an encrypted PGP file to import.",
+      "changeSubtitle": "Tap to select a different file."
+    },
     "exportPassword": {
       "title": "Export notes",
       "passwordHint": "Export password...",

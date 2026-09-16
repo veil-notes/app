@@ -43,6 +43,11 @@
     "exportSubtitle": "別のパスワードで保護された暗号化コピーを保存します。",
     "importTitle": "ノートをインポート",
     "importSubtitle": "暗号化された PGP ファイルからノートを復元します。",
+    "filePicker": {
+      "selectTitle": "インポートするファイルを選択",
+      "selectSubtitle": "インポートする暗号化 PGP ファイルを選択してください。",
+      "changeSubtitle": "タップして別のファイルを選択します。"
+    },
     "exportPassword": {
       "title": "ノートをエクスポート",
       "passwordHint": "エクスポートのパスワード...",

@@ -1,5 +1,7 @@
+import '../domain/notes_import_file.dart';
+
 abstract class NotesFileService {
-  Future<String?> pickImportFile();
+  Future<NotesImportFile?> pickImportFile();
 
   Future<bool> saveExportFile(String encryptedPayload);
 }

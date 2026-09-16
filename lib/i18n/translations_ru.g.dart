@@ -259,6 +259,7 @@ class _TranslationsSettingsNotesTransferRu extends TranslationsSettingsNotesTran
 	@override String get exportSubtitle => 'Сохраните зашифрованную копию с отдельным паролем.';
 	@override String get importTitle => 'Импорт заметок';
 	@override String get importSubtitle => 'Восстановите заметки из зашифрованного файла PGP.';
+	@override late final _TranslationsSettingsNotesTransferFilePickerRu filePicker = _TranslationsSettingsNotesTransferFilePickerRu._(_root);
 	@override late final _TranslationsSettingsNotesTransferExportPasswordRu exportPassword = _TranslationsSettingsNotesTransferExportPasswordRu._(_root);
 	@override late final _TranslationsSettingsNotesTransferImportPasswordRu importPassword = _TranslationsSettingsNotesTransferImportPasswordRu._(_root);
 	@override String importSuccess({required Object count}) => 'Импортировано заметок: ${count}.';
@@ -345,6 +346,18 @@ class _TranslationsSettingsAutoLockOptionsRu extends TranslationsSettingsAutoLoc
 	@override String get fiveMinutes => '5 минут';
 	@override String get fifteenMinutes => '15 минут';
 	@override String get thirtyMinutes => '30 минут';
+}
+
+// Path: settings.notesTransfer.filePicker
+class _TranslationsSettingsNotesTransferFilePickerRu extends TranslationsSettingsNotesTransferFilePickerEn {
+	_TranslationsSettingsNotesTransferFilePickerRu._(TranslationsRu root) : this._root = root, super.internal(root);
+
+	final TranslationsRu _root; // ignore: unused_field
+
+	// Translations
+	@override String get selectTitle => 'Выберите файл для импорта';
+	@override String get selectSubtitle => 'Выберите зашифрованный файл PGP для импорта.';
+	@override String get changeSubtitle => 'Нажмите, чтобы выбрать другой файл.';
 }
 
 // Path: settings.notesTransfer.exportPassword
@@ -440,6 +453,9 @@ extension on TranslationsRu {
 			'settings.notesTransfer.exportSubtitle' => 'Сохраните зашифрованную копию с отдельным паролем.',
 			'settings.notesTransfer.importTitle' => 'Импорт заметок',
 			'settings.notesTransfer.importSubtitle' => 'Восстановите заметки из зашифрованного файла PGP.',
+			'settings.notesTransfer.filePicker.selectTitle' => 'Выберите файл для импорта',
+			'settings.notesTransfer.filePicker.selectSubtitle' => 'Выберите зашифрованный файл PGP для импорта.',
+			'settings.notesTransfer.filePicker.changeSubtitle' => 'Нажмите, чтобы выбрать другой файл.',
 			'settings.notesTransfer.exportPassword.title' => 'Экспорт заметок',
 			'settings.notesTransfer.exportPassword.passwordHint' => 'Пароль экспорта...',
 			'settings.notesTransfer.exportPassword.confirmPasswordHint' => 'Подтвердите пароль экспорта...',

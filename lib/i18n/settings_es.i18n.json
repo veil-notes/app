@@ -43,6 +43,11 @@
     "exportSubtitle": "Guarda una copia cifrada protegida por una contraseña independiente.",
     "importTitle": "Importar notas",
     "importSubtitle": "Restaura notas desde un archivo PGP cifrado.",
+    "filePicker": {
+      "selectTitle": "Selecciona un archivo para importar",
+      "selectSubtitle": "Elige un archivo PGP cifrado para importar.",
+      "changeSubtitle": "Toca para seleccionar otro archivo."
+    },
     "exportPassword": {
       "title": "Exportar notas",
       "passwordHint": "Contraseña de exportación...",

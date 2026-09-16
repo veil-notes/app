@@ -1,5 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:veil/features/settings/presentation/screens/change_password_screen.dart';
+import 'package:veil/features/settings/presentation/screens/export_notes_screen.dart';
+import 'package:veil/features/settings/presentation/screens/import_notes_screen.dart';
 import 'package:veil/features/settings/presentation/screens/settings_screen.dart';
 import 'package:veil/features/veil/domain/states/bootstrapping_state.dart';
 import 'package:veil/features/veil/presentation/screens/setup_screen.dart';
@@ -51,6 +54,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       if (isUnlocked) {
         if (isUnlockRoute) {
           final from = state.uri.queryParameters['from'];
+          if (from != null && from.startsWith('/settings/')) {
+            return '/settings';
+          }
+
           if (from != null &&
               from.isNotEmpty &&
               from != '/' &&
@@ -77,6 +84,18 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/unlock', builder: (_, _) => const UnlockScreen()),
       GoRoute(path: '/list', builder: (_, _) => const NoteListScreen()),
       GoRoute(path: '/settings', builder: (_, _) => const SettingsScreen()),
+      GoRoute(
+        path: '/settings/change-password',
+        builder: (_, _) => const ChangePasswordScreen(),
+      ),
+      GoRoute(
+        path: '/settings/export-notes',
+        builder: (_, _) => const ExportNotesScreen(),
+      ),
+      GoRoute(
+        path: '/settings/import-notes',
+        builder: (_, _) => const ImportNotesScreen(),
+      ),
       GoRoute(path: '/note', builder: (_, _) => const NoteScreen()),
       GoRoute(
         path: '/note/:id',

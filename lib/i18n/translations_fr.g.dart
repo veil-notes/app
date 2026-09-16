@@ -95,6 +95,7 @@ class _TranslationsSettingsFr extends TranslationsSettingsEn {
 	@override late final _TranslationsSettingsConfirmPasswordFr confirmPassword = _TranslationsSettingsConfirmPasswordFr._(_root);
 	@override late final _TranslationsSettingsChangePasswordFr changePassword = _TranslationsSettingsChangePasswordFr._(_root);
 	@override late final _TranslationsSettingsNotesTransferFr notesTransfer = _TranslationsSettingsNotesTransferFr._(_root);
+	@override late final _TranslationsSettingsAboutFr about = _TranslationsSettingsAboutFr._(_root);
 }
 
 // Path: veil
@@ -265,6 +266,30 @@ class _TranslationsSettingsNotesTransferFr extends TranslationsSettingsNotesTran
 	@override String importSuccess({required Object count}) => '${count} notes importées.';
 	@override String exportSuccess({required Object count}) => '${count} notes exportées.';
 	@override late final _TranslationsSettingsNotesTransferErrorsFr errors = _TranslationsSettingsNotesTransferErrorsFr._(_root);
+}
+
+// Path: settings.about
+class _TranslationsSettingsAboutFr extends TranslationsSettingsAboutEn {
+	_TranslationsSettingsAboutFr._(TranslationsFr root) : this._root = root, super.internal(root);
+
+	final TranslationsFr _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'À propos';
+	@override String get subtitle => 'Informations sur l’application et licences open source.';
+	@override String version({required Object version}) => 'Version ${version}';
+	@override String get versionLoading => 'Chargement de la version...';
+	@override String get versionUnavailable => 'Version indisponible';
+	@override String get repositoryTitle => 'Code source';
+	@override String get repositorySubtitle => 'Consultez le code source de Veil sur GitHub.';
+	@override String get repositoryError => 'Impossible d’ouvrir le dépôt.';
+	@override String get licensesTitle => 'Licences open source';
+	@override String get licensesSubtitle => 'Consultez les licences de Veil et de ses dépendances.';
+	@override String get licensesHeading => 'Licences open source';
+	@override String get licensesIntro => 'Veil est distribué sous la GNU General Public License v3.0.\n\nCette application inclut des logiciels et des ressources open source de tiers. Leurs licences et attributions sont listées ci-dessous.';
+	@override String get fullLicenseText => 'Texte complet de la licence';
+	@override String get licensesLoading => 'Chargement des licences...';
+	@override String get licensesError => 'Impossible de charger les licences.';
 }
 
 // Path: veil.setup
@@ -467,6 +492,21 @@ extension on TranslationsFr {
 			'settings.notesTransfer.errors.unsupportedFormatVersion' => 'Cette version du format d’exportation n’est pas prise en charge.',
 			'settings.notesTransfer.errors.invalidPayload' => 'Le fichier d’exportation contient des notes invalides.',
 			'settings.notesTransfer.errors.fileOperationFailed' => 'Impossible d’accéder au fichier.',
+			'settings.about.title' => 'À propos',
+			'settings.about.subtitle' => 'Informations sur l’application et licences open source.',
+			'settings.about.version' => ({required Object version}) => 'Version ${version}',
+			'settings.about.versionLoading' => 'Chargement de la version...',
+			'settings.about.versionUnavailable' => 'Version indisponible',
+			'settings.about.repositoryTitle' => 'Code source',
+			'settings.about.repositorySubtitle' => 'Consultez le code source de Veil sur GitHub.',
+			'settings.about.repositoryError' => 'Impossible d’ouvrir le dépôt.',
+			'settings.about.licensesTitle' => 'Licences open source',
+			'settings.about.licensesSubtitle' => 'Consultez les licences de Veil et de ses dépendances.',
+			'settings.about.licensesHeading' => 'Licences open source',
+			'settings.about.licensesIntro' => 'Veil est distribué sous la GNU General Public License v3.0.\n\nCette application inclut des logiciels et des ressources open source de tiers. Leurs licences et attributions sont listées ci-dessous.',
+			'settings.about.fullLicenseText' => 'Texte complet de la licence',
+			'settings.about.licensesLoading' => 'Chargement des licences...',
+			'settings.about.licensesError' => 'Impossible de charger les licences.',
 			'veil.setup.passwordHint' => 'Saisissez un mot de passe pour commencer...',
 			'veil.setup.cta' => 'C\'est parti !',
 			'veil.setup.biometricsOptInTitle' => 'Activer la biométrie',

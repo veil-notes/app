@@ -104,6 +104,7 @@ class TranslationsSettingsEn {
 	late final TranslationsSettingsConfirmPasswordEn confirmPassword = TranslationsSettingsConfirmPasswordEn.internal(_root);
 	late final TranslationsSettingsChangePasswordEn changePassword = TranslationsSettingsChangePasswordEn.internal(_root);
 	late final TranslationsSettingsNotesTransferEn notesTransfer = TranslationsSettingsNotesTransferEn.internal(_root);
+	late final TranslationsSettingsAboutEn about = TranslationsSettingsAboutEn.internal(_root);
 }
 
 // Path: veil
@@ -365,6 +366,60 @@ class TranslationsSettingsNotesTransferEn {
 	String exportSuccess({required Object count}) => 'Exported ${count} notes.';
 
 	late final TranslationsSettingsNotesTransferErrorsEn errors = TranslationsSettingsNotesTransferErrorsEn.internal(_root);
+}
+
+// Path: settings.about
+class TranslationsSettingsAboutEn {
+	TranslationsSettingsAboutEn.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'About'
+	String get title => 'About';
+
+	/// en: 'App information and open-source licenses.'
+	String get subtitle => 'App information and open-source licenses.';
+
+	/// en: 'Version {{version}}'
+	String version({required Object version}) => 'Version ${version}';
+
+	/// en: 'Loading version...'
+	String get versionLoading => 'Loading version...';
+
+	/// en: 'Version unavailable'
+	String get versionUnavailable => 'Version unavailable';
+
+	/// en: 'Source code'
+	String get repositoryTitle => 'Source code';
+
+	/// en: 'View the Veil source code on GitHub.'
+	String get repositorySubtitle => 'View the Veil source code on GitHub.';
+
+	/// en: 'Could not open the repository.'
+	String get repositoryError => 'Could not open the repository.';
+
+	/// en: 'Open source licenses'
+	String get licensesTitle => 'Open source licenses';
+
+	/// en: 'View licenses for Veil and its dependencies.'
+	String get licensesSubtitle => 'View licenses for Veil and its dependencies.';
+
+	/// en: 'Open Source Licenses'
+	String get licensesHeading => 'Open Source Licenses';
+
+	/// en: 'Veil is licensed under the GNU General Public License v3.0. This app includes third-party open-source software and assets. Their licenses and attributions are listed below.'
+	String get licensesIntro => 'Veil is licensed under the GNU General Public License v3.0.\n\nThis app includes third-party open-source software and assets. Their licenses and attributions are listed below.';
+
+	/// en: 'Full license text'
+	String get fullLicenseText => 'Full license text';
+
+	/// en: 'Loading licenses...'
+	String get licensesLoading => 'Loading licenses...';
+
+	/// en: 'Could not load the licenses.'
+	String get licensesError => 'Could not load the licenses.';
 }
 
 // Path: veil.setup
@@ -663,6 +718,21 @@ extension on Translations {
 			'settings.notesTransfer.errors.unsupportedFormatVersion' => 'This export format is not supported.',
 			'settings.notesTransfer.errors.invalidPayload' => 'The export file contains invalid notes.',
 			'settings.notesTransfer.errors.fileOperationFailed' => 'The file could not be accessed.',
+			'settings.about.title' => 'About',
+			'settings.about.subtitle' => 'App information and open-source licenses.',
+			'settings.about.version' => ({required Object version}) => 'Version ${version}',
+			'settings.about.versionLoading' => 'Loading version...',
+			'settings.about.versionUnavailable' => 'Version unavailable',
+			'settings.about.repositoryTitle' => 'Source code',
+			'settings.about.repositorySubtitle' => 'View the Veil source code on GitHub.',
+			'settings.about.repositoryError' => 'Could not open the repository.',
+			'settings.about.licensesTitle' => 'Open source licenses',
+			'settings.about.licensesSubtitle' => 'View licenses for Veil and its dependencies.',
+			'settings.about.licensesHeading' => 'Open Source Licenses',
+			'settings.about.licensesIntro' => 'Veil is licensed under the GNU General Public License v3.0.\n\nThis app includes third-party open-source software and assets. Their licenses and attributions are listed below.',
+			'settings.about.fullLicenseText' => 'Full license text',
+			'settings.about.licensesLoading' => 'Loading licenses...',
+			'settings.about.licensesError' => 'Could not load the licenses.',
 			'veil.setup.passwordHint' => 'Type a password to start...',
 			'veil.setup.cta' => 'Let\'s start!',
 			'veil.setup.biometricsOptInTitle' => 'Enable biometrics',

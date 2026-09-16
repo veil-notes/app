@@ -65,5 +65,22 @@
       "invalidPayload": "El archivo de exportación contiene notas no válidas.",
       "fileOperationFailed": "No se pudo acceder al archivo."
     }
+  },
+  "about": {
+    "title": "Acerca de",
+    "subtitle": "Información de la app y licencias de código abierto.",
+    "version": "Versión {{version}}",
+    "versionLoading": "Cargando versión...",
+    "versionUnavailable": "Versión no disponible",
+    "repositoryTitle": "Código fuente",
+    "repositorySubtitle": "Consulta el código fuente de Veil en GitHub.",
+    "repositoryError": "No se pudo abrir el repositorio.",
+    "licensesTitle": "Licencias de código abierto",
+    "licensesSubtitle": "Consulta las licencias de Veil y sus dependencias.",
+    "licensesHeading": "Licencias de código abierto",
+    "licensesIntro": "Veil está licenciado bajo la GNU General Public License v3.0.\n\nEsta app incluye software y recursos de código abierto de terceros. Sus licencias y atribuciones se enumeran a continuación.",
+    "fullLicenseText": "Texto completo de la licencia",
+    "licensesLoading": "Cargando licencias...",
+    "licensesError": "No se pudieron cargar las licencias."
   }
 }

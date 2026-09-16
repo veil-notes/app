@@ -65,5 +65,22 @@
       "invalidPayload": "내보낸 파일에 잘못된 메모가 있습니다.",
       "fileOperationFailed": "파일에 접근할 수 없습니다."
     }
+  },
+  "about": {
+    "title": "Veil 정보",
+    "subtitle": "앱 정보 및 오픈 소스 라이선스입니다.",
+    "version": "버전 {{version}}",
+    "versionLoading": "버전을 불러오는 중...",
+    "versionUnavailable": "버전을 사용할 수 없습니다",
+    "repositoryTitle": "소스 코드",
+    "repositorySubtitle": "GitHub에서 Veil 소스 코드를 확인하세요.",
+    "repositoryError": "저장소를 열 수 없습니다.",
+    "licensesTitle": "오픈 소스 라이선스",
+    "licensesSubtitle": "Veil 및 종속 항목의 라이선스를 확인하세요.",
+    "licensesHeading": "오픈 소스 라이선스",
+    "licensesIntro": "Veil은 GNU General Public License v3.0에 따라 라이선스가 부여됩니다.\n\n이 앱에는 타사 오픈 소스 소프트웨어와 에셋이 포함되어 있습니다. 해당 라이선스와 저작자 표시는 아래에 나열되어 있습니다.",
+    "fullLicenseText": "전체 라이선스 텍스트",
+    "licensesLoading": "라이선스를 불러오는 중...",
+    "licensesError": "라이선스를 불러올 수 없습니다."
   }
 }

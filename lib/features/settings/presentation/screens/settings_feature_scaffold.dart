@@ -5,10 +5,12 @@ import '../../../../i18n/translations.g.dart';
 class SettingsFeatureScaffold extends StatelessWidget {
   final String title;
   final Widget body;
+  final bool showTitle;
 
   const SettingsFeatureScaffold({
     required this.title,
     required this.body,
+    this.showTitle = true,
     super.key,
   });
 
@@ -50,14 +52,16 @@ class SettingsFeatureScaffold extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Text(
-                  title,
-                  style: Theme.of(context).textTheme.titleLarge,
+              if (showTitle) ...[
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Text(
+                    title,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 24),
+                const SizedBox(height: 24),
+              ],
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24),

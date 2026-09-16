@@ -65,5 +65,22 @@
       "invalidPayload": "エクスポートファイルに無効なノートがあります。",
       "fileOperationFailed": "ファイルにアクセスできませんでした。"
     }
+  },
+  "about": {
+    "title": "Veilについて",
+    "subtitle": "アプリ情報とオープンソースライセンス。",
+    "version": "バージョン {{version}}",
+    "versionLoading": "バージョンを読み込み中…",
+    "versionUnavailable": "バージョンを利用できません",
+    "repositoryTitle": "ソースコード",
+    "repositorySubtitle": "GitHubでVeilのソースコードを見る。",
+    "repositoryError": "リポジトリを開けませんでした。",
+    "licensesTitle": "オープンソースライセンス",
+    "licensesSubtitle": "Veilと依存関係のライセンスを表示します。",
+    "licensesHeading": "オープンソースライセンス",
+    "licensesIntro": "VeilはGNU General Public License v3.0のもとでライセンスされています。\n\nこのアプリには第三者のオープンソースソフトウェアとアセットが含まれています。ライセンスと帰属表示は以下のとおりです。",
+    "fullLicenseText": "ライセンス全文",
+    "licensesLoading": "ライセンスを読み込み中…",
+    "licensesError": "ライセンスを読み込めませんでした。"
   }
 }

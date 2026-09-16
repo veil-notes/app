@@ -65,5 +65,22 @@
       "invalidPayload": "导出文件包含无效笔记。",
       "fileOperationFailed": "无法访问文件。"
     }
+  },
+  "about": {
+    "title": "关于 Veil",
+    "subtitle": "应用信息和开源许可证。",
+    "version": "版本 {{version}}",
+    "versionLoading": "正在加载版本…",
+    "versionUnavailable": "版本不可用",
+    "repositoryTitle": "源代码",
+    "repositorySubtitle": "在 GitHub 上查看 Veil 源代码。",
+    "repositoryError": "无法打开代码仓库。",
+    "licensesTitle": "开源许可证",
+    "licensesSubtitle": "查看 Veil 及其依赖项的许可证。",
+    "licensesHeading": "开源许可证",
+    "licensesIntro": "Veil 根据 GNU General Public License v3.0 授权。\n\n此应用包含第三方开源软件和资源。下面列出了相关许可证和归属信息。",
+    "fullLicenseText": "完整许可证文本",
+    "licensesLoading": "正在加载许可证…",
+    "licensesError": "无法加载许可证。"
   }
 }

@@ -158,6 +158,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ref.read(veilControllerProvider.notifier).lock();
             },
           ),
+          ListTile(
+            title: Text(
+              t.settings.about.title,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            subtitle: Text(
+              t.settings.about.subtitle,
+              style: const TextStyle(fontSize: 12),
+            ),
+            onTap: _isLoading ? null : () => context.push('/settings/about'),
+          ),
         ],
       ),
     );

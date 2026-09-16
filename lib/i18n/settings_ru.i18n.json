@@ -65,5 +65,22 @@
       "invalidPayload": "Файл экспорта содержит недействительные заметки.",
       "fileOperationFailed": "Не удалось получить доступ к файлу."
     }
+  },
+  "about": {
+    "title": "О приложении",
+    "subtitle": "Информация о приложении и лицензии открытого кода.",
+    "version": "Версия {{version}}",
+    "versionLoading": "Загрузка версии...",
+    "versionUnavailable": "Версия недоступна",
+    "repositoryTitle": "Исходный код",
+    "repositorySubtitle": "Открыть исходный код Veil на GitHub.",
+    "repositoryError": "Не удалось открыть репозиторий.",
+    "licensesTitle": "Лицензии открытого кода",
+    "licensesSubtitle": "Лицензии Veil и его зависимостей.",
+    "licensesHeading": "Лицензии открытого кода",
+    "licensesIntro": "Veil распространяется по лицензии GNU General Public License v3.0.\n\nЭто приложение включает стороннее программное обеспечение и ресурсы с открытым исходным кодом. Их лицензии и сведения об атрибуции перечислены ниже.",
+    "fullLicenseText": "Полный текст лицензии",
+    "licensesLoading": "Загрузка лицензий...",
+    "licensesError": "Не удалось загрузить лицензии."
   }
 }

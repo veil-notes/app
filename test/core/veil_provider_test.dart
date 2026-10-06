@@ -7,6 +7,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:veil/core/crypto/crypto_service.dart';
 import 'package:veil/core/crypto/domain/crypto_key_pair.dart';
 import 'package:veil/core/crypto/domain/encrypted_data.dart';
+import 'package:veil/core/storage/secure_storage_service.dart';
 import 'package:veil/features/veil/application/veil_controller.dart';
 import 'package:veil/features/veil/application/veil_service.dart';
 import 'package:veil/features/veil/domain/session/auto_lock_option.dart';
@@ -110,25 +111,24 @@ void main() {
   });
 
   test(
-    'veilServiceProvider toggles the biometric prompt notifier during auth',
+    'veilServiceProvider reads the protected biometric passphrase',
     () async {
       FlutterSecureStorage.setMockInitialValues({
         'veil.biometric_enabled': 'true',
-        'veil.biometric_passphrase': 'stored-passphrase',
         'veil.private_key_encrypted': 'encrypted-private-key',
       });
 
       fakeLocalAuthPlatform.canCheckBiometrics = true;
       fakeLocalAuthPlatform.deviceSupported = true;
+      fakeLocalAuthPlatform.enrolledBiometrics = [BiometricType.strong];
 
       late ProviderContainer container;
-      fakeLocalAuthPlatform.onAuthenticate = () async {
-        expect(container.read(biometricPromptInProgressProvider), isTrue);
-      };
-
       container = ProviderContainer(
         overrides: [
           cryptoServiceProvider.overrideWithValue(_FakeCryptoService()),
+          biometricStorageServiceProvider.overrideWithValue(
+            _FakeBiometricStorageService(),
+          ),
         ],
       );
       addTearDown(container.dispose);
@@ -177,7 +177,10 @@ class _FakeVeilService implements VeilService, VaultKeyProvider {
   Future<void> create(String password) async {}
 
   @override
-  Future<void> changePassword(String currentPassword, String newPassword) async {}
+  Future<void> changePassword(
+    String currentPassword,
+    String newPassword,
+  ) async {}
 
   @override
   Future<void> disableBiometricUnlock() async {}
@@ -240,10 +243,22 @@ class _FakeCryptoService implements CryptoService {
   }
 }
 
+class _FakeBiometricStorageService implements SecureStorageService {
+  @override
+  Future<String?> read(String key) async => 'stored-passphrase';
+
+  @override
+  Future<void> write(String key, String value) async {}
+
+  @override
+  Future<void> delete(String key) async {}
+}
+
 class _FakeLocalAuthPlatform extends LocalAuthPlatform
     with MockPlatformInterfaceMixin {
   bool canCheckBiometrics = false;
   bool deviceSupported = false;
+  List<BiometricType> enrolledBiometrics = [];
   Future<void> Function()? onAuthenticate;
 
   @override
@@ -263,7 +278,8 @@ class _FakeLocalAuthPlatform extends LocalAuthPlatform
   Future<bool> deviceSupportsBiometrics() async => canCheckBiometrics;
 
   @override
-  Future<List<BiometricType>> getEnrolledBiometrics() async => [];
+  Future<List<BiometricType>> getEnrolledBiometrics() async =>
+      enrolledBiometrics;
 
   @override
   Future<bool> isDeviceSupported() async => deviceSupported;

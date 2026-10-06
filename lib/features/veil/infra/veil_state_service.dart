@@ -30,6 +30,7 @@ class VeilStateService implements VeilService, VaultKeyProvider {
   final PasswordValidator _passwordValidator;
   final KeyDerivationService _keyDerivationService;
   final SecureStorageService _secureStorageService;
+  final SecureStorageService _biometricStorageService;
   final CryptoService _cryptoService;
   final BiometricAuthService _biometricAuthService;
 
@@ -40,6 +41,7 @@ class VeilStateService implements VeilService, VaultKeyProvider {
   VeilStateService({
     required KeyDerivationService keyDerivationService,
     required SecureStorageService secureStorageService,
+    required SecureStorageService biometricStorageService,
     required CryptoService cryptoService,
     required BiometricAuthService biometricAuthService,
 
@@ -47,6 +49,7 @@ class VeilStateService implements VeilService, VaultKeyProvider {
     Random? random,
   }) : _keyDerivationService = keyDerivationService,
        _secureStorageService = secureStorageService,
+       _biometricStorageService = biometricStorageService,
        _cryptoService = cryptoService,
        _biometricAuthService = biometricAuthService,
        _passwordValidator = passwordValidator,
@@ -131,9 +134,8 @@ class VeilStateService implements VeilService, VaultKeyProvider {
     }
 
     final oldBiometricEnabled = await isBiometricEnabled();
-    final oldBiometricPassphrase = await _secureStorageService.read(
-      _biometricPassphraseStorageKey,
-    );
+    final keepBiometrics =
+        oldBiometricEnabled && await _biometricAuthService.isAvailable();
 
     final currentDerivedKey = await _keyDerivationService.derive(
       password: currentPassword,
@@ -159,8 +161,7 @@ class VeilStateService implements VeilService, VaultKeyProvider {
     final snapshot = _PasswordChangeSnapshot(
       kdfParams: jsonEncode(oldParams.toJson()),
       encryptedPrivateKey: oldEncryptedPrivateKey,
-      biometricEnabled: oldBiometricEnabled ? 'true' : 'false',
-      biometricPassphrase: oldBiometricPassphrase ?? '',
+      biometricEnabled: keepBiometrics ? 'true' : 'false',
     );
 
     try {
@@ -178,16 +179,18 @@ class VeilStateService implements VeilService, VaultKeyProvider {
       );
       await _secureStorageService.write(
         _biometricEnabledStorageKey,
-        oldBiometricEnabled ? 'true' : 'false',
+        keepBiometrics ? 'true' : 'false',
       );
-      await _secureStorageService.write(
-        _biometricPassphraseStorageKey,
-        oldBiometricEnabled ? newPassphrase : '',
-      );
+      if (keepBiometrics) {
+        await _biometricStorageService.write(
+          _biometricPassphraseStorageKey,
+          newPassphrase,
+        );
+      }
       await _clearPasswordChangeTransaction();
     } catch (_) {
       try {
-        await _restorePasswordChangeSnapshot(snapshot);
+        await _restorePasswordChangeSnapshot(snapshot, disableBiometrics: true);
       } catch (_) {
         lock();
         throw const VeilException(VeilExceptionCode.passwordChangeFailed);
@@ -245,11 +248,7 @@ class VeilStateService implements VeilService, VaultKeyProvider {
     }
 
     final isEnabled = await isBiometricEnabled();
-    final storedPassphrase = await _secureStorageService.read(
-      _biometricPassphraseStorageKey,
-    );
-
-    return isEnabled && storedPassphrase != null && storedPassphrase.isNotEmpty;
+    return isEnabled;
   }
 
   @override
@@ -281,11 +280,6 @@ class VeilStateService implements VeilService, VaultKeyProvider {
       throw const BiometricUnavailableException();
     }
 
-    final authenticated = await _biometricAuthService.authenticate();
-    if (!authenticated) {
-      throw const BiometricFailedException();
-    }
-
     final derivedKey = await _keyDerivationService.derive(
       password: password,
       params: params,
@@ -302,11 +296,11 @@ class VeilStateService implements VeilService, VaultKeyProvider {
       throw const VeilException(VeilExceptionCode.invalidPassword);
     }
 
-    await _secureStorageService.write(_biometricEnabledStorageKey, 'true');
-    await _secureStorageService.write(
+    await _biometricStorageService.write(
       _biometricPassphraseStorageKey,
       passphrase,
     );
+    await _secureStorageService.write(_biometricEnabledStorageKey, 'true');
   }
 
   @override
@@ -314,7 +308,8 @@ class VeilStateService implements VeilService, VaultKeyProvider {
     await _recoverPendingPasswordChange();
 
     await _secureStorageService.write(_biometricEnabledStorageKey, 'false');
-    await _secureStorageService.write(_biometricPassphraseStorageKey, '');
+    await _secureStorageService.delete(_biometricPassphraseStorageKey);
+    await _biometricStorageService.delete(_biometricPassphraseStorageKey);
   }
 
   @override
@@ -326,17 +321,17 @@ class VeilStateService implements VeilService, VaultKeyProvider {
       return false;
     }
 
-    final authenticated = await _biometricAuthService.authenticate();
-    if (!authenticated) {
-      return false;
-    }
-
     final encryptedPrivateKey = await _secureStorageService.read(
       _encryptedPrivateKeyStorageKey,
     );
-    final passphrase = await _secureStorageService.read(
-      _biometricPassphraseStorageKey,
-    );
+    String? passphrase;
+    try {
+      passphrase = await _biometricStorageService.read(
+        _biometricPassphraseStorageKey,
+      );
+    } catch (_) {
+      return false;
+    }
 
     if (encryptedPrivateKey == null ||
         passphrase == null ||
@@ -441,6 +436,14 @@ class VeilStateService implements VeilService, VaultKeyProvider {
   }
 
   Future<void> _recoverPendingPasswordChange() async {
+    // Old releases kept this secret in storage without user authentication.
+    final legacyPassphrase = await _secureStorageService.read(
+      _biometricPassphraseStorageKey,
+    );
+    if (legacyPassphrase != null && legacyPassphrase.isNotEmpty) {
+      await _secureStorageService.write(_biometricEnabledStorageKey, 'false');
+      await _secureStorageService.delete(_biometricPassphraseStorageKey);
+    }
     final rawTransaction = await _secureStorageService.read(
       _passwordChangeTransactionStorageKey,
     );
@@ -456,39 +459,30 @@ class VeilStateService implements VeilService, VaultKeyProvider {
       }
 
       final snapshot = _PasswordChangeSnapshot.fromJson(decoded);
-      await _restorePasswordChangeSnapshot(snapshot);
+      await _restorePasswordChangeSnapshot(snapshot, disableBiometrics: true);
     } catch (_) {
       throw const VeilException(VeilExceptionCode.passwordChangeFailed);
     }
   }
 
   Future<void> _restorePasswordChangeSnapshot(
-    _PasswordChangeSnapshot snapshot,
-  ) async {
-    await _secureStorageService.write(
-      _kdfParamsStorageKey,
-      snapshot.kdfParams,
-    );
+    _PasswordChangeSnapshot snapshot, {
+    bool disableBiometrics = false,
+  }) async {
+    await _secureStorageService.write(_kdfParamsStorageKey, snapshot.kdfParams);
     await _secureStorageService.write(
       _encryptedPrivateKeyStorageKey,
       snapshot.encryptedPrivateKey,
     );
     await _secureStorageService.write(
       _biometricEnabledStorageKey,
-      snapshot.biometricEnabled,
-    );
-    await _secureStorageService.write(
-      _biometricPassphraseStorageKey,
-      snapshot.biometricPassphrase,
+      disableBiometrics ? 'false' : snapshot.biometricEnabled,
     );
     await _clearPasswordChangeTransaction();
   }
 
   Future<void> _clearPasswordChangeTransaction() async {
-    await _secureStorageService.write(
-      _passwordChangeTransactionStorageKey,
-      '',
-    );
+    await _secureStorageService.write(_passwordChangeTransactionStorageKey, '');
   }
 }
 
@@ -496,13 +490,11 @@ class _PasswordChangeSnapshot {
   final String kdfParams;
   final String encryptedPrivateKey;
   final String biometricEnabled;
-  final String biometricPassphrase;
 
   const _PasswordChangeSnapshot({
     required this.kdfParams,
     required this.encryptedPrivateKey,
     required this.biometricEnabled,
-    required this.biometricPassphrase,
   });
 
   Map<String, String> toJson() {
@@ -510,7 +502,6 @@ class _PasswordChangeSnapshot {
       'kdfParams': kdfParams,
       'encryptedPrivateKey': encryptedPrivateKey,
       'biometricEnabled': biometricEnabled,
-      'biometricPassphrase': biometricPassphrase,
     };
   }
 
@@ -518,12 +509,10 @@ class _PasswordChangeSnapshot {
     final kdfParams = json['kdfParams'];
     final encryptedPrivateKey = json['encryptedPrivateKey'];
     final biometricEnabled = json['biometricEnabled'];
-    final biometricPassphrase = json['biometricPassphrase'];
 
     if (kdfParams is! String ||
         encryptedPrivateKey is! String ||
-        biometricEnabled is! String ||
-        biometricPassphrase is! String) {
+        biometricEnabled is! String) {
       throw const FormatException('Invalid password change transaction');
     }
 
@@ -531,7 +520,6 @@ class _PasswordChangeSnapshot {
       kdfParams: kdfParams,
       encryptedPrivateKey: encryptedPrivateKey,
       biometricEnabled: biometricEnabled,
-      biometricPassphrase: biometricPassphrase,
     );
   }
 }

@@ -19,8 +19,12 @@ class LocalAuthBiometricAuthService implements BiometricAuthService {
   Future<bool> isAvailable() async {
     final canCheckBiometrics = await _localAuthentication.canCheckBiometrics;
     final isDeviceSupported = await _localAuthentication.isDeviceSupported();
+    final enrolled = await _localAuthentication.getAvailableBiometrics();
 
-    return canCheckBiometrics && isDeviceSupported;
+    // Some Android 10 devices report an enrolled fingerprint as weak here,
+    // while the Keystore-backed CryptoObject still accepts it. The protected
+    // storage operation enforces the required authentication.
+    return canCheckBiometrics && isDeviceSupported && enrolled.isNotEmpty;
   }
 
   @override

@@ -34,11 +34,24 @@ void main() {
   test('isAvailable requires biometrics and supported device', () async {
     fakePlatform.canCheckBiometrics = true;
     fakePlatform.deviceSupported = true;
+    fakePlatform.enrolledBiometrics = [BiometricType.strong];
 
     expect(await service.isAvailable(), isTrue);
 
     fakePlatform.deviceSupported = false;
     expect(await service.isAvailable(), isFalse);
+    fakePlatform.deviceSupported = true;
+    fakePlatform.enrolledBiometrics = [];
+    expect(await service.isAvailable(), isFalse);
+  });
+
+  test('availability accepts enrolled biometrics for Keystore validation', () async {
+    fakePlatform.canCheckBiometrics = true;
+    fakePlatform.deviceSupported = true;
+    fakePlatform.enrolledBiometrics = [BiometricType.weak];
+    expect(await service.isAvailable(), isTrue);
+    fakePlatform.enrolledBiometrics = [BiometricType.strong];
+    expect(await service.isAvailable(), isTrue);
   });
 
   test(
@@ -110,6 +123,7 @@ class _FakeLocalAuthPlatform extends LocalAuthPlatform
   bool canCheckBiometrics = false;
   bool deviceSupported = false;
   bool authenticateResult = false;
+  List<BiometricType> enrolledBiometrics = [];
   LocalAuthException? exception;
   String? lastLocalizedReason;
 
@@ -135,7 +149,8 @@ class _FakeLocalAuthPlatform extends LocalAuthPlatform
   Future<bool> isDeviceSupported() async => deviceSupported;
 
   @override
-  Future<List<BiometricType>> getEnrolledBiometrics() async => [];
+  Future<List<BiometricType>> getEnrolledBiometrics() async =>
+      enrolledBiometrics;
 
   @override
   Future<bool> stopAuthentication() async => true;

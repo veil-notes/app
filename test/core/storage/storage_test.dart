@@ -4,6 +4,14 @@ import 'package:veil/core/storage/secure_storage_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() {
+  test('biometric Android storage enforces strong user authentication', () {
+    final options = veilBiometricAndroidOptions.toMap();
+    expect(options['enforceBiometrics'], 'true');
+    expect(options['biometricType'], 'strongBiometricOnly');
+    expect(options['storageNamespace'], 'veil_biometric');
+    expect(options['resetOnError'], 'false');
+  });
+
   setUpAll(() {
     FlutterSecureStorage.setMockInitialValues({});
   });

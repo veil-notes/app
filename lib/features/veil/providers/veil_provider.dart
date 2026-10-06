@@ -39,23 +39,31 @@ final secureStorageServiceProvider = Provider<SecureStorageService>((ref) {
   return FlutterSecureStorageService(const FlutterSecureStorage());
 });
 
+final biometricStorageServiceProvider = Provider<SecureStorageService>((ref) {
+  return FlutterSecureStorageService(
+    const FlutterSecureStorage(aOptions: veilBiometricAndroidOptions),
+    onOperationStarted: () {
+      ref.read(biometricPromptInProgressProvider.notifier).start();
+    },
+    onOperationFinished: () {
+      ref.read(biometricPromptInProgressProvider.notifier).finish();
+    },
+  );
+});
+
 final veilServiceProvider = Provider<VeilService>((ref) {
   final secureStorage = ref.read(secureStorageServiceProvider);
+  final biometricStorage = ref.read(biometricStorageServiceProvider);
   final cryptoService = ref.read(cryptoServiceProvider);
 
   final biometricAuthService = LocalAuthBiometricAuthService(
     LocalAuthentication(),
-    onAuthStarted: () {
-      ref.read(biometricPromptInProgressProvider.notifier).start();
-    },
-    onAuthFinished: () {
-      ref.read(biometricPromptInProgressProvider.notifier).finish();
-    },
   );
 
   return VeilStateService(
     keyDerivationService: Argon2KdfDerivationService(),
     secureStorageService: secureStorage,
+    biometricStorageService: biometricStorage,
     cryptoService: cryptoService,
     passwordValidator: DefaultPasswordValidator(),
     biometricAuthService: biometricAuthService,

@@ -41,10 +41,14 @@ class NoteListScreen extends ConsumerWidget {
                     color: Colors.white.withValues(alpha: 0.08),
                   ),
                 ),
-                child: IconButton(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  onPressed: () => context.push('/settings'),
-                  icon: const Icon(Icons.settings),
+                child: Semantics(
+                  button: true,
+                  label: context.t.notes.actions.openSettings,
+                  child: IconButton(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    onPressed: () => context.push('/settings'),
+                    icon: const Icon(Icons.settings),
+                  ),
                 ),
               ),
             ),
@@ -54,10 +58,14 @@ class NoteListScreen extends ConsumerWidget {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: Padding(
         padding: const EdgeInsets.all(16),
-        child: FloatingActionButton(
-          shape: const CircleBorder(),
-          onPressed: () => context.go('/note'),
-          child: const Icon(Icons.add),
+        child: Semantics(
+          button: true,
+          label: context.t.notes.actions.createNote,
+          child: FloatingActionButton(
+            shape: const CircleBorder(),
+            onPressed: () => context.go('/note'),
+            child: const Icon(Icons.add),
+          ),
         ),
       ),
       body: notesAsync.when(

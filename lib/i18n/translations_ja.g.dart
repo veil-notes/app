@@ -78,6 +78,7 @@ class _TranslationsNotesJa extends TranslationsNotesEn {
 	// Translations
 	@override String get empty => 'まだノートがありません。';
 	@override late final _TranslationsNotesDeleteJa delete = _TranslationsNotesDeleteJa._(_root);
+	@override late final _TranslationsNotesActionsJa actions = _TranslationsNotesActionsJa._(_root);
 	@override late final _TranslationsNotesEditorJa editor = _TranslationsNotesEditorJa._(_root);
 }
 
@@ -171,6 +172,33 @@ class _TranslationsNotesEditorJa extends TranslationsNotesEditorEn {
 
 	// Translations
 	@override String heading({required Object level}) => '見出し ${level}';
+	@override late final _TranslationsNotesEditorActionsJa actions = _TranslationsNotesEditorActionsJa._(_root);
+}
+
+// Path: notes.actions
+class _TranslationsNotesActionsJa extends TranslationsNotesActionsEn {
+	_TranslationsNotesActionsJa._(TranslationsJa root) : this._root = root, super.internal(root);
+
+	final TranslationsJa _root; // ignore: unused_field
+
+	// Translations
+	@override String get openSettings => '設定を開く';
+	@override String get createNote => '新しいノートを作成';
+}
+
+// Path: notes.editor.actions
+class _TranslationsNotesEditorActionsJa extends TranslationsNotesEditorActionsEn {
+	_TranslationsNotesEditorActionsJa._(TranslationsJa root) : this._root = root, super.internal(root);
+
+	final TranslationsJa _root; // ignore: unused_field
+
+	// Translations
+	@override String get bold => '太字';
+	@override String get italic => '斜体';
+	@override String get headingLevel => '見出しレベル';
+	@override String get bulletList => '箇条書き';
+	@override String get numberedList => '番号付きリスト';
+	@override String get checklist => 'チェックリスト';
 }
 
 // Path: settings.biometrics

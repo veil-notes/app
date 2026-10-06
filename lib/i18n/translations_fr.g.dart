@@ -78,6 +78,7 @@ class _TranslationsNotesFr extends TranslationsNotesEn {
 	// Translations
 	@override String get empty => 'aucune note pour l\'instant.';
 	@override late final _TranslationsNotesDeleteFr delete = _TranslationsNotesDeleteFr._(_root);
+	@override late final _TranslationsNotesActionsFr actions = _TranslationsNotesActionsFr._(_root);
 	@override late final _TranslationsNotesEditorFr editor = _TranslationsNotesEditorFr._(_root);
 }
 
@@ -171,6 +172,33 @@ class _TranslationsNotesEditorFr extends TranslationsNotesEditorEn {
 
 	// Translations
 	@override String heading({required Object level}) => 'Titre ${level}';
+	@override late final _TranslationsNotesEditorActionsFr actions = _TranslationsNotesEditorActionsFr._(_root);
+}
+
+// Path: notes.actions
+class _TranslationsNotesActionsFr extends TranslationsNotesActionsEn {
+	_TranslationsNotesActionsFr._(TranslationsFr root) : this._root = root, super.internal(root);
+
+	final TranslationsFr _root; // ignore: unused_field
+
+	// Translations
+	@override String get openSettings => 'Ouvrir les paramètres';
+	@override String get createNote => 'Créer une note';
+}
+
+// Path: notes.editor.actions
+class _TranslationsNotesEditorActionsFr extends TranslationsNotesEditorActionsEn {
+	_TranslationsNotesEditorActionsFr._(TranslationsFr root) : this._root = root, super.internal(root);
+
+	final TranslationsFr _root; // ignore: unused_field
+
+	// Translations
+	@override String get bold => 'Gras';
+	@override String get italic => 'Italique';
+	@override String get headingLevel => 'Niveau de titre';
+	@override String get bulletList => 'Liste à puces';
+	@override String get numberedList => 'Liste numérotée';
+	@override String get checklist => 'Liste de tâches';
 }
 
 // Path: settings.biometrics

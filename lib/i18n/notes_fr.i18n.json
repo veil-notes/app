@@ -5,7 +5,19 @@
     "confirm": "Oui, supprimer",
     "cancel": "Non, conserver"
   },
+  "actions": {
+    "openSettings": "Ouvrir les paramètres",
+    "createNote": "Créer une note"
+  },
   "editor": {
+    "actions": {
+      "bold": "Gras",
+      "italic": "Italique",
+      "headingLevel": "Niveau de titre",
+      "bulletList": "Liste à puces",
+      "numberedList": "Liste numérotée",
+      "checklist": "Liste de tâches"
+    },
     "heading": "Titre {{level}}"
   }
 }

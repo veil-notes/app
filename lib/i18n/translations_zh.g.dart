@@ -78,6 +78,7 @@ class _TranslationsNotesZh extends TranslationsNotesEn {
 	// Translations
 	@override String get empty => '还没有笔记。';
 	@override late final _TranslationsNotesDeleteZh delete = _TranslationsNotesDeleteZh._(_root);
+	@override late final _TranslationsNotesActionsZh actions = _TranslationsNotesActionsZh._(_root);
 	@override late final _TranslationsNotesEditorZh editor = _TranslationsNotesEditorZh._(_root);
 }
 
@@ -171,6 +172,33 @@ class _TranslationsNotesEditorZh extends TranslationsNotesEditorEn {
 
 	// Translations
 	@override String heading({required Object level}) => '标题 ${level}';
+	@override late final _TranslationsNotesEditorActionsZh actions = _TranslationsNotesEditorActionsZh._(_root);
+}
+
+// Path: notes.actions
+class _TranslationsNotesActionsZh extends TranslationsNotesActionsEn {
+	_TranslationsNotesActionsZh._(TranslationsZh root) : this._root = root, super.internal(root);
+
+	final TranslationsZh _root; // ignore: unused_field
+
+	// Translations
+	@override String get openSettings => '打开设置';
+	@override String get createNote => '新建笔记';
+}
+
+// Path: notes.editor.actions
+class _TranslationsNotesEditorActionsZh extends TranslationsNotesEditorActionsEn {
+	_TranslationsNotesEditorActionsZh._(TranslationsZh root) : this._root = root, super.internal(root);
+
+	final TranslationsZh _root; // ignore: unused_field
+
+	// Translations
+	@override String get bold => '粗体';
+	@override String get italic => '斜体';
+	@override String get headingLevel => '标题级别';
+	@override String get bulletList => '项目符号列表';
+	@override String get numberedList => '编号列表';
+	@override String get checklist => '清单';
 }
 
 // Path: settings.biometrics

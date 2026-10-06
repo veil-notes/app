@@ -1,0 +1,4 @@
+Beta 8
+
+- Corrigido o salvamento das notas antes de sair do editor e o retorno à lista de notas com um gesto.
+- Melhorados o empacotamento Android e as verificações de metadados para distribuição pelo F-Droid.

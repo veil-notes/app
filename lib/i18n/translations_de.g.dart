@@ -78,6 +78,7 @@ class _TranslationsNotesDe extends TranslationsNotesEn {
 	// Translations
 	@override String get empty => 'noch keine notizen.';
 	@override late final _TranslationsNotesDeleteDe delete = _TranslationsNotesDeleteDe._(_root);
+	@override late final _TranslationsNotesActionsDe actions = _TranslationsNotesActionsDe._(_root);
 	@override late final _TranslationsNotesEditorDe editor = _TranslationsNotesEditorDe._(_root);
 }
 
@@ -171,6 +172,33 @@ class _TranslationsNotesEditorDe extends TranslationsNotesEditorEn {
 
 	// Translations
 	@override String heading({required Object level}) => 'Überschrift ${level}';
+	@override late final _TranslationsNotesEditorActionsDe actions = _TranslationsNotesEditorActionsDe._(_root);
+}
+
+// Path: notes.actions
+class _TranslationsNotesActionsDe extends TranslationsNotesActionsEn {
+	_TranslationsNotesActionsDe._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get openSettings => 'Einstellungen öffnen';
+	@override String get createNote => 'Neue Notiz erstellen';
+}
+
+// Path: notes.editor.actions
+class _TranslationsNotesEditorActionsDe extends TranslationsNotesEditorActionsEn {
+	_TranslationsNotesEditorActionsDe._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get bold => 'Fett';
+	@override String get italic => 'Kursiv';
+	@override String get headingLevel => 'Überschriftenebene';
+	@override String get bulletList => 'Aufzählung';
+	@override String get numberedList => 'Nummerierte Liste';
+	@override String get checklist => 'Checkliste';
 }
 
 // Path: settings.biometrics

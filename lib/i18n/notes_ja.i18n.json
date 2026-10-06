@@ -5,7 +5,19 @@
     "confirm": "はい、削除",
     "cancel": "いいえ、そのままにする"
   },
+  "actions": {
+    "openSettings": "設定を開く",
+    "createNote": "新しいノートを作成"
+  },
   "editor": {
+    "actions": {
+      "bold": "太字",
+      "italic": "斜体",
+      "headingLevel": "見出しレベル",
+      "bulletList": "箇条書き",
+      "numberedList": "番号付きリスト",
+      "checklist": "チェックリスト"
+    },
     "heading": "見出し {{level}}"
   }
 }

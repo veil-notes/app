@@ -5,7 +5,19 @@
     "confirm": "是的，删除",
     "cancel": "不，保留"
   },
+  "actions": {
+    "openSettings": "打开设置",
+    "createNote": "新建笔记"
+  },
   "editor": {
+    "actions": {
+      "bold": "粗体",
+      "italic": "斜体",
+      "headingLevel": "标题级别",
+      "bulletList": "项目符号列表",
+      "numberedList": "编号列表",
+      "checklist": "清单"
+    },
     "heading": "标题 {{level}}"
   }
 }

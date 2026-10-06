@@ -5,7 +5,19 @@
     "confirm": "Ja, löschen",
     "cancel": "Nein, behalten"
   },
+  "actions": {
+    "openSettings": "Einstellungen öffnen",
+    "createNote": "Neue Notiz erstellen"
+  },
   "editor": {
+    "actions": {
+      "bold": "Fett",
+      "italic": "Kursiv",
+      "headingLevel": "Überschriftenebene",
+      "bulletList": "Aufzählung",
+      "numberedList": "Nummerierte Liste",
+      "checklist": "Checkliste"
+    },
     "heading": "Überschrift {{level}}"
   }
 }

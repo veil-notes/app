@@ -1,0 +1,4 @@
+Beta 8
+
+- Fixed saving notes before leaving the editor and returning to the notes list with a swipe.
+- Improved Android packaging and metadata checks for F-Droid distribution.

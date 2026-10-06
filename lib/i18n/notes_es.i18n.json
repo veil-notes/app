@@ -5,7 +5,19 @@
     "confirm": "Sí, eliminar",
     "cancel": "No, conservar"
   },
+  "actions": {
+    "openSettings": "Abrir ajustes",
+    "createNote": "Crear una nota nueva"
+  },
   "editor": {
+    "actions": {
+      "bold": "Negrita",
+      "italic": "Cursiva",
+      "headingLevel": "Nivel de encabezado",
+      "bulletList": "Lista con viñetas",
+      "numberedList": "Lista numerada",
+      "checklist": "Lista de tareas"
+    },
     "heading": "Encabezado {{level}}"
   }
 }

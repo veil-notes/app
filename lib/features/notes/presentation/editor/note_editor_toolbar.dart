@@ -67,6 +67,7 @@ class NoteEditorToolbar extends StatelessWidget {
                   children: [
                     _ToolbarButton(
                       onTap: onBold,
+                      label: context.t.notes.editor.actions.bold,
                       child: const Icon(
                         Icons.format_bold,
                         size: 21,
@@ -75,6 +76,7 @@ class NoteEditorToolbar extends StatelessWidget {
                     ),
                     _ToolbarButton(
                       onTap: onItalic,
+                      label: context.t.notes.editor.actions.italic,
                       child: const Icon(
                         Icons.format_italic,
                         size: 21,
@@ -84,46 +86,54 @@ class NoteEditorToolbar extends StatelessWidget {
                     _PopupToolbarButton(
                       isActive: currentHeadingLevel != null,
                       popupBuilder: (context) {
-                        return PopupMenuButton<int>(
-                          tooltip: '',
-                          initialValue: currentHeadingLevel,
-                          onSelected: onHeadingSelected,
-                          color: const Color(0xFF262144),
-                          surfaceTintColor: Colors.transparent,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
-                            side: BorderSide(
-                              color: Colors.white.withValues(alpha: 0.06),
+                        return Semantics(
+                          button: true,
+                          label: context.t.notes.editor.actions.headingLevel,
+                          child: PopupMenuButton<int>(
+                            tooltip: '',
+                            initialValue: currentHeadingLevel,
+                            onSelected: onHeadingSelected,
+                            color: const Color(0xFF262144),
+                            surfaceTintColor: Colors.transparent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                              side: BorderSide(
+                                color: Colors.white.withValues(alpha: 0.06),
+                              ),
                             ),
-                          ),
-                          itemBuilder: (context) {
-                            return List.generate(5, (index) {
-                              final level = index + 1;
+                            itemBuilder: (context) {
+                              return List.generate(5, (index) {
+                                final level = index + 1;
 
-                              return PopupMenuItem<int>(
-                                value: level,
-                                child: Text(
-                                  context.t.notes.editor.heading(level: level),
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: currentHeadingLevel == level
-                                        ? FontWeight.w700
-                                        : FontWeight.w500,
+                                return PopupMenuItem<int>(
+                                  value: level,
+                                  child: Text(
+                                    context.t.notes.editor.heading(
+                                      level: level,
+                                    ),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: currentHeadingLevel == level
+                                          ? FontWeight.w700
+                                          : FontWeight.w500,
+                                    ),
                                   ),
-                                ),
-                              );
-                            });
-                          },
-                          child: const SizedBox(
-                            width: 40,
-                            height: 40,
-                            child: Center(
-                              child: Text(
-                                'H',
-                                style: TextStyle(
-                                  fontSize: 19,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
+                                );
+                              });
+                            },
+                            child: const ExcludeSemantics(
+                              child: SizedBox(
+                                width: 40,
+                                height: 40,
+                                child: Center(
+                                  child: Text(
+                                    'H',
+                                    style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
@@ -134,6 +144,7 @@ class NoteEditorToolbar extends StatelessWidget {
 
                     _ToolbarButton(
                       onTap: onBullet,
+                      label: context.t.notes.editor.actions.bulletList,
                       isActive: isBulletActive,
                       child: const Icon(
                         Icons.format_list_bulleted_rounded,
@@ -143,6 +154,7 @@ class NoteEditorToolbar extends StatelessWidget {
                     ),
                     _ToolbarButton(
                       onTap: onOrdered,
+                      label: context.t.notes.editor.actions.numberedList,
                       isActive: isOrderedActive,
                       child: const Icon(
                         Icons.format_list_numbered_rounded,
@@ -152,6 +164,7 @@ class NoteEditorToolbar extends StatelessWidget {
                     ),
                     _ToolbarButton(
                       onTap: onChecklist,
+                      label: context.t.notes.editor.actions.checklist,
                       isActive: isChecklistActive,
                       child: const Icon(
                         Icons.check_box_outlined,
@@ -198,11 +211,13 @@ class _PopupToolbarButton extends StatelessWidget {
 class _ToolbarButton extends StatelessWidget {
   final Widget child;
   final VoidCallback onTap;
+  final String label;
   final bool isActive;
 
   const _ToolbarButton({
     required this.child,
     required this.onTap,
+    required this.label,
     this.isActive = false,
   });
 
@@ -215,10 +230,18 @@ class _ToolbarButton extends StatelessWidget {
             ? Colors.white.withValues(alpha: 0.12)
             : Colors.transparent,
         borderRadius: BorderRadius.circular(12),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(12),
-          onTap: onTap,
-          child: SizedBox(width: 40, height: 40, child: Center(child: child)),
+        child: Semantics(
+          button: true,
+          label: label,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(12),
+            onTap: onTap,
+            child: SizedBox(
+              width: 40,
+              height: 40,
+              child: Center(child: ExcludeSemantics(child: child)),
+            ),
+          ),
         ),
       ),
     );
@@ -246,14 +269,8 @@ class _StatusDotState extends State<_StatusDot>
       vsync: this,
       duration: const Duration(milliseconds: 700),
     );
-    _pulseAnimation = Tween<double>(
-      begin: 0.58,
-      end: 1,
-    ).animate(
-      CurvedAnimation(
-        parent: _pulseController,
-        curve: Curves.easeInOut,
-      ),
+    _pulseAnimation = Tween<double>(begin: 0.58, end: 1).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
     );
     _updatePulse();
   }
@@ -283,34 +300,18 @@ class _StatusDotState extends State<_StatusDot>
   @override
   Widget build(BuildContext context) {
     final (icon, color) = switch (widget.saveStatus) {
-      NoteSaveStatus.saved => (
-        Icons.check,
-        const Color(0xFF5AD13F),
-      ),
-      NoteSaveStatus.saving => (
-        Icons.save_outlined,
-        const Color(0xFFE2B93B),
-      ),
-      NoteSaveStatus.error => (
-        Icons.priority_high,
-        const Color(0xFFE25555),
-      ),
+      NoteSaveStatus.saved => (Icons.check, const Color(0xFF5AD13F)),
+      NoteSaveStatus.saving => (Icons.save_outlined, const Color(0xFFE2B93B)),
+      NoteSaveStatus.error => (Icons.priority_high, const Color(0xFFE25555)),
     };
 
-    final iconWidget = Icon(
-      icon,
-      color: color,
-      size: 18,
-    );
+    final iconWidget = Icon(icon, color: color, size: 18);
 
     return SizedBox(
       width: 18,
       height: 18,
       child: widget.saveStatus == NoteSaveStatus.saving
-          ? ScaleTransition(
-              scale: _pulseAnimation,
-              child: iconWidget,
-            )
+          ? ScaleTransition(scale: _pulseAnimation, child: iconWidget)
           : iconWidget,
     );
   }

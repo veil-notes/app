@@ -78,6 +78,7 @@ class _TranslationsNotesRu extends TranslationsNotesEn {
 	// Translations
 	@override String get empty => 'заметок пока нет.';
 	@override late final _TranslationsNotesDeleteRu delete = _TranslationsNotesDeleteRu._(_root);
+	@override late final _TranslationsNotesActionsRu actions = _TranslationsNotesActionsRu._(_root);
 	@override late final _TranslationsNotesEditorRu editor = _TranslationsNotesEditorRu._(_root);
 }
 
@@ -171,6 +172,33 @@ class _TranslationsNotesEditorRu extends TranslationsNotesEditorEn {
 
 	// Translations
 	@override String heading({required Object level}) => 'Заголовок ${level}';
+	@override late final _TranslationsNotesEditorActionsRu actions = _TranslationsNotesEditorActionsRu._(_root);
+}
+
+// Path: notes.actions
+class _TranslationsNotesActionsRu extends TranslationsNotesActionsEn {
+	_TranslationsNotesActionsRu._(TranslationsRu root) : this._root = root, super.internal(root);
+
+	final TranslationsRu _root; // ignore: unused_field
+
+	// Translations
+	@override String get openSettings => 'Открыть настройки';
+	@override String get createNote => 'Создать заметку';
+}
+
+// Path: notes.editor.actions
+class _TranslationsNotesEditorActionsRu extends TranslationsNotesEditorActionsEn {
+	_TranslationsNotesEditorActionsRu._(TranslationsRu root) : this._root = root, super.internal(root);
+
+	final TranslationsRu _root; // ignore: unused_field
+
+	// Translations
+	@override String get bold => 'Полужирный';
+	@override String get italic => 'Курсив';
+	@override String get headingLevel => 'Уровень заголовка';
+	@override String get bulletList => 'Маркированный список';
+	@override String get numberedList => 'Нумерованный список';
+	@override String get checklist => 'Список задач';
 }
 
 // Path: settings.biometrics

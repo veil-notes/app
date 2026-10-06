@@ -15,6 +15,47 @@ void main() {
   }
 
   group('NoteEditorToolbar', () {
+    testWidgets('labels formatting controls for screen readers', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+
+      await tester.pumpWidget(
+        wrap(
+          NoteEditorToolbar(
+            saveStatus: NoteSaveStatus.saved,
+            onBold: () {},
+            onItalic: () {},
+            onHeadingSelected: (_) {},
+            currentHeadingLevel: null,
+            onBullet: () {},
+            onOrdered: () {},
+            onChecklist: () {},
+            isBulletActive: false,
+            isOrderedActive: false,
+            isChecklistActive: false,
+          ),
+        ),
+      );
+
+      for (final label in [
+        'Bold',
+        'Italic',
+        'Heading level',
+        'Bulleted list',
+        'Numbered list',
+        'Checklist',
+      ]) {
+        final button = find.bySemanticsLabel(RegExp(label));
+        expect(button, findsOneWidget);
+        expect(
+          tester.getSemantics(button).flagsCollection.isButton,
+          isTrue,
+        );
+      }
+      semantics.dispose();
+    });
+
     testWidgets('fires formatting callbacks', (tester) async {
       var boldTapped = false;
       var italicTapped = false;

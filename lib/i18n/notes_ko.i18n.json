@@ -5,7 +5,19 @@
     "confirm": "예, 삭제",
     "cancel": "아니요, 유지"
   },
+  "actions": {
+    "openSettings": "설정 열기",
+    "createNote": "새 노트 만들기"
+  },
   "editor": {
+    "actions": {
+      "bold": "굵게",
+      "italic": "기울임꼴",
+      "headingLevel": "제목 수준",
+      "bulletList": "글머리 기호 목록",
+      "numberedList": "번호 매기기 목록",
+      "checklist": "체크리스트"
+    },
     "heading": "제목 {{level}}"
   }
 }

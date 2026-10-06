@@ -13,6 +13,29 @@ import 'package:veil/features/notes/providers/notes_provider.dart';
 import '../test_localized_app.dart';
 
 void main() {
+  testWidgets('labels the settings and new note buttons for screen readers', (
+    WidgetTester tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+
+    await tester.pumpWidget(
+      _wrapHome(
+        overrides: [notesListProvider.overrideWith((ref) async => const [])],
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    for (final label in ['Open settings', 'Create new note']) {
+      final button = find.bySemanticsLabel(RegExp(label));
+      expect(button, findsOneWidget);
+      expect(
+        tester.getSemantics(button).flagsCollection.isButton,
+        isTrue,
+      );
+    }
+    semantics.dispose();
+  });
+
   testWidgets('shows the empty state when there are no notes', (
     WidgetTester tester,
   ) async {
@@ -57,7 +80,10 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    expect(find.textContaining("Could not load the information."), findsOneWidget);
+    expect(
+      find.textContaining("Could not load the information."),
+      findsOneWidget,
+    );
   });
 
   testWidgets('strips markdown syntax from note titles in the list', (

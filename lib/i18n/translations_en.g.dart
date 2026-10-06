@@ -87,6 +87,7 @@ class TranslationsNotesEn {
 	String get empty => 'no notes yet.';
 
 	late final TranslationsNotesDeleteEn delete = TranslationsNotesDeleteEn.internal(_root);
+	late final TranslationsNotesActionsEn actions = TranslationsNotesActionsEn.internal(_root);
 	late final TranslationsNotesEditorEn editor = TranslationsNotesEditorEn.internal(_root);
 }
 
@@ -214,6 +215,34 @@ class TranslationsNotesEditorEn {
 
 	/// en: 'Heading {{level}}'
 	String heading({required Object level}) => 'Heading ${level}';
+
+	late final TranslationsNotesEditorActionsEn actions = TranslationsNotesEditorActionsEn.internal(_root);
+}
+
+// Path: notes.actions
+class TranslationsNotesActionsEn {
+	TranslationsNotesActionsEn.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	String get openSettings => 'Open settings';
+	String get createNote => 'Create new note';
+}
+
+// Path: notes.editor.actions
+class TranslationsNotesEditorActionsEn {
+	TranslationsNotesEditorActionsEn.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	String get bold => 'Bold';
+	String get italic => 'Italic';
+	String get headingLevel => 'Heading level';
+	String get bulletList => 'Bulleted list';
+	String get numberedList => 'Numbered list';
+	String get checklist => 'Checklist';
 }
 
 // Path: settings.biometrics

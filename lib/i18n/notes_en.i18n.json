@@ -5,7 +5,19 @@
     "confirm": "Yes, delete",
     "cancel": "No, keep it"
   },
+  "actions": {
+    "openSettings": "Open settings",
+    "createNote": "Create new note"
+  },
   "editor": {
+    "actions": {
+      "bold": "Bold",
+      "italic": "Italic",
+      "headingLevel": "Heading level",
+      "bulletList": "Bulleted list",
+      "numberedList": "Numbered list",
+      "checklist": "Checklist"
+    },
     "heading": "Heading {{level}}"
   }
 }

@@ -78,6 +78,7 @@ class _TranslationsNotesKo extends TranslationsNotesEn {
 	// Translations
 	@override String get empty => '아직 노트가 없습니다.';
 	@override late final _TranslationsNotesDeleteKo delete = _TranslationsNotesDeleteKo._(_root);
+	@override late final _TranslationsNotesActionsKo actions = _TranslationsNotesActionsKo._(_root);
 	@override late final _TranslationsNotesEditorKo editor = _TranslationsNotesEditorKo._(_root);
 }
 
@@ -171,6 +172,33 @@ class _TranslationsNotesEditorKo extends TranslationsNotesEditorEn {
 
 	// Translations
 	@override String heading({required Object level}) => '제목 ${level}';
+	@override late final _TranslationsNotesEditorActionsKo actions = _TranslationsNotesEditorActionsKo._(_root);
+}
+
+// Path: notes.actions
+class _TranslationsNotesActionsKo extends TranslationsNotesActionsEn {
+	_TranslationsNotesActionsKo._(TranslationsKo root) : this._root = root, super.internal(root);
+
+	final TranslationsKo _root; // ignore: unused_field
+
+	// Translations
+	@override String get openSettings => '설정 열기';
+	@override String get createNote => '새 노트 만들기';
+}
+
+// Path: notes.editor.actions
+class _TranslationsNotesEditorActionsKo extends TranslationsNotesEditorActionsEn {
+	_TranslationsNotesEditorActionsKo._(TranslationsKo root) : this._root = root, super.internal(root);
+
+	final TranslationsKo _root; // ignore: unused_field
+
+	// Translations
+	@override String get bold => '굵게';
+	@override String get italic => '기울임꼴';
+	@override String get headingLevel => '제목 수준';
+	@override String get bulletList => '글머리 기호 목록';
+	@override String get numberedList => '번호 매기기 목록';
+	@override String get checklist => '체크리스트';
 }
 
 // Path: settings.biometrics

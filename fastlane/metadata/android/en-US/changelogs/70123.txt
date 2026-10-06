@@ -1,0 +1,5 @@
+Beta 9
+
+- Added password changes, encrypted note import and export, and an About screen.
+- Improved biometric security and settings screens.
+- Blocked Android printing and keyboard learning for notes.

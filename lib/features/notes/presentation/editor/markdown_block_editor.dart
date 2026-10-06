@@ -240,6 +240,7 @@ class MarkdownBlockEditorState extends State<MarkdownBlockEditor> {
           maxLines: null,
           keyboardType: TextInputType.multiline,
           textInputAction: TextInputAction.next,
+          enableIMEPersonalizedLearning: false,
           decoration: const InputDecoration(
             isDense: true,
             contentPadding: EdgeInsets.zero,

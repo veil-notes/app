@@ -53,6 +53,7 @@ void main() {
       expect(textField.minLines, 1);
       expect(textField.maxLines, isNull);
       expect(textField.keyboardType, TextInputType.multiline);
+      expect(textField.enableIMEPersonalizedLearning, isFalse);
     });
 
     testWidgets('applyWrap wraps the selected text', (tester) async {

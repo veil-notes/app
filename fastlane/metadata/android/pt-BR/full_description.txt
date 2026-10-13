@@ -8,8 +8,9 @@ Recursos:
 - Cofre protegido por senha com derivação de chave Argon2
 - Desbloqueio biométrico opcional
 - Bloqueio automático
+- Alteração de senha e importação/exportação de notas criptografadas
 - Funcionamento sem depender de serviços online
 
-Veil está em beta. Ainda não há recuperação de senha, backup na nuvem ou fluxo de importação e exportação. Não use o aplicativo como a única cópia de dados importantes.
+Veil está em beta. Ainda não há recuperação de senha nem backup na nuvem. Mantenha uma cópia separada dos dados importantes.
 
 Veil é software livre e de código aberto, licenciado sob a GPL-3.0-only. Contribuições, relatos de bugs, testes, documentação, melhorias de acessibilidade e traduções são bem-vindos.

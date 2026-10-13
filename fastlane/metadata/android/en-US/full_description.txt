@@ -8,8 +8,9 @@ Features:
 - Password-protected vault with Argon2 key derivation
 - Optional biometric unlock
 - Automatic locking
+- Password changes and encrypted note import and export
 - Offline-first design
 
-Veil is in beta. There is no password recovery, cloud backup, or import/export flow yet. Do not use it as the only copy of critical data.
+Veil is in beta. There is no password recovery or cloud backup. Keep a separate copy of critical data.
 
 Veil is free and open-source software licensed under GPL-3.0-only. Contributions, bug reports, tests, documentation, accessibility improvements, and translations are welcome.

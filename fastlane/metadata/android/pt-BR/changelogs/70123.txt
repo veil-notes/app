@@ -3,3 +3,4 @@ Beta 9
 - Adicionadas troca de senha, importação e exportação de notas criptografadas e tela Sobre.
 - Melhoradas a segurança biométrica e as telas de configurações.
 - Bloqueados a impressão no Android e o aprendizado do teclado para as notas.
+- Ativadas a otimização de código com R8 e a remoção de recursos não usados para reduzir o tamanho do app.
